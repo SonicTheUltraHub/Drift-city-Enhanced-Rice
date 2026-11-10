@@ -8,7 +8,7 @@ Portuguese guide and the full change history: `LEIA-ME.md`.
 
 **⬇️ Download the ready-to-use installer:** [RaGEZONE — Drift City Offline - Enhanced Rice](https://forum.ragezone.com/threads/%F0%9F%8F%81-drift-city-offline-enhanced-rice-v1.1277531/)
 
-> **Credits:** based on [Rice](https://github.com/amPerl/Rice) by **amPerl**.
+> **Credits:** based on **Rice** by **amPerl** (used and expanded with the author's permission).
 > **Game files are not included in this repository** (the modified `DriftCity.exe`, `.agt` packs and `Patch` files
 > under `Cliente/`, and `Instalador/modificacoes/*.completo`). The source builds without them; a ready-to-use installer
 > is available on the [RaGEZONE thread](https://forum.ragezone.com/threads/%F0%9F%8F%81-drift-city-offline-enhanced-rice-v1.1277531/).
