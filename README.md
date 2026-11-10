@@ -1,4 +1,4 @@
-# Enhanced Rice (Offline Aprimorado) — V1
+# Enhanced Rice (Offline Aprimorado)
 
 An improved offline mode for the **Drift City 2016 US client**, built on top of the Rice server emulator
 (C#, .NET Framework 4.8). The city feels alive with simulated players (bots) who race, trade, join your party and
