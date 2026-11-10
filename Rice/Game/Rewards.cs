@@ -116,7 +116,7 @@ namespace Rice.Game
             }
             foreach (var l in lines) c.PendingNotices.Add(l);
             c.PendingNotices.Add(string.Format("Docks de nivel: os 4 na mesma fileira do carro dao +{0} em cada atributo e {1}.",
-                RiceServer.Config.DockRowBonus, rowAssist == TurboStart ? "Turbo Start" : "Drift Booster"));
+                RiceServer.Config.DockRowBonus, rowAssist == TurboStart ? "a Option Part Turbo Launch A (Turbo Start)" : "uma Option Part de tempo de booster"));
 
             if (level == 100 && RiceServer.Config.Level100CarSort > 0)
             {
@@ -240,7 +240,7 @@ namespace Rice.Game
                     levelDocks[cid + ":init"] = "1";   // a migracao dos docks letra A nao sorteia por cima
                     CharFiles.WriteAllText(LevelDocksFile, Newtonsoft.Json.JsonConvert.SerializeObject(levelDocks));
                 }
-                if (made > 0) Log.WriteLine("Perfil upado: {0} dock(s) U no carro (Turbo Start e Drift Booster).", made);
+                if (made > 0) Log.WriteLine("Perfil upado: {0} dock(s) U no carro (Turbo Start e tempo de booster).", made);
             }
             catch (Exception ex) { Log.WriteError("Docks do admin: " + ex.Message); }
         }
@@ -288,7 +288,8 @@ namespace Rice.Game
                 {
                     var first = row[0];
                     string assist = LevelDockAssist(c, first);
-                    want[first] = (uint) Math.Max(0, AssistTable.GetIndex(assist));
+                    // so o Turbo Start aparece no dock (a fileira de "Drift Booster" agora da tempo de booster na Option Part)
+                    want[first] = assist == TurboStart ? (uint) Math.Max(0, AssistTable.GetIndex(assist)) : 0u;
                     try { GiveRowOption(c, car.CarID, row, assist); } catch (Exception ex) { Log.WriteError("Fileira de docks (option): " + ex.Message); }
                     int puid = Rice.Server.Packets.Game.VisualShop.PassiveUidOf(assist);
                     if (puid > 0)
@@ -327,25 +328,39 @@ namespace Rice.Game
         // (op_B_0006, Drift + frente com o carro parado) e ela ja vai no quadrado de boost da fileira se estiver livre.
         // Drift Booster nao existe em nenhuma Option Part do jogo (so vem de fabrica em alguns carros).
         const string TurboOption = "op_B_0006";
+        // Fileira de "Drift Booster" (nao existe em Option Part): ganha uma Option Part de tempo de booster pelo grau
+        // dos docks: N = Booster Extension C (+0,3 s), S = Booster Limit B (+0,5 s), H/U = Hyper Converting Tuning
+        // Booster (+0,7 s).
+        static string BoostTimeOption(string tier)
+        {
+            return tier == "N" ? "op_B_0012" : tier == "S" ? "op_B_0014" : "op_B_0035";
+        }
+
         static void GiveRowOption(Character c, int carId, List<Item> row, string assist)
         {
-            if (assist != TurboStart || row == null || row.Count < 4) return;
+            if ((assist != TurboStart && assist != DriftBooster) || row == null || row.Count < 4) return;
             string key = c.CID + ":opt:" + carId + ":" + row[0].slot;
             lock (DockSync) if (LevelDocks().ContainsKey(key)) return;
             ushort slot = row[3].slot;
             bool busy = c.Inventory.Any(i => i.state == 1 && i.curCarID == (uint) carId && i.slot == slot && i.itemEntry != null
                                              && i.itemEntry.Category != null && i.itemEntry.Category.StartsWith("op_"));
+            string tier = row[0].ID != null && row[0].ID.Length > 7 ? row[0].ID.Substring(7, 1) : "N";
+            string optId = assist == TurboStart ? TurboOption : BoostTimeOption(tier);
             Item it;
-            if (!c.GrantItem(TurboOption, 1, out it) || it == null) return;
+            if (!c.GrantItem(optId, 1, out it) || it == null) return;
             bool on = !busy && c.EquipItem((int) it.invIdx, (short) slot, carId);
             lock (DockSync)
             {
-                LevelDocks()[key] = TurboOption;
+                LevelDocks()[key] = optId;
                 try { CharFiles.WriteAllText(LevelDocksFile, Newtonsoft.Json.JsonConvert.SerializeObject(levelDocks)); } catch (Exception) { }
             }
-            c.PendingNotices.Add(on ? "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start) no quadrado de boost. Use Drift + frente com o carro parado."
-                                    : "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start). Coloque no quadrado de boost do carro (Drift + frente com o carro parado).");
-            Log.WriteLine("Fileira de docks: {0} ganhou Turbo Launch A (carro {1}{2}).", c.Name, carId, on ? ", colocada" : "");
+            string nm = it.itemEntry != null ? it.itemEntry.Name : optId;
+            if (assist == TurboStart)
+                c.PendingNotices.Add(on ? "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start) no quadrado de boost. Use Drift + frente com o carro parado."
+                                        : "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start). Coloque no quadrado de boost do carro (Drift + frente com o carro parado).");
+            else
+                c.PendingNotices.Add("Fileira de docks completa: ganhou a Option Part " + nm + " (mais tempo de booster)" + (on ? " no quadrado de boost." : ". Coloque no quadrado de boost do carro."));
+            Log.WriteLine("Fileira de docks: {0} ganhou {1} (carro {2}{3}).", c.Name, nm, carId, on ? ", colocada" : "");
         }
 
         // id do dock: dock_S_N001 (tipo = indice 0..3, grau N/S/H/U, letra 1 = A).

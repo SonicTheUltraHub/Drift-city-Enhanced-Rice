@@ -2409,5 +2409,11 @@
 "Espectadores: com a sala cheia, bots ficam assistindo (cada sala sorteia de 1 ate BattleSpectatorsMax; chance BattleSpectatorChance a cada tentativa), aparecem em \"Spectators\" no topo da sala, narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga.": "Spectators: when the room is full, bots watch (each room picks 1 to BattleSpectatorsMax; chance BattleSpectatorChance on each try), show up in \"Spectators\" at the top of the room, commentate the race in the room chat (at most one line every ~BattleNarratorSeconds) and join when a seat opens.",
 "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start) no quadrado de boost. Use Drift + frente com o carro parado.": "Dock row complete: you got the Turbo Launch A Option Part (Turbo Start) in the boost square. Use Drift + forward while stopped.",
 "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start). Coloque no quadrado de boost do carro (Drift + frente com o carro parado).": "Dock row complete: you got the Turbo Launch A Option Part (Turbo Start). Put it in the car's boost square (Drift + forward while stopped).",
-" ganhou Turbo Launch A (carro ": " got Turbo Launch A (car "
+" ganhou Turbo Launch A (carro ": " got Turbo Launch A (car ",
+"a Option Part Turbo Launch A (Turbo Start)": "the Turbo Launch A Option Part (Turbo Start)",
+"uma Option Part de tempo de booster": "a booster-time Option Part",
+"Fileira de docks completa: ganhou a Option Part ": "Dock row complete: you got the Option Part ",
+" (mais tempo de booster)": " (more booster time)",
+" no quadrado de boost.": " in the boost square.",
+". Coloque no quadrado de boost do carro.": ". Put it in the car's boost square."
 }

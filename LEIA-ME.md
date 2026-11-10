@@ -42,7 +42,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   (`op_B_0006`) e ela ja vai no quadrado de boost da fileira (109/110) se estiver livre; senao fica no inventario.
   Use **Drift + frente com o carro parado**. Vale para o carro do RiceAdmin.
 - Drift Booster: nenhuma Option Part do jogo tem; so vem de fabrica em alguns carros (`car_assist` a_00247/a_00248:
-  Bugatti Veyron, RUF CTR3, Pagani Zonda Roadster...).
+  Bugatti Veyron, RUF CTR3, Pagani Zonda Roadster, Koenigsegg CCR, New GT40...). Por isso a fileira que era de
+  "Drift Booster" agora da uma **Option Part de tempo de booster** pelo grau dos docks: N = Booster Extension C
+  (+0,3 s), S = Booster Limit B (+0,5 s), H/U = Hyper Converting Tuning Booster (+0,7 s), no quadrado de boost da
+  fileira (se estiver livre). O dock dessa fileira nao mostra mais "Drift Booster". O admin ganha a de +0,7 s.
 
 **Atualizacao 201 — Espectadores aparecem na sala:**
 - Os bots assistindo agora aparecem em **"Spectators: N"** no topo da sala (pacote 823 ObserverCount, DriftCity.exe
