@@ -85,4 +85,4 @@ Text the server does not know yet stays in Portuguese.
 
 ## Credits
 - **Rice** server emulator by **amPerl** (used with permission).
-- Packet formats from the openDC emulator documentation (github.com/Xerender13/openDC).
+- **openDC** (github.com/Xerender13/openDC): ideas, packet formats from its emulator documentation, and its client used to test the installer on other clients.
