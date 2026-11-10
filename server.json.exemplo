@@ -323,7 +323,7 @@
   "BattleBotPatienceSeconds": 150,
   "BattleBotLeaveAfterRaceChance": 0.2,
   "BattleSpectators": true,
-  "BattleSpectatorsMax": 3,
+  "BattleSpectatorsMax": 5,
   "BattleSpectatorChance": 0.5,
   "BattleNarratorSeconds": 8,
   "OptionParts": true,

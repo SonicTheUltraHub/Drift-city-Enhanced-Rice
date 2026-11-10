@@ -397,10 +397,11 @@ namespace Rice
         public double BattleBotPatienceSeconds = 150;
         // No fim da corrida, chance de cada bot (que nao e da sua party) sair da sala quando voce volta para ela.
         public double BattleBotLeaveAfterRaceChance = 0.2;
-        // Espectadores: com a sala cheia, bots ficam assistindo (ate BattleSpectatorsMax, chance BattleSpectatorChance a cada
-        // tentativa), narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga.
+        // Espectadores: com a sala cheia, bots ficam assistindo (cada sala sorteia de 1 ate BattleSpectatorsMax; chance
+        // BattleSpectatorChance a cada tentativa), aparecem em "Spectators" no topo da sala, narram a corrida no chat da sala
+        // (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga.
         public bool BattleSpectators = true;
-        public int BattleSpectatorsMax = 3;
+        public int BattleSpectatorsMax = 5;
         public double BattleSpectatorChance = 0.5;
         public double BattleNarratorSeconds = 8;
         // Posicao das IAs no grid (flag do cliente BattleZone.FrontAi): 0 = ao lado do jogador e visiveis na apresentacao.

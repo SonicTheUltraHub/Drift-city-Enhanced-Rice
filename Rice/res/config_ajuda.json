@@ -1133,19 +1133,19 @@
 ],
 "BattleSpectators": [
 "Battle Zone",
-"Espectadores: com a sala cheia, bots ficam assistindo (ate BattleSpectatorsMax, chance BattleSpectatorChance a cada tentativa), narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
+"Espectadores: com a sala cheia, bots ficam assistindo (cada sala sorteia de 1 ate BattleSpectatorsMax; chance BattleSpectatorChance a cada tentativa), aparecem em \"Spectators\" no topo da sala, narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
 ],
 "BattleSpectatorsMax": [
 "Battle Zone",
-"Espectadores: com a sala cheia, bots ficam assistindo (ate BattleSpectatorsMax, chance BattleSpectatorChance a cada tentativa), narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
+"Espectadores: com a sala cheia, bots ficam assistindo (cada sala sorteia de 1 ate BattleSpectatorsMax; chance BattleSpectatorChance a cada tentativa), aparecem em \"Spectators\" no topo da sala, narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
 ],
 "BattleSpectatorChance": [
 "Battle Zone",
-"Espectadores: com a sala cheia, bots ficam assistindo (ate BattleSpectatorsMax, chance BattleSpectatorChance a cada tentativa), narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
+"Espectadores: com a sala cheia, bots ficam assistindo (cada sala sorteia de 1 ate BattleSpectatorsMax; chance BattleSpectatorChance a cada tentativa), aparecem em \"Spectators\" no topo da sala, narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
 ],
 "BattleNarratorSeconds": [
 "Battle Zone",
-"Espectadores: com a sala cheia, bots ficam assistindo (ate BattleSpectatorsMax, chance BattleSpectatorChance a cada tentativa), narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
+"Espectadores: com a sala cheia, bots ficam assistindo (cada sala sorteia de 1 ate BattleSpectatorsMax; chance BattleSpectatorChance a cada tentativa), aparecem em \"Spectators\" no topo da sala, narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga."
 ],
 "BattleFrontAi": [
 "Battle Zone",

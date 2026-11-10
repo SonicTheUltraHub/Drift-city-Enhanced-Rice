@@ -89,6 +89,7 @@ namespace Rice.Server.Packets.Game
             public bool BackInRoom = true;                                                    // voce ja voltou para a tela da sala                      // bots entrando sozinhos na sua sala
             public HashSet<string> Kicked = new HashSet<string>(StringComparer.OrdinalIgnoreCase);   // tirados por voce: nao voltam
             public List<long> Spectators = new List<long>();          // bots assistindo (sala cheia): entram quando abrir vaga
+            public int SpecMax = -1;                                  // quantos espectadores essa sala aceita (sorteado: 1 ate BattleSpectatorsMax)
             public bool AfterRace;                                    // corrida acabou: alguns bots saem quando voce volta
             public Dictionary<uint, int> Gates = new Dictionary<uint, int>();   // portoes de cada carro na corrida (narracao)
             public List<uint> Order = new List<uint>();               // ordem pelos portoes (1o primeiro)
@@ -565,7 +566,8 @@ namespace Rice.Server.Packets.Game
         static void AddSpectator(Room room, Member host, List<Tuple<RiceClient, string, string>> says)
         {
             var cfg = RiceServer.Config;
-            if (!cfg.BattleSpectators || room.Spectators.Count >= Math.Max(0, cfg.BattleSpectatorsMax) || Rng.NextDouble() > cfg.BattleSpectatorChance) return;
+            if (room.SpecMax < 0) room.SpecMax = cfg.BattleSpectatorsMax <= 0 ? 0 : 1 + Rng.Next(cfg.BattleSpectatorsMax);
+            if (!cfg.BattleSpectators || room.Spectators.Count >= room.SpecMax || Rng.NextDouble() > cfg.BattleSpectatorChance) return;
             int arena = ArenaOfRoom(room.Channel, room.Type);
             var inRoom = new HashSet<string>(room.Members.Select(m => m.Name ?? ""), StringComparer.OrdinalIgnoreCase);
             var party = new HashSet<long>(BotSocial.PartyBots(host.Char).Select(x => x.Cid));
@@ -576,6 +578,7 @@ namespace Rice.Server.Packets.Game
             room.Spectators.Add(sp.Cid);
             MarkRacing(sp, 1800);
             Log.WriteLine("Sala {0}: {1} esta assistindo (sala cheia).", room.Id, sp.Name);
+            SendSpecCount(room);
             says.Add(Tuple.Create(host.Client, sp.Name, Pick("Sala cheia... vou ficar assistindo. Abriu vaga, eu entro!",
                 "To de espectador por enquanto. Alguem sai ai!", "Vou assistir essa, mas quero a proxima vaga!",
                 "Lotou! Fico aqui na arquibancada esperando.")));
@@ -590,6 +593,7 @@ namespace Rice.Server.Packets.Game
                 var sp = Bots.ByCid(cid);
                 if (sp == null) continue;
                 if (!SeatBot(room, host, sp, seat)) { EndRacing(sp, null); continue; }
+                SendSpecCount(room);
                 says.Add(Tuple.Create(host.Client, sp.Name, Pick("Abriu vaga! Agora e a minha vez.", "Finalmente! Saindo da arquibancada.",
                     "Opa, vaga livre: to dentro!", "Cansei de assistir, agora eu corro!")));
                 return true;
@@ -598,6 +602,12 @@ namespace Rice.Server.Packets.Game
         }
 
         // bot sai da sala (paciencia ou fim da corrida); quem estava assistindo entra no lugar
+        // 823 ObserverCount (DriftCity.exe 0x51d190): u16 = quantos estao assistindo ("Spectators: N" no topo da sala)
+        static void SendSpecCount(Room room)
+        {
+            Cast(room, 823, BitConverter.GetBytes((ushort) Math.Min(room.Spectators.Count, ushort.MaxValue)));
+        }
+
         static void BotLeaves(Room room, Member host, Member ai, string line, List<Tuple<RiceClient, string, string>> says)
         {
             uint s = ai.Serial;
@@ -1158,6 +1168,7 @@ namespace Rice.Server.Packets.Game
             Cast(room, 446, StateFrame(room));
             Cast(room, 621, ModifyFrame(room));
             foreach (var m in room.Members) Cast(room, 485, ReadyFrame(m));
+            SendSpecCount(room);
         }
 
         static void SetAiCarAttr(Member ai)
