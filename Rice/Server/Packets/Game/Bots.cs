@@ -859,15 +859,15 @@ namespace Rice.Server.Packets.Game
                         {
                             var others = rc.Characters.Where(x => !mine.Contains(x.ID)).ToList();
                             var ids = others.Select(x => x.ID).ToList();
-                            var cars = rc.Vehicles.Where(v => ids.Contains(v.CID)).ToList();
+                            var cars = rc.Vehicles.Where(vh => ids.Contains(vh.CID)).ToList();
                             foreach (var oc in others)
                             {
-                                var cv = cars.Where(v => v.CID == oc.ID).ToList();
-                                var v = cv.FirstOrDefault(g => g.CarID == oc.CurrentCarID) ?? cv.FirstOrDefault();
+                                var cv = cars.Where(vh => vh.CID == oc.ID).ToList();
+                                var ocar = cv.FirstOrDefault(g => g.CarID == oc.CurrentCarID) ?? cv.FirstOrDefault();
                                 alts[oc.ID] = new BotProfile
                                 {
-                                    Cid = oc.ID, Name = oc.Name, Level = oc.Level, Car = v != null ? v.CarType : 1,
-                                    Color = v != null && v.Color != 0 ? (uint) v.Color : 0x01010102, Avatar = oc.Avatar, Personality = "amigavel",
+                                    Cid = oc.ID, Name = oc.Name, Level = oc.Level, Car = ocar != null ? ocar.CarType : 1,
+                                    Color = ocar != null && ocar.Color != 0 ? (uint) ocar.Color : 0x01010102, Avatar = oc.Avatar, Personality = "amigavel",
                                     IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                                     InTutorial = cv.Count > 0 && cv.All(g => Rice.Game.Vehicle.IsTrainingType(g.CarType))
                                 };
