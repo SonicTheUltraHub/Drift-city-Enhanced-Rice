@@ -39,6 +39,7 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - Os bots assistindo agora aparecem em **"Spectators: N"** no topo da sala (pacote 823 ObserverCount, DriftCity.exe
   0x51d190: u16 = quantos assistem). Antes so falavam no chat e o contador ficava 0.
 - Cada sala sorteia quantos espectadores aceita: de 1 ate `BattleSpectatorsMax` (agora 5).
+- Quando abre uma vaga, o espectador entra de 2 a 10 s depois (antes entrava na hora); com mais vagas, um de cada vez.
 
 **Atualizacao 200 — CC no menu, sala da Battle Zone, espectadores, bots online, Drift Booster e pacote 3725:**
 - **Menu.bat > Saves:** agora muda o **CC** (moeda dourada). O CC e da CONTA (vale para todos os corredores dela):

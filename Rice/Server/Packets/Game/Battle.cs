@@ -89,7 +89,8 @@ namespace Rice.Server.Packets.Game
             public bool BackInRoom = true;                                                    // voce ja voltou para a tela da sala                      // bots entrando sozinhos na sua sala
             public HashSet<string> Kicked = new HashSet<string>(StringComparer.OrdinalIgnoreCase);   // tirados por voce: nao voltam
             public List<long> Spectators = new List<long>();          // bots assistindo (sala cheia): entram quando abrir vaga
-            public int SpecMax = -1;                                  // quantos espectadores essa sala aceita (sorteado: 1 ate BattleSpectatorsMax)
+            public int SpecMax = -1;
+            public bool SpecPending;                                  // um espectador ja vai entrar (2 a 10 s depois da vaga abrir)                                  // quantos espectadores essa sala aceita (sorteado: 1 ate BattleSpectatorsMax)
             public bool AfterRace;                                    // corrida acabou: alguns bots saem quando voce volta
             public Dictionary<uint, int> Gates = new Dictionary<uint, int>();   // portoes de cada carro na corrida (narracao)
             public List<uint> Order = new List<uint>();               // ordem pelos portoes (1o primeiro)
@@ -525,7 +526,7 @@ namespace Rice.Server.Packets.Game
                     // sala cheia: alguns ficam assistindo (espectadores) e entram quando abrir uma vaga
                     if (seat < 0) { AddSpectator(room, host, says); break; }
                     // vaga aberta: quem estava assistindo entra primeiro
-                    if (SpectatorTakesSeat(room, host, seat, says)) continue;
+                    if (room.Spectators.Count > 0) { ScheduleSpectator(room); break; }
                     var pool = Bots.All().Where(b => !b.IsAlt && b.AiIdx > 0 && !inRoom.Contains(b.Name) && !room.Kicked.Contains(b.Name)
                                                      && !party.Contains(b.Cid) && !IsRacing(b.Cid) && BotSocial.Online(b) && BotFits(arena, b)).ToList();
                     if (pool.Count == 0) break;
@@ -584,6 +585,36 @@ namespace Rice.Server.Packets.Game
                 "Lotou! Fico aqui na arquibancada esperando.")));
         }
 
+        // vaga aberta: o primeiro espectador entra de 2 a 10 s depois (o tempo de sair da arquibancada)
+        static void ScheduleSpectator(Room room)
+        {
+            if (room.SpecPending || room.Spectators.Count == 0) return;
+            room.SpecPending = true;
+            int ms = 2000 + Rng.Next(8001);
+            int rid = room.Id;
+            System.Threading.Tasks.Task.Delay(ms).ContinueWith(_ =>
+            {
+                var says = new List<Tuple<RiceClient, string, string>>();
+                try
+                {
+                    lock (Sync)
+                    {
+                        Room r;
+                        if (!Rooms.TryGetValue(rid, out r) || r != room) return;
+                        r.SpecPending = false;
+                        if (r.State != Wait || !r.Humans.Any()) return;
+                        var host = r.Humans.FirstOrDefault(m => m.Serial == r.Master) ?? r.Humans.First();
+                        int seat = -1;
+                        for (int i = 0; i < r.Capacity && i < Seats; i++) if (r.SeatList[i] == Open) { seat = i; break; }
+                        if (seat >= 0) SpectatorTakesSeat(r, host, seat, says);
+                        if (r.Spectators.Count > 0 && seat >= 0) ScheduleSpectator(r);   // mais vagas: o proximo vem depois
+                    }
+                }
+                catch (Exception ex) { Log.WriteError("Espectador entrando: " + ex.Message); room.SpecPending = false; }
+                foreach (var t in says) Bots.SayLater(t.Item1, 300, "room", t.Item2, t.Item3);
+            });
+        }
+
         static bool SpectatorTakesSeat(Room room, Member host, int seat, List<Tuple<RiceClient, string, string>> says)
         {
             while (room.Spectators.Count > 0)
@@ -621,7 +652,7 @@ namespace Rice.Server.Packets.Game
             Log.WriteLine("Sala {0}: {1} saiu ({2}).", room.Id, ai.Name, line);
             says.Add(Tuple.Create(host.Client, ai.Name, line));
             room.NextBotJoin = DateTime.UtcNow.AddSeconds(3 + Rng.NextDouble() * Math.Max(2, RiceServer.Config.BattleBotJoinSeconds));
-            if (seat >= 0 && seat < room.Capacity) SpectatorTakesSeat(room, host, seat, says);
+            if (seat >= 0 && seat < room.Capacity) ScheduleSpectator(room);
         }
 
         static void PatienceAndSeats(Room room, Member host, List<Tuple<RiceClient, string, string>> says)
