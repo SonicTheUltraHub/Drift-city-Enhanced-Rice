@@ -35,6 +35,15 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 202 — Turbo Start pela Option Part:**
+- O "PassiveAssist" da Drift Shop (Atualizacao 200) nao ligou o Turbo Start / Drift Booster: os itens postos saem.
+- O jogo so liga o Turbo Start pela propria Option Part (campo `partassist` da tabela de itens do cliente), nao pela
+  opcao do dock. Agora a fileira de docks completa com Turbo Start da uma vez a Option Part **Turbo Launch A**
+  (`op_B_0006`) e ela ja vai no quadrado de boost da fileira (109/110) se estiver livre; senao fica no inventario.
+  Use **Drift + frente com o carro parado**. Vale para o carro do RiceAdmin.
+- Drift Booster: nenhuma Option Part do jogo tem; so vem de fabrica em alguns carros (`car_assist` a_00247/a_00248:
+  Bugatti Veyron, RUF CTR3, Pagani Zonda Roadster...).
+
 **Atualizacao 201 — Espectadores aparecem na sala:**
 - Os bots assistindo agora aparecem em **"Spectators: N"** no topo da sala (pacote 823 ObserverCount, DriftCity.exe
   0x51d190: u16 = quantos assistem). Antes so falavam no chat e o contador ficava 0.

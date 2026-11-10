@@ -83,7 +83,8 @@ namespace Rice.Server.Packets.Game
         // "PassiveAssist" (categoria 41) da Drift Shop no carro. Estes itens sao nossos (texto DockTag): entram quando a
         // fileira fica completa e saem quando ela desfaz.
         public const string DockTag = "dock_row";
-        static readonly Dictionary<string, int> PassiveUids = new Dictionary<string, int> { { "a_00002", 10819 }, { "a_00247", 20612 }, { "a_00118", 10820 } };
+        // vazio: o PassiveAssist da Drift Shop nao ligou o Turbo Start / Drift Booster (Atualizacao 202); os que foram postos saem
+        static readonly Dictionary<string, int> PassiveUids = new Dictionary<string, int>();
         public static int PassiveUidOf(string assist)
         {
             int u;

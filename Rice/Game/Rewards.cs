@@ -289,6 +289,7 @@ namespace Rice.Game
                     var first = row[0];
                     string assist = LevelDockAssist(c, first);
                     want[first] = (uint) Math.Max(0, AssistTable.GetIndex(assist));
+                    try { GiveRowOption(c, car.CarID, row, assist); } catch (Exception ex) { Log.WriteError("Fileira de docks (option): " + ex.Message); }
                     int puid = Rice.Server.Packets.Game.VisualShop.PassiveUidOf(assist);
                     if (puid > 0)
                     {
@@ -297,8 +298,8 @@ namespace Rice.Game
                         set.Add(puid);
                     }
                 }
-            // O jogo mostra a opcao no dock, mas so LIGA o Turbo Start / Drift Booster pelo item "PassiveAssist" da
-            // Drift Shop (categoria 41) no carro: a fileira completa poe esse item no carro (e tira quando desfaz).
+            // (Atualizacao 200 tentou ligar pelo item "PassiveAssist" da Drift Shop: nao funcionou. Os que foram postos
+            // saem aqui: PassiveUidOf nao devolve mais nenhum.)
             try { Rice.Server.Packets.Game.VisualShop.SyncDockPassives(c, passives, client); }
             catch (Exception ex) { Log.WriteError("Fileira de docks (passiva): " + ex.Message); }
             // A opcao vai no PRIMEIRO espaco de opcao (o jogo liga Turbo Start / Drift Booster pelos espacos normais; no
@@ -319,6 +320,32 @@ namespace Rice.Game
                     c.SaveItemState(it);
                 }
             }
+        }
+
+        // O jogo so liga o Turbo Start pela "partassist" da propria Option Part (tabela de itens do cliente); a opcao
+        // no dock so aparece. Fileira completa com Turbo Start: ganha uma vez a Option Part "Turbo Launch A"
+        // (op_B_0006, Drift + frente com o carro parado) e ela ja vai no quadrado de boost da fileira se estiver livre.
+        // Drift Booster nao existe em nenhuma Option Part do jogo (so vem de fabrica em alguns carros).
+        const string TurboOption = "op_B_0006";
+        static void GiveRowOption(Character c, int carId, List<Item> row, string assist)
+        {
+            if (assist != TurboStart || row == null || row.Count < 4) return;
+            string key = c.CID + ":opt:" + carId + ":" + row[0].slot;
+            lock (DockSync) if (LevelDocks().ContainsKey(key)) return;
+            ushort slot = row[3].slot;
+            bool busy = c.Inventory.Any(i => i.state == 1 && i.curCarID == (uint) carId && i.slot == slot && i.itemEntry != null
+                                             && i.itemEntry.Category != null && i.itemEntry.Category.StartsWith("op_"));
+            Item it;
+            if (!c.GrantItem(TurboOption, 1, out it) || it == null) return;
+            bool on = !busy && c.EquipItem((int) it.invIdx, (short) slot, carId);
+            lock (DockSync)
+            {
+                LevelDocks()[key] = TurboOption;
+                try { CharFiles.WriteAllText(LevelDocksFile, Newtonsoft.Json.JsonConvert.SerializeObject(levelDocks)); } catch (Exception) { }
+            }
+            c.PendingNotices.Add(on ? "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start) no quadrado de boost. Use Drift + frente com o carro parado."
+                                    : "Fileira de docks completa: ganhou a Option Part Turbo Launch A (Turbo Start). Coloque no quadrado de boost do carro (Drift + frente com o carro parado).");
+            Log.WriteLine("Fileira de docks: {0} ganhou Turbo Launch A (carro {1}{2}).", c.Name, carId, on ? ", colocada" : "");
         }
 
         // id do dock: dock_S_N001 (tipo = indice 0..3, grau N/S/H/U, letra 1 = A).
