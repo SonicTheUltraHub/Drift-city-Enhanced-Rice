@@ -78,6 +78,55 @@ namespace Rice.Server.Packets.Game
         public static double MitoMult(Rice.Game.Character ch) { return Owns(ch, MitoDrink) ? 1 + RiceServer.Config.DrinkMitoBonus : 1; }
         public static int DropCount(Rice.Game.Character ch) { return Owns(ch, ItemDrink) ? Math.Max(1, RiceServer.Config.DrinkItemDrops) : 1; }
 
+        // ---- opcoes passivas das fileiras de docks de nivel -----------------------------------------------------------
+        // O Turbo Start / Drift Booster da fileira de docks aparece no dock, mas o jogo so liga a opcao pelo item
+        // "PassiveAssist" (categoria 41) da Drift Shop no carro. Estes itens sao nossos (texto DockTag): entram quando a
+        // fileira fica completa e saem quando ela desfaz.
+        public const string DockTag = "dock_row";
+        static readonly Dictionary<string, int> PassiveUids = new Dictionary<string, int> { { "a_00002", 10819 }, { "a_00247", 20612 }, { "a_00118", 10820 } };
+        public static int PassiveUidOf(string assist)
+        {
+            int u;
+            if (string.IsNullOrEmpty(assist) || !PassiveUids.TryGetValue(assist, out u) || !Table().ContainsKey(u)) return 0;
+            return u;
+        }
+
+        public static void SyncDockPassives(Rice.Game.Character ch, Dictionary<int, HashSet<int>> want, RiceClient client)
+        {
+            if (ch == null) return;
+            var mods = new List<KeyValuePair<VsItem, int>>();
+            var cars = new HashSet<int>();
+            lock (Sync)
+            {
+                var items = ItemsOf(ch);
+                var missing = new Dictionary<int, HashSet<int>>();
+                foreach (var kv in want ?? new Dictionary<int, HashSet<int>>()) missing[kv.Key] = new HashSet<int>(kv.Value);
+                foreach (var o in items.Where(o => o.Text == DockTag).ToList())
+                {
+                    HashSet<int> w;
+                    if (missing.TryGetValue(o.Car, out w) && w.Remove(o.Uid)) continue;
+                    items.Remove(o);
+                    mods.Add(new KeyValuePair<VsItem, int>(o, Removed));
+                    cars.Add(o.Car);
+                }
+                foreach (var kv in missing)
+                    foreach (int uid in kv.Value)
+                    {
+                        int inven = (items.Count == 0 ? 61 : Math.Max(61, items.Max(x => x.Inven))) + 1;
+                        var v = new VsItem { Inven = inven, Uid = uid, Car = kv.Key, State = OnCar, Text = DockTag, Ctime = Environment.TickCount };
+                        items.Add(v);
+                        mods.Add(new KeyValuePair<VsItem, int>(v, New));
+                        cars.Add(kv.Key);
+                        Shop s; Table().TryGetValue(uid, out s);
+                        Log.WriteLine("Fileira de docks: {0} no carro {1} ({2}).", s != null ? s.market : uid.ToString(), kv.Key, ch.Name);
+                    }
+                if (mods.Count > 0) Save();
+            }
+            if (client == null || mods.Count == 0) return;
+            SendMods(client, mods);
+            foreach (int car in cars) AfterChange(client, ch, car);
+        }
+
         static List<VsItem> ItemsOf(Rice.Game.Character ch)
         {
             if (store == null)

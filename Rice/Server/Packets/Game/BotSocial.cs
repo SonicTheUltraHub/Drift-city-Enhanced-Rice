@@ -163,7 +163,7 @@ namespace Rice.Server.Packets.Game
             return Encoding.Unicode.GetString(b, at, Math.Min(bytes, b.Length - at)).Split('\0')[0].Trim();
         }
 
-        // Quem esta online: sorteado de novo toda vez que voce entra num corredor (cerca de 1/3 fica offline).
+        // Quem esta online: sorteado de novo toda vez que voce entra num corredor (BotsOfflineChance fica offline; 0 = todos online).
         // Os da sua party e os especiais ficam sempre online.
         static HashSet<long> offline;
         static readonly Random OnRng = new Random();
@@ -175,7 +175,7 @@ namespace Rice.Server.Packets.Game
                 if (ch != null) foreach (var p in PartyBots(ch)) keep.Add(p.Cid);
                 var n = new HashSet<long>();
                 foreach (var b in Bots.All())
-                    if (!b.Special && !Bots.IsAce(b) && !b.NeoBot && !keep.Contains(b.Cid) && OnRng.NextDouble() < 0.34) n.Add(b.Cid);
+                    if (!b.Special && !Bots.IsAce(b) && !b.NeoBot && !keep.Contains(b.Cid) && OnRng.NextDouble() < RiceServer.Config.BotsOfflineChance) n.Add(b.Cid);
                 offline = n;
                 Log.WriteLine("Bots: {0} online agora (sorteio desta entrada).", Bots.All().Count - n.Count);
             }
@@ -188,7 +188,7 @@ namespace Rice.Server.Packets.Game
             if (b.Special || Bots.IsAce(b)) return true;
             if (b.MostWanted) return CrewLadder.AnyMostWanted();      // Most Wanted so aparece depois da LegendsDC
             var off = offline;
-            return off != null ? !off.Contains(b.Cid) : b.Cid % 3 != 0;
+            return off != null ? !off.Contains(b.Cid) : (RiceServer.Config.BotsOfflineChance <= 0 || b.Cid % 3 != 0);
         }
 
         public static uint SerialOf(Bots.BotProfile b) { return (uint) ((b.IsAlt ? 0x6000 : 0x7000) + (b.Cid % 0x0fff)); }

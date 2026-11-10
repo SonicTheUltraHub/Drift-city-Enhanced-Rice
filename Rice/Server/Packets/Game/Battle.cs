@@ -44,6 +44,7 @@ namespace Rice.Server.Packets.Game
             public string Name;
             // bot que aparece na sala como jogador (nome, nivel, carro) e vira IA so na corrida
             public bool AsPlayer; public uint LobbySerial;
+            public DateTime PatienceUntil = DateTime.MaxValue;   // bot que entrou sozinho: sai da sala se demorar para largar
 
             public bool IsAi { get { return Client == null; } }
             public uint Serial { get { return IsAi && AsPlayer ? LobbySerial : IsAi && Assigned ? (uint) (Key << 16 | (Driver & 0xffff)) : BaseSerial; } }
@@ -87,6 +88,11 @@ namespace Rice.Server.Packets.Game
             public DateTime ResultAt = DateTime.MinValue;                                     // fim da ultima corrida
             public bool BackInRoom = true;                                                    // voce ja voltou para a tela da sala                      // bots entrando sozinhos na sua sala
             public HashSet<string> Kicked = new HashSet<string>(StringComparer.OrdinalIgnoreCase);   // tirados por voce: nao voltam
+            public List<long> Spectators = new List<long>();          // bots assistindo (sala cheia): entram quando abrir vaga
+            public bool AfterRace;                                    // corrida acabou: alguns bots saem quando voce volta
+            public Dictionary<uint, int> Gates = new Dictionary<uint, int>();   // portoes de cada carro na corrida (narracao)
+            public List<uint> Order = new List<uint>();               // ordem pelos portoes (1o primeiro)
+            public DateTime NextTalk = DateTime.MinValue;             // proxima fala dos espectadores
             public int Area { get { return 900 + Id; } }
             public IEnumerable<Member> Humans { get { return Members.Where(m => !m.IsAi); } }
             public IEnumerable<Member> Ais { get { return Members.Where(m => m.IsAi); } }
@@ -501,6 +507,8 @@ namespace Rice.Server.Packets.Game
                 foreach (var room in Rooms.Values.ToList())
                 {
                     if (room.State != Wait || room.ChallengeHost != null || room.DuelBot != 0 || !room.Humans.Any()) continue;
+                    var host0 = room.Humans.FirstOrDefault(m => m.Serial == room.Master) ?? room.Humans.First();
+                    if (room.BackInRoom) PatienceAndSeats(room, host0, says);
                     if (DateTime.UtcNow < room.NextBotJoin) continue;
                     double gap = Math.Max(2, cfg.BattleBotJoinSeconds);
                     room.NextBotJoin = DateTime.UtcNow.AddSeconds(2 + Rng.NextDouble() * (gap - 2));   // ate BattleBotJoinSeconds
@@ -510,24 +518,18 @@ namespace Rice.Server.Packets.Game
                     {
                     int seat = -1;
                     for (int i = 0; i < room.Capacity && i < Seats; i++) if (room.SeatList[i] == Open) { seat = i; break; }
-                    if (seat < 0) break;
                     int arena = ArenaOfRoom(room.Channel, room.Type);
                     var inRoom = new HashSet<string>(room.Members.Select(m => m.Name ?? ""), StringComparer.OrdinalIgnoreCase);
                     var party = new HashSet<long>(BotSocial.PartyBots(host.Char).Select(x => x.Cid));
+                    // sala cheia: alguns ficam assistindo (espectadores) e entram quando abrir uma vaga
+                    if (seat < 0) { AddSpectator(room, host, says); break; }
+                    // vaga aberta: quem estava assistindo entra primeiro
+                    if (SpectatorTakesSeat(room, host, seat, says)) continue;
                     var pool = Bots.All().Where(b => !b.IsAlt && b.AiIdx > 0 && !inRoom.Contains(b.Name) && !room.Kicked.Contains(b.Name)
                                                      && !party.Contains(b.Cid) && !IsRacing(b.Cid) && BotSocial.Online(b) && BotFits(arena, b)).ToList();
                     if (pool.Count == 0) break;
                     var bb = pool[Rng.Next(pool.Count)];
-                    var ai = NewAi(room, bb.Level, bb.Name, bb.Car, bb.AiIdx);
-                    if (ai == null) break;
-                    ai.Driver = (int) (host.Serial & 0xffff);
-                    room.Members.Add(ai);
-                    room.SeatList[seat] = ai.Serial;
-                    MarkRacing(bb, 1800);
-                    Cast(room, 468, JoinFrame(room, ai));
-                    Cast(room, 485, ReadyFrame(ai));
-                    Cast(room, 621, ModifyFrame(room));
-                    Log.WriteLine("Sala {0}: {1} entrou sozinho no assento {2}.", room.Id, bb.Name, seat);
+                    if (!SeatBot(room, host, bb, seat)) break;
                     says.Add(Tuple.Create(host.Client, bb.Name, Pick("Opa, posso correr tambem?", "Entrei! Bora?", "Cheguei pra correr!", "Essa sala ta boa, to dentro.")));
                     }
                 }
@@ -535,6 +537,148 @@ namespace Rice.Server.Packets.Game
             foreach (var t in says) Bots.SayLater(t.Item1, 800, "room", t.Item2, t.Item3);
         }
         static string Pick(params string[] s) { return s[Rng.Next(s.Length)]; }
+
+        // ---- paciencia, saida depois da corrida e espectadores ----------------------------------------------------------
+        static DateTime PatienceFrom(DateTime now)
+        {
+            double s = RiceServer.Config.BattleBotPatienceSeconds;
+            return s <= 0 ? DateTime.MaxValue : now.AddSeconds(s * (0.6 + Rng.NextDouble()));
+        }
+
+        // poe um bot (que entrou sozinho) no assento; false = nao tem linha de IA / nao cabe
+        static bool SeatBot(Room room, Member host, Bots.BotProfile bb, int seat)
+        {
+            var ai = NewAi(room, bb.Level, bb.Name, bb.Car, bb.AiIdx);
+            if (ai == null) return false;
+            ai.Driver = (int) (host.Serial & 0xffff);
+            ai.PatienceUntil = PatienceFrom(DateTime.UtcNow);
+            room.Members.Add(ai);
+            room.SeatList[seat] = ai.Serial;
+            MarkRacing(bb, 1800);
+            Cast(room, 468, JoinFrame(room, ai));
+            Cast(room, 485, ReadyFrame(ai));
+            Cast(room, 621, ModifyFrame(room));
+            Log.WriteLine("Sala {0}: {1} entrou sozinho no assento {2}.", room.Id, bb.Name, seat);
+            return true;
+        }
+
+        static void AddSpectator(Room room, Member host, List<Tuple<RiceClient, string, string>> says)
+        {
+            var cfg = RiceServer.Config;
+            if (!cfg.BattleSpectators || room.Spectators.Count >= Math.Max(0, cfg.BattleSpectatorsMax) || Rng.NextDouble() > cfg.BattleSpectatorChance) return;
+            int arena = ArenaOfRoom(room.Channel, room.Type);
+            var inRoom = new HashSet<string>(room.Members.Select(m => m.Name ?? ""), StringComparer.OrdinalIgnoreCase);
+            var party = new HashSet<long>(BotSocial.PartyBots(host.Char).Select(x => x.Cid));
+            var pool = Bots.All().Where(b => !b.IsAlt && b.AiIdx > 0 && !inRoom.Contains(b.Name) && !room.Kicked.Contains(b.Name) && !room.Spectators.Contains(b.Cid)
+                                             && !party.Contains(b.Cid) && !IsRacing(b.Cid) && BotSocial.Online(b) && BotFits(arena, b)).ToList();
+            if (pool.Count == 0) return;
+            var sp = pool[Rng.Next(pool.Count)];
+            room.Spectators.Add(sp.Cid);
+            MarkRacing(sp, 1800);
+            Log.WriteLine("Sala {0}: {1} esta assistindo (sala cheia).", room.Id, sp.Name);
+            says.Add(Tuple.Create(host.Client, sp.Name, Pick("Sala cheia... vou ficar assistindo. Abriu vaga, eu entro!",
+                "To de espectador por enquanto. Alguem sai ai!", "Vou assistir essa, mas quero a proxima vaga!",
+                "Lotou! Fico aqui na arquibancada esperando.")));
+        }
+
+        static bool SpectatorTakesSeat(Room room, Member host, int seat, List<Tuple<RiceClient, string, string>> says)
+        {
+            while (room.Spectators.Count > 0)
+            {
+                long cid = room.Spectators[0];
+                room.Spectators.RemoveAt(0);
+                var sp = Bots.ByCid(cid);
+                if (sp == null) continue;
+                if (!SeatBot(room, host, sp, seat)) { EndRacing(sp, null); continue; }
+                says.Add(Tuple.Create(host.Client, sp.Name, Pick("Abriu vaga! Agora e a minha vez.", "Finalmente! Saindo da arquibancada.",
+                    "Opa, vaga livre: to dentro!", "Cansei de assistir, agora eu corro!")));
+                return true;
+            }
+            return false;
+        }
+
+        // bot sai da sala (paciencia ou fim da corrida); quem estava assistindo entra no lugar
+        static void BotLeaves(Room room, Member host, Member ai, string line, List<Tuple<RiceClient, string, string>> says)
+        {
+            uint s = ai.Serial;
+            int seat = Array.IndexOf(room.SeatList, s);
+            room.Members.Remove(ai);
+            ReplaceSeat(room, s, Open);
+            Cast(room, 469, LeaveFrame(room, s));
+            Cast(room, 621, ModifyFrame(room));
+            var kb = Bots.ByName(ai.Name);
+            if (kb != null) { EndRacing(kb, null); room.Kicked.Add(kb.Name); }   // nao volta nessa sala
+            Log.WriteLine("Sala {0}: {1} saiu ({2}).", room.Id, ai.Name, line);
+            says.Add(Tuple.Create(host.Client, ai.Name, line));
+            room.NextBotJoin = DateTime.UtcNow.AddSeconds(3 + Rng.NextDouble() * Math.Max(2, RiceServer.Config.BattleBotJoinSeconds));
+            if (seat >= 0 && seat < room.Capacity) SpectatorTakesSeat(room, host, seat, says);
+        }
+
+        static void PatienceAndSeats(Room room, Member host, List<Tuple<RiceClient, string, string>> says)
+        {
+            var cfg = RiceServer.Config;
+            var party = new HashSet<string>(BotSocial.PartyBots(host.Char).Select(x => x.Name), StringComparer.OrdinalIgnoreCase);
+            var mine = room.Ais.Where(a => a.Name != null && !party.Contains(a.Name) && Bots.ByName(a.Name) != null).ToList();
+            var now = DateTime.UtcNow;
+            if (room.AfterRace)
+            {
+                room.AfterRace = false;
+                // fim da corrida: alguns vao embora (cada um com BattleBotLeaveAfterRaceChance)
+                foreach (var ai in mine.Where(a => Rng.NextDouble() < cfg.BattleBotLeaveAfterRaceChance).ToList())
+                    BotLeaves(room, host, ai, Pick("Boa corrida, galera! Vou nessa.", "Valeu pela corrida, vou dar uma volta na cidade.",
+                        "Chega por hoje, ate a proxima!", "GG! Vou ali e ja volto... talvez."), says);
+                foreach (var ai in room.Ais) if (ai.PatienceUntil != DateTime.MaxValue) ai.PatienceUntil = PatienceFrom(now);
+                return;
+            }
+            // demorou para largar: um de cada vez perde a paciencia
+            var bored = mine.Where(a => a.PatienceUntil <= now).OrderBy(a => a.PatienceUntil).FirstOrDefault();
+            if (bored != null)
+                BotLeaves(room, host, bored, Pick("Demorou demais pra largar... fui!", "Cansei de esperar, vou correr em outra sala.",
+                    "Vai largar ou nao? To saindo.", "Zzz... acordo na proxima. Fui!"), says);
+        }
+
+        // ---- narracao dos espectadores (portoes de cada carro) ----------------------------------------------------------
+        static string NameOf(Room room, uint key)
+        {
+            var m = room.Members.FirstOrDefault(x => (x.IsAi ? 0x80000000u | (uint) x.Key : x.Serial) == key);
+            return m != null ? m.Name : null;
+        }
+
+        static void Narrate(Room room, uint key)
+        {
+            var cfg = RiceServer.Config;
+            int g; room.Gates.TryGetValue(key, out g); room.Gates[key] = ++g;
+            int before = room.Order.IndexOf(key);
+            if (before < 0) { room.Order.Add(key); before = room.Order.Count - 1; }
+            // sobe na ordem enquanto tiver mais portoes que o da frente
+            int pos = before;
+            while (pos > 0) { int f; room.Gates.TryGetValue(room.Order[pos - 1], out f); if (f >= g) break; pos--; }
+            if (pos != before) { room.Order.RemoveAt(before); room.Order.Insert(pos, key); }
+            if (!cfg.BattleSpectators || room.Spectators.Count == 0 || DateTime.UtcNow < room.NextTalk) return;
+            var host = room.Humans.FirstOrDefault();
+            var sp = Bots.ByCid(room.Spectators[Rng.Next(room.Spectators.Count)]);
+            if (host == null || sp == null) return;
+            string me = NameOf(room, key), text = null;
+            if (pos < before && me != null)
+            {
+                string passed = NameOf(room, room.Order[pos + 1]);
+                text = pos == 0 ? Pick("{0} assumiu a ponta! Que ultrapassagem linda!", "Olha o {0}! Passou o {1} e agora lidera!", "{0} pra cima do {1}... e passou! Primeiro lugar!")
+                                : Pick("Que ultrapassagem linda do {0} em cima do {1}!", "{0} passou o {1}! Que manobra!", "Uau, o {0} deixou o {1} pra tras!", "{0} mergulhou por dentro e passou o {1}!");
+                text = string.Format(text, me, passed ?? "rival");
+            }
+            else if (room.Order.Count >= 3 && Rng.NextDouble() < 0.35)
+            {
+                int lead; room.Gates.TryGetValue(room.Order[0], out lead);
+                uint lastKey = room.Order[room.Order.Count - 1];
+                int last; room.Gates.TryGetValue(lastKey, out last);
+                string ln = NameOf(room, lastKey), first = NameOf(room, room.Order[0]);
+                if (lead - last >= 4 && ln != null) text = string.Format(Pick("{0} ficou muito pra tras... acorda, piloto!", "Alguem avisa o {0} que a corrida ja comecou!", "{0} ta passeando, muito longe do pelotao!"), ln);
+                else if (first != null) text = string.Format(Pick("{0} segue liderando!", "Corrida apertada! {0} na frente por enquanto.", "Que disputa! {0} ainda lidera."), first);
+            }
+            if (text == null) return;
+            room.NextTalk = DateTime.UtcNow.AddSeconds(Math.Max(3, cfg.BattleNarratorSeconds) * (0.8 + Rng.NextDouble() * 0.6));
+            Bots.SayLater(host.Client, 200, "room", sp.Name, text);
+        }
 
         // mano a mano (escada de crews): sala com o nome do bot e da crew e so 2 lugares (ele e voce)
         public static Challenge OpenDuel(Bots.BotProfile host, string title, double seconds, Bots.BotProfile mate = null)
@@ -952,7 +1096,9 @@ namespace Rice.Server.Packets.Game
         static void RedressAll(Room room)
         {
             room.BackInRoom = true;
-            foreach (var ai in room.Ais.Where(a => !a.AsPlayer && Bots.ByName(a.Name) != null).ToList()) Redress(room, ai, true);
+            bool any = false;
+            foreach (var ai in room.Ais.Where(a => !a.AsPlayer && Bots.ByName(a.Name) != null).ToList()) { Redress(room, ai, true); any = true; }
+            if (any || room.AfterRace) Resync(room);
         }
 
         // 516 (sem nome no jogo): chega duas vezes no fim da corrida - 01-00-FF-FF-FF-FF com o resultado na tela e
@@ -989,14 +1135,29 @@ namespace Rice.Server.Packets.Game
         }
 
         // troca na sala: sai com o serial antigo e entra com o novo no mesmo assento
+        // O jogo pode conhecer o bot por mais de um serial (o da sala, o de IA e o de IA com piloto do 625): saia com
+        // todos antes de entrar de novo. Antes so saia com um, e depois da corrida a sala ficava 16/8 (o bot duplicado).
         static void Redress(Room room, Member ai, bool asPlayer)
         {
             uint old = ai.Serial;
-            Cast(room, 469, LeaveFrame(room, old));
+            var olds = new List<uint> { old, (uint) (ai.Key << 16), (uint) (ai.Key << 16 | (ai.Driver & 0xffff)) };
+            if (ai.LobbySerial != 0) olds.Add(ai.LobbySerial);
+            foreach (var s in olds.Distinct()) Cast(room, 469, LeaveFrame(room, s));
             if (asPlayer) DressAsPlayer(ai); else { DressAsAi(ai); ai.Assigned = false; }
             ReplaceSeat(room, old, ai.Serial);
             Cast(room, 468, JoinFrame(room, ai));
             Cast(room, 485, ReadyFrame(ai));
+        }
+
+        // manda a sala inteira de novo (mestre, estado com todos os membros, assentos e prontos): o jogo refaz a lista
+        // e a contagem (ex.: 8/8) fica certa
+        static void Resync(Room room)
+        {
+            if (!RiceServer.Config.BattleRoomResync || room.State != Wait) return;
+            Cast(room, 622, MasterFrame(room));
+            Cast(room, 446, StateFrame(room));
+            Cast(room, 621, ModifyFrame(room));
+            foreach (var m in room.Members) Cast(room, 485, ReadyFrame(m));
         }
 
         static void SetAiCarAttr(Member ai)
@@ -1263,6 +1424,8 @@ namespace Rice.Server.Packets.Game
                     }
                     else EndRacing(bb, "Ok, sai da sala com voce. To indo te encontrar!");
                 }
+                foreach (var sp in room.Spectators.Select(Bots.ByCid).Where(x => x != null)) EndRacing(sp, null);
+                room.Spectators.Clear();
                 if (room.Timer != null) room.Timer.Dispose();
                 Rooms.Remove(room.Id);
                 Log.WriteLine("Sala {0} fechada.", room.Id);
@@ -1338,6 +1501,7 @@ namespace Rice.Server.Packets.Game
             room.RankCounter = 0;
             room.FirstEnd = null;
             room.CardsTaken.Clear(); room.CardPicked.Clear();
+            room.Gates.Clear(); room.Order.Clear(); room.NextTalk = DateTime.UtcNow.AddSeconds(8);
             room.Racers = room.Humans.Select(m => m.Serial).ToList();
             room.Waiting = new HashSet<uint>(room.Racers);
             foreach (var m in room.Members) { m.Loaded = m.IsAi; m.Ended = false; m.EndType = 0; m.Rank = 0; m.Record = 0; }
@@ -1451,7 +1615,9 @@ namespace Rice.Server.Packets.Game
                 if (room == null || room.State != Racing) return;
                 var me = MemberOf(room, packet.Sender);
                 uint who = BitConverter.ToUInt32(p, 0);
-                if (me != null && who != me.Serial && ByCar(room, who) != null)
+                var gateAi = me != null && who != me.Serial ? ByCar(room, who) : null;
+                try { Narrate(room, gateAi != null ? 0x80000000u | (uint) gateAi.Key : (me != null ? me.Serial : who)); } catch (Exception ex) { Log.WriteError("Narracao: " + ex.Message); }
+                if (gateAi != null)
                 {
                     Cast(room, 494, Build(w => { w.Write(who); w.Write(0); }));
                     return;
@@ -1504,6 +1670,13 @@ namespace Rice.Server.Packets.Game
                 }));
                 if (endType == Finished && room.FirstEnd == null)
                 {
+                    if (RiceServer.Config.BattleSpectators && room.Spectators.Count > 0)
+                    {
+                        var sp = Bots.ByCid(room.Spectators[Rng.Next(room.Spectators.Count)]);
+                        var hh = room.Humans.FirstOrDefault();
+                        if (sp != null && hh != null)
+                            Bots.SayLater(hh.Client, 300, "room", sp.Name, string.Format(Pick("{0} cruzou a linha em primeiro! Que corrida!", "VITORIA do {0}! Arquibancada em pe!", "E o {0} leva essa! Que corridao!"), m.Name));
+                    }
                     room.FirstEnd = endTime;
                     int fin = (int) (Math.Max(3, RiceServer.Config.BattleFinishSeconds) * 1000);
                     Cast(room, 495, BitConverter.GetBytes(endTime + fin));
@@ -1655,6 +1828,7 @@ namespace Rice.Server.Packets.Game
             room.State = Wait;
             room.ResultAt = DateTime.UtcNow;
             room.BackInRoom = false;
+            room.AfterRace = true;
             room.Waiting.Clear();
             TeamColors(room, false);
             foreach (var ai in room.Ais)

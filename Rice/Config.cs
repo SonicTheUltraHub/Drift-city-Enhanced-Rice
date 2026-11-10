@@ -391,6 +391,18 @@ namespace Rice
         public bool BattleBotsJoinRoom = true;              // bots entram sozinhos na sala que voce cria (voce tira clicando no assento)
         public double BattleBotJoinSeconds = 12;            // entra mais gente a cada 2 ate N segundos
         public int BattleBotJoinMax = 3;                    // de 1 ate N bots de uma vez               // Leo Patrol TW/USA: so o admin tem; nenhum bot (cidade, corrida, troca, leilao)
+        // Sala da Battle Zone: depois da corrida manda a sala inteira de novo ao voltar (a contagem fica certa: 8/8, nao 16/8).
+        public bool BattleRoomResync = true;
+        // Paciencia: bot que entrou sozinho sai da sala se voce demorar para largar (entre 0,6x e 1,6x N segundos; 0 = nunca).
+        public double BattleBotPatienceSeconds = 150;
+        // No fim da corrida, chance de cada bot (que nao e da sua party) sair da sala quando voce volta para ela.
+        public double BattleBotLeaveAfterRaceChance = 0.2;
+        // Espectadores: com a sala cheia, bots ficam assistindo (ate BattleSpectatorsMax, chance BattleSpectatorChance a cada
+        // tentativa), narram a corrida no chat da sala (no maximo uma fala a cada ~BattleNarratorSeconds) e entram quando abre vaga.
+        public bool BattleSpectators = true;
+        public int BattleSpectatorsMax = 3;
+        public double BattleSpectatorChance = 0.5;
+        public double BattleNarratorSeconds = 8;
         // Posicao das IAs no grid (flag do cliente BattleZone.FrontAi): 0 = ao lado do jogador e visiveis na apresentacao.
         public int BattleFrontAi = 0;
         // Evento especial: "natal" (neve, arvore de Natal, roupa de Papai Noel), "valentine", "halloween",
@@ -477,6 +489,8 @@ namespace Rice
         public double PartyBotLicenseBoost = 3;
         // Mostra os bots como "online" (na cidade) na lista de membros da crew.
         public bool BotsAppearOnline = true;
+        // Chance de cada bot ficar offline a cada entrada (0 = todos online; 0.34 = cerca de 1/3 offline, como antes).
+        public double BotsOfflineChance = 0;
         // Bots respondem no chat da crew quando voce escreve no canal "team".
         public bool BotsCrewChat = true;
         // Bonus por bot na party nas recompensas de HUV (0.1 = +10% por bot).

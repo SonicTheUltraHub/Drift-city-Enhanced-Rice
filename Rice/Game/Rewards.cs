@@ -278,16 +278,29 @@ namespace Rice.Game
         }
 
         // poe a opcao (Turbo Start / Drift Booster) no dock de velocidade de cada fileira completa e tira dos outros
-        public static void UpdateDockRows(Character c)
+        public static void UpdateDockRows(Character c, RiceClient client = null)
         {
             if (c == null || c.Inventory == null) return;
             var want = new Dictionary<Item, uint>();
+            var passives = new Dictionary<int, HashSet<int>>();
             foreach (var car in c.Garage)
                 foreach (var row in CompleteDockRows(c, car.CarID))
                 {
                     var first = row[0];
-                    want[first] = (uint) Math.Max(0, AssistTable.GetIndex(LevelDockAssist(c, first)));
+                    string assist = LevelDockAssist(c, first);
+                    want[first] = (uint) Math.Max(0, AssistTable.GetIndex(assist));
+                    int puid = Rice.Server.Packets.Game.VisualShop.PassiveUidOf(assist);
+                    if (puid > 0)
+                    {
+                        HashSet<int> set;
+                        if (!passives.TryGetValue(car.CarID, out set)) { set = new HashSet<int>(); passives[car.CarID] = set; }
+                        set.Add(puid);
+                    }
                 }
+            // O jogo mostra a opcao no dock, mas so LIGA o Turbo Start / Drift Booster pelo item "PassiveAssist" da
+            // Drift Shop (categoria 41) no carro: a fileira completa poe esse item no carro (e tira quando desfaz).
+            try { Rice.Server.Packets.Game.VisualShop.SyncDockPassives(c, passives, client); }
+            catch (Exception ex) { Log.WriteError("Fileira de docks (passiva): " + ex.Message); }
             // A opcao vai no PRIMEIRO espaco de opcao (o jogo liga Turbo Start / Drift Booster pelos espacos normais; no
             // terceiro espaco, usado desde a Atualizacao 79, ela nao funcionava no carro). Se o primeiro espaco ja tiver
             // outra opcao (Convert), vai no terceiro como antes.

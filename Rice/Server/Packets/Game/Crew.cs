@@ -329,7 +329,7 @@ namespace Rice.Server.Packets.Game
                 var b = Bots.ByCid(cid);
                 if (b == null) return null;
                 name = b.Name; level = b.Level; car = b.Car; color = b.Color; joined = b.Joined;
-                online = RiceServer.Config.BotsAppearOnline && (cid % 3 != 0);
+                online = RiceServer.Config.BotsAppearOnline && (RiceServer.Config.BotsOfflineChance <= 0 || cid % 3 != 0);
                 serial = online ? (int) (0x7000 + (cid % 0x0fff)) : 0;
             }
             BitConverter.GetBytes(cid).CopyTo(o, 0);

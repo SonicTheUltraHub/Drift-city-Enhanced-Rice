@@ -66,14 +66,14 @@ namespace Rice
         }
 
         // ------------------------------------------------------------------------------------------------ saves
-        class Acc { public long ID; public string Name; public List<Chr> Chars = new List<Chr>(); }
+        class Acc { public long ID; public string Name; public long Credits; public List<Chr> Chars = new List<Chr>(); }
         class Chr { public long ID; public string Name; public int Level; public long Mito; public int Cars; public int Items; }
 
         static List<Acc> LoadAccounts()
         {
             using (var rc = Database.GetContext())
             {
-                var accs = rc.Users.OrderBy(u => u.ID).ToList().Select(u => new Acc { ID = u.ID, Name = u.Name }).ToList();
+                var accs = rc.Users.OrderBy(u => u.ID).ToList().Select(u => new Acc { ID = u.ID, Name = u.Name, Credits = u.Credits }).ToList();
                 var chars = rc.Characters.ToList();
                 var cars = rc.Vehicles.GroupBy(v => v.CID).Select(g => new { g.Key, N = g.Count() }).ToList().ToDictionary(x => x.Key, x => x.N);
                 var items = rc.Items.GroupBy(v => v.CID).Select(g => new { g.Key, N = g.Count() }).ToList().ToDictionary(x => x.Key, x => x.N);
@@ -100,7 +100,7 @@ namespace Rice
                 {
                     var a = accs[i];
                     string tag = a.Name == AdminName() ? "  [admin]" : "";
-                    Console.WriteLine(" {0}) {1}{2} - {3} corredor(es)", i + 1, a.Name, tag, a.Chars.Count);
+                    Console.WriteLine(" {0}) {1}{2} - {3} corredor(es), {4:N0} CC", i + 1, a.Name, tag, a.Chars.Count, a.Credits);
                     foreach (var c in a.Chars) Console.WriteLine("       - {0} (nivel {1}, {2:N0} mito, {3} carro(s), {4} item(ns))", c.Name, c.Level, c.Mito, c.Cars, c.Items);
                 }
                 Console.WriteLine();
@@ -138,14 +138,17 @@ namespace Rice
                 if (a == null) return;
                 Header("Conta " + a.Name);
                 Intro("Escolha o numero de um corredor para mudar nome, nivel, mito ou o V de um carro.",
+                      "C muda o CC (moeda dourada, e da conta: vale para todos os corredores dela),",
                       "R renomeia a conta (o nome do login), A apaga a conta inteira, P abre a pasta dela.");
+                Console.WriteLine(" CC (moeda dourada): {0:N0}", a.Credits);
                 for (int i = 0; i < a.Chars.Count; i++)
                     Console.WriteLine(" {0}) {1} (nivel {2}, {3:N0} mito)", i + 1, a.Chars[i].Name, a.Chars[i].Level, a.Chars[i].Mito);
                 Console.WriteLine();
-                Console.WriteLine(" R) Renomear a conta   A) Apagar a conta   P) Abrir a pasta   0) Voltar");
+                Console.WriteLine(" C) Mudar CC   R) Renomear a conta   A) Apagar a conta   P) Abrir a pasta   0) Voltar");
                 string s = Ask("Escolha um corredor ou opcao");
                 if (s == "0" || s == "") return;
-                if (s.Equals("r", StringComparison.OrdinalIgnoreCase)) RenameAccount(a);
+                if (s.Equals("c", StringComparison.OrdinalIgnoreCase)) ChangeCredits(a.ID);
+                else if (s.Equals("r", StringComparison.OrdinalIgnoreCase)) RenameAccount(a);
                 else if (s.Equals("a", StringComparison.OrdinalIgnoreCase)) { if (DeleteAccount(a)) return; }
                 else if (s.Equals("p", StringComparison.OrdinalIgnoreCase)) OpenFolder(Path.GetFullPath(Path.Combine(Paths.Save, Paths.Safe(a.Name))));
                 else
@@ -154,6 +157,17 @@ namespace Rice
                     if (int.TryParse(s, out k) && k >= 1 && k <= a.Chars.Count) CharMenu(a, a.Chars[k - 1].ID);
                 }
             }
+        }
+
+        // CC (moeda dourada / Credits) fica na conta, nao no corredor.
+        static long ChangeCredits(long uid)
+        {
+            long m;
+            if (!long.TryParse(Ask("CC novo (moeda dourada)").Replace(".", "").Replace(",", ""), out m) || m < 0 || !CanWrite()) return -1;
+            if (m > uint.MaxValue) m = uint.MaxValue;
+            using (var rc = Database.GetContext()) { var u = rc.Users.Find(uid); if (u == null) return -1; u.Credits = m; rc.SaveChanges(); }
+            Ok("CC mudado para " + m.ToString("N0") + ".");
+            return m;
         }
 
         static void RenameAccount(Acc a)
@@ -218,13 +232,13 @@ namespace Rice
                 }
                 Header("Corredor " + c.Name + " (conta " + a.Name + ")");
                 Intro("1 muda o nome, 2 o nivel (a exp acompanha), 3 o mito, 4 o V de um carro da garagem,",
-                      "5 apaga o corredor e 6 abre a pasta dele.");
-                Console.WriteLine(" Nivel {0} | {1:N0} mito | {2} carro(s)", c.Level, c.Mito, cars.Count);
+                      "5 apaga o corredor, 6 abre a pasta dele e 7 muda o CC (moeda dourada, e da conta inteira).");
+                Console.WriteLine(" Nivel {0} | {1:N0} mito | {2:N0} CC (da conta) | {3} carro(s)", c.Level, c.Mito, a.Credits, cars.Count);
                 foreach (var v in cars)
                     Console.WriteLine("   carro {0}: {1} V{2}{3}", v.CarID, CarName(v.CarType), v.Grade, v.CarID == c.CurrentCarID ? "  (atual)" : "");
                 Console.WriteLine();
                 Console.WriteLine(" 1) Renomear   2) Mudar nivel   3) Mudar mito   4) Mudar o V de um carro");
-                Console.WriteLine(" 5) Apagar o corredor   6) Abrir a pasta   0) Voltar");
+                Console.WriteLine(" 5) Apagar o corredor   6) Abrir a pasta   7) Mudar CC   0) Voltar");
                 switch (Ask("Escolha"))
                 {
                     case "1": RenameChar(a, c); break;
@@ -265,6 +279,7 @@ namespace Rice
                         Ok("Corredor apagado.");
                         return;
                     case "6": OpenFolder(Path.GetFullPath(Path.Combine(Paths.Save, Paths.Safe(a.Name), Paths.Safe(c.Name)))); break;
+                    case "7": { long n = ChangeCredits(a.ID); if (n >= 0) a.Credits = n; break; }
                     case "0": case "": return;
                 }
             }

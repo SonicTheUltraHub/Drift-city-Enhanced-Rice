@@ -642,7 +642,7 @@ namespace Rice.Game
 
         public void FlushModInfo(RiceClient client)
         {
-            Rewards.UpdateDockRows(this);
+            Rewards.UpdateDockRows(this, client);
             // peca nova da Neo City ja vem com a durabilidade cheia (antes so no proximo minuto: aparecia 1/max)
             try { Rice.Server.Packets.Game.NeoDurability.Prepare(this); } catch (Exception) { }
             var mods = PendingItemMods.ToArray();

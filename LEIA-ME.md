@@ -35,6 +35,28 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 200 — CC no menu, sala da Battle Zone, espectadores, bots online, Drift Booster e pacote 3725:**
+- **Menu.bat > Saves:** agora muda o **CC** (moeda dourada). O CC e da CONTA (vale para todos os corredores dela):
+  na tela da conta, `C) Mudar CC`; na tela do corredor, `7) Mudar CC`. A lista de contas mostra o CC de cada uma.
+- **Battle Zone - sala 16/8 depois da corrida:** o jogo conhecia o bot por mais de um numero (o da sala e o de IA da
+  corrida) e, ao voltar para a sala, ele saia so com um: ficava duplicado (16/8, 15/8...). Agora sai com todos e a sala
+  inteira e mandada de novo quando voce volta (`BattleRoomResync`).
+- **Paciencia dos bots:** bot que entrou sozinho na sua sala vai embora se voce demorar para largar (um de cada vez,
+  `BattleBotPatienceSeconds`, 150 s em media). No fim da corrida, cada bot tem 20% de chance de sair quando voce volta
+  para a sala (`BattleBotLeaveAfterRaceChance`). Bots da sua party nao saem.
+- **Espectadores:** com a sala cheia, ate 3 bots ficam assistindo (`BattleSpectators`, `BattleSpectatorsMax`,
+  `BattleSpectatorChance`). Eles narram a corrida no chat da sala ("Que ultrapassagem linda do X em cima do Y!",
+  "Z ficou muito pra tras...", quem lidera, quem cruzou primeiro) e, quando abre uma vaga, entram no lugar.
+  A narracao segue os portoes da pista; no maximo uma fala a cada ~8 s (`BattleNarratorSeconds`).
+- **Bots online:** agora TODOS os bots ficam online (antes cerca de 1/3 ficava offline a cada entrada).
+  `BotsOfflineChance` (0 = todos online; 0.34 = como antes).
+- **Drift Booster / Turbo Start das fileiras de docks (pacote de nivel):** a opcao aparecia no dock mas nao funcionava.
+  O jogo so liga essas opcoes pelo item "PassiveAssist" da Drift Shop (categoria 41) no carro. Agora, com a fileira
+  completa, o carro ganha o PassiveAssist (DriftBooster / TurboStart) junto; desfazendo a fileira, ele sai. Vale tambem
+  para o carro de policia do RiceAdmin. (Teste: Shift + frente depois do drift.)
+- **Pacote 3725 (0xE8D) "unknown packet":** o jogo manda sozinho um valor do carro (soma de dois atributos, ex.: 1310)
+  quando ele muda, sem esperar resposta. Agora o servidor recebe e guarda (aparece no log uma vez por valor).
+
 **Atualizacao 199 — Nome:** o projeto passa a se chamar so **Enhanced Rice** (sem "V1"); o zip e a pasta do projeto
 agora sao `Enhanced Rice`. Codigo fonte tambem no GitHub (SonicTheUltraHub/drift-city-enhanced-rice).
 

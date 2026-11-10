@@ -10,6 +10,26 @@ namespace Rice.Server.Packets.Game
 {
     public static class Misc
     {
+        // 3725 (0xE8D): o DriftCity.exe (funcao 0x788750 -> 0x867b50) soma dois valores float do carro (campos +0x9e4 e
+        // +0xb84 do jogador) e manda so esse float (4 bytes) quando ele muda, sem esperar resposta (nao tem handler de
+        // resposta no cliente). Pelo valor (ex.: 1310) e o total do carro reportado ao servidor. Antes caia como
+        // "unknown packet"; agora so guardamos o ultimo valor (aparece no log uma vez quando muda).
+        public static readonly Dictionary<ulong, float> ReportedCarTotal = new Dictionary<ulong, float>();
+        [RicePacket(3725, RiceServer.ServerType.Game)]
+        public static void CarTotalReport(RicePacket packet)
+        {
+            if (packet.Buffer == null || packet.Buffer.Length < 4) return;
+            float v = BitConverter.ToSingle(packet.Buffer, 0);
+            ulong key = (ulong) packet.Sender.GetHashCode();
+            float old;
+            lock (ReportedCarTotal)
+            {
+                if (ReportedCarTotal.TryGetValue(key, out old) && Math.Abs(old - v) < 0.01f) return;
+                ReportedCarTotal[key] = v;
+            }
+            Log.WriteLine("Carro: total reportado pelo jogo (3725) = {0}", v);
+        }
+
         [RicePacket(784, RiceServer.ServerType.Game)]
         public static void GetDateTime(RicePacket packet)
         {
