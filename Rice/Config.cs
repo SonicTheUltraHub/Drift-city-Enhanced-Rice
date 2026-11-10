@@ -575,7 +575,7 @@ namespace Rice
         public double AltRewardShare = 1.0;
         // Corredores das OUTRAS contas (outros logins) tambem viram bots seus (amigos, party, ganham junto); nao fazem nada sozinhos.
         public bool AltsAllAccounts = true;
-        // Seus outros corredores (de todas as contas) ficam sempre estacionados no lobby do Driver Dome.
+        // Seus outros corredores (de todas as contas) ficam sempre no lobby do Driver Dome (parados ou andando).
         public bool AltsInLobby = true;
         public double PartyBotExpShare = 0.5;          // bots da party (nao os seus corredores) ganham essa parte da sua exp/mito
         public bool PartyBotExpTable = true;           // ... e mostram no chat da party: exp p/ o proximo nivel e progresso das licencas

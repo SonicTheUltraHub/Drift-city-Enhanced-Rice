@@ -44,9 +44,12 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   O instalador aplica a tabela nova (patch do Init_us e, em outros clientes, pela tabela). **Instale de novo** para o
   jogo mostrar os precos novos.
 - **Todos os corredores viram bots:** os corredores de TODAS as contas (outros logins), e nao so os da mesma conta,
-  viram bots seus: aparecem na lista de amigos, podem entrar na party, ganham junto (`AltRewardShare`) e ficam sempre
-  estacionados no lobby do Driver Dome. Eles nao fazem nada sozinhos (nao compram, nao vendem, nao correm sozinhos).
+  viram bots seus: aparecem na lista de amigos, podem entrar na party, ganham exp e mito junto (`AltRewardShare`) e
+  ficam sempre no lobby do Driver Dome (parados ou andando). No maximo andam: nao compram, nao vendem, nao correm sozinhos.
   `AltsAllAccounts`, `AltsInLobby`.
+- **Troca com o seu outro corredor:** agora da (antes pedia para entrar com ele). Voce so da: coloque itens do
+  inventario (fora do carro; a pilha inteira, com pontos, opcoes e durabilidade) e mito, confirme, e vai tudo para ele.
+  Carro: use a caixa de carro.
 - **Stickers:** o registro do sticker, a lista da comunidade, a imagem e o "colar no carro" (salvar) ainda nao tem
   resposta do servidor (o jogo nao guarda nada). Agora esses pacotes aparecem no log com o conteudo ("Sticker: ...")
   para montar isso: registre um sticker, abra a lista da comunidade e cole um no carro, e mande o log.

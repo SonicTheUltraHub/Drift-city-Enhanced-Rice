@@ -604,6 +604,19 @@ namespace Rice.Server.Packets.Game
         }
 
         // Corredores da conta (alts) na party ganham junto: exp e mito x AltRewardShare.
+        // personagem de um outro corredor seu (mesma conta: o que ja esta carregado; outra conta: o que esta online agora
+        // ou carregado do banco). null = nao e corredor seu.
+        public static Rice.Game.Character AltCharacter(Rice.Game.Player player, Bots.BotProfile b)
+        {
+            if (b == null || !b.IsAlt) return null;
+            var own = player != null && player.Characters != null ? player.Characters.FirstOrDefault(x => x != null && (long) x.CID == b.Cid) : null;
+            if (own != null) return own;
+            var on = RiceServer.GetPlayers().Where(p => p != null && p.ActiveCharacter != null).Select(p => p.ActiveCharacter).FirstOrDefault(x => (long) x.CID == b.Cid);
+            if (on != null) return on;
+            try { return Rice.Game.Character.Retrieve(b.Name); }
+            catch (Exception ex) { Log.WriteError("Corredor " + b.Name + ": " + ex.Message); return null; }
+        }
+
         public static void ShareRewards(Rice.Game.Character ch, long exp, long mito)
         {
             if (ch == null || (exp <= 0 && mito <= 0)) return;
@@ -629,12 +642,12 @@ namespace Rice.Server.Packets.Game
             }
             Bots.Save();
             var party = PartyBots(ch).Where(b => b.IsAlt).ToList();
-            if (party.Count == 0 || player.Characters == null) return;
+            if (party.Count == 0) return;
             double share = RiceServer.Config.AltRewardShare;
             var parts = new List<string>();
             foreach (var b in party)
             {
-                var alt = player.Characters.FirstOrDefault(c => (long) c.CID == b.Cid);
+                var alt = AltCharacter(player, b);
                 if (alt == null) continue;
                 long e = (long) (exp * share), m = (long) (mito * share);
                 int before = alt.Level;

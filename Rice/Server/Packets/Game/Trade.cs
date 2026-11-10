@@ -182,13 +182,12 @@ namespace Rice.Server.Packets.Game
             if (b == null) { Chat.SendSystemMessage(c, name + " nao esta online para trocar."); return; }
             if (Bots.InTutorial(ch)) { Chat.SendSystemMessage(c, "Termine o tutorial e pegue o seu primeiro carro antes de trocar."); return; }
             if (b.IsAlt && b.InTutorial) { Chat.SendSystemMessage(c, b.Name + " ainda nao terminou o tutorial (esta com o carro de treino). Nao da para trocar com ele."); return; }
-            if (b.IsAlt) { Chat.SendSystemMessage(c, "Para trocar com o seu outro corredor, entre com ele (correio/garagem)."); return; }
 
             bool close = BotSocial.PartyBots(ch).Contains(b) || BotSocial.IsFriend((long) ch.CID, b.Cid);
             var myCrew = Crew.Of((long) ch.CID); var botCrew = Crew.Of(b.Cid);
             if (myCrew != null && botCrew != null && myCrew.Tid == botCrew.Tid) close = true;
             double refuse = b.Personality == "calado" ? 0.55 : b.Personality == "competitivo" ? 0.45 : b.Personality == "comerciante" ? 0.15 : 0.3;
-            bool ok = close || !RiceServer.Config.TradeBotsRefuse || Rng.NextDouble() >= refuse;
+            bool ok = b.IsAlt || close || !RiceServer.Config.TradeBotsRefuse || Rng.NextDouble() >= refuse;
 
             uint id;
             lock (Sync)
@@ -206,6 +205,12 @@ namespace Rice.Server.Packets.Game
             c.Send(pk);
             if (!ok) { Bots.Say(c, "channel", b.Name, RefuseLine(b)); return; }
             Bots.MeetPlayer(b, 1800);        // o bot fica de frente para voce ate a troca acabar (feita ou cancelada)
+            if (b.IsAlt)
+            {
+                // outro corredor seu (qualquer conta): voce so DA - itens do inventario e mito vao para ele
+                Chat.SendSystemMessage(c, "[Troca com " + b.Name + "] Seu outro corredor: coloque os itens (fora do carro) e o mito que quer passar para ele e confirme.");
+                return;
+            }
             Session cur; lock (Sync) sessions.TryGetValue(ch.CID, out cur);
             if (cur != null) PlaceGifts(c, ch, cur);      // bot da sua crew que veio te dar coisas
             Bots.Say(c, "channel", b.Name, b.NeoBot ? "Bora trocar! Aceito arma, armadura, Amplifier e Fuse da Neo City (e pecas, caixa de carro ou de peca visual)."
@@ -237,7 +242,15 @@ namespace Rice.Server.Packets.Game
             var o = new Offer { InvIdx = idx, ItemId = e.ID };
             string msg;
             string ecat = e.Category ?? "";
-            if (ecat.StartsWith("op_") || ecat.StartsWith("dock_"))
+            if (b.IsAlt)
+            {
+                // seu outro corredor: qualquer item que nao esteja no carro vai inteiro para ele (pilha toda)
+                if (it.curCarID != 0 || it.state == 1) { Chat.SendSystemMessage(c, "Tire do carro antes de passar."); return; }
+                if (e.Category == "car") { Chat.SendSystemMessage(c, "Carro nao passa pela troca (use a caixa de carro: clique duas vezes na chave ou !!caixa)."); return; }
+                o.Kind = "transfer"; o.Cat = ecat; o.Count = Math.Max(1u, it.stackNum);
+                msg = "Para " + b.Name + ": " + e.Name + (o.Count > 1 ? " x" + o.Count : "");
+            }
+            else if (ecat.StartsWith("op_") || ecat.StartsWith("dock_"))
             {
                 // option ou dock: um de cada tipo no carro do bot; ele confere o nivel e compara com o que tem
                 if (it.curCarID != 0) { Chat.SendSystemMessage(c, "Tire do carro antes de trocar."); return; }
@@ -351,6 +364,7 @@ namespace Rice.Server.Packets.Game
                 if (isCar && s.Offers.Any(x => x.Kind == "car" || x.Kind == "box")) { Chat.SendSystemMessage(c, "Um carro por troca."); return; }
                 if (o.Kind == "visual" && s.Offers.Any(x => x.Kind == "visual" && x.Slot == o.Slot)) { Chat.SendSystemMessage(c, "Uma peca visual de cada tipo por troca."); return; }
                 if (o.Kind == "part" && s.Offers.Count(x => x.Kind == "part" && x.Cat == o.Cat) >= (o.Cat.StartsWith("op_") || o.Cat.StartsWith("dock_") || (o.Cat.StartsWith("neo_") && o.Cat != "neo_weapon") ? 1 : 2)) { Chat.SendSystemMessage(c, "No maximo duas pecas (ou uma option/dock) de cada tipo por troca."); return; }
+                if (o.Kind == "transfer" && s.Offers.Count >= 12) { Chat.SendSystemMessage(c, "No maximo 12 itens por troca."); return; }
                 o.BotIdx = s.NextBotIdx++;
                 s.Offers.Add(o);
             }
@@ -358,7 +372,7 @@ namespace Rice.Server.Packets.Game
             pk.Writer.Write(id); pk.Writer.Write(Item88(it.GetInfo())); pk.Writer.Write(WStr(ch.Name, 0x2a));
             c.Send(pk);
             // o bot poe o que volta para voce
-            string back = o.Kind == "kit" ? null : o.Kind == "part" ? o.OldItem : o.Kind == "visual" ? (o.OldUid > 0 ? e.ID : null) : KeyOf(o.OldCar);
+            string back = o.Kind == "kit" || o.Kind == "transfer" ? null : o.Kind == "part" ? o.OldItem : o.Kind == "visual" ? (o.OldUid > 0 ? e.ID : null) : KeyOf(o.OldCar);
             if (back != null)
             {
                 var bp = new RicePacket(505);
@@ -510,13 +524,60 @@ namespace Rice.Server.Packets.Game
             c.Send(end);
             ch.FlushModInfo(c);
             foreach (var l in lines) Chat.SendSystemMessage(c, "[Troca com " + s.Bot.Name + "] " + l);
-            if (lines.Count > 0) Bots.Say(c, "channel", s.Bot.Name, "Valeu pela troca! Ja equipei.");
+            if (lines.Count > 0) Bots.Say(c, "channel", s.Bot.Name, s.Bot.IsAlt ? "Recebi, valeu!" : "Valeu pela troca! Ja equipei.");
             try { BotChatter.TradeDone(c, ch, s.Bot, givenParts, givenCar, lines.Count > 0 ? givenMoney : 0); }
             catch (Exception ex) { Log.WriteError("Troca (meta do bot): " + ex.Message); }
         }
 
+        // seu outro corredor: os itens (com os pontos, opcoes e durabilidade) e o mito passam para ele
+        static List<string> ExchangeAlt(RiceClient c, Rice.Game.Character ch, Session s)
+        {
+            var lines = new List<string>();
+            var b = s.Bot;
+            var alt = BotSocial.AltCharacter(c.Player, b);
+            if (alt == null) { lines.Add("Nao achei o corredor " + b.Name + "."); return lines; }
+            foreach (var o in s.Offers.Where(x => x.Kind == "transfer"))
+            {
+                var it = Inv(ch, o.InvIdx);
+                if (it == null || it.itemEntry == null) continue;
+                uint n = Math.Max(1u, Math.Min(o.Count, Math.Max(1u, it.stackNum)));
+                Item got;
+                if (!alt.GrantItem(o.ItemId, n, out got) || got == null) { lines.Add(it.itemEntry.Name + ": o inventario de " + b.Name + " esta cheio."); continue; }
+                try
+                {
+                    using (var rc = Rice.Database.GetContext())
+                    {
+                        var src = rc.Items.FirstOrDefault(x => x.CID == (long) ch.CID && x.InvIdx == (int) o.InvIdx);
+                        var dst = rc.Items.FirstOrDefault(x => x.CID == (long) alt.CID && x.InvIdx == (int) got.invIdx);
+                        if (src != null && dst != null && n == 1)
+                        {
+                            dst.UpgradeLevel = src.UpgradeLevel; dst.UpgradePoints = src.UpgradePoints; dst.ItemHealth = src.ItemHealth;
+                            dst.AssistA = src.AssistA; dst.AssistB = src.AssistB; dst.AssistC = src.AssistC; dst.AssistD = src.AssistD; dst.AssistE = src.AssistE;
+                            dst.AssistF = src.AssistF; dst.AssistG = src.AssistG; dst.AssistH = src.AssistH; dst.AssistI = src.AssistI; dst.AssistJ = src.AssistJ;
+                            rc.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception ex) { Log.WriteError("Troca (copiar pontos do item): " + ex.Message); }
+                Item dropped;
+                ch.DropItem((int) o.InvIdx, out dropped, n, true);
+                lines.Add(b.Name + " recebeu " + it.itemEntry.Name + (n > 1 ? " x" + n : "") + ".");
+            }
+            if (s.Money > 0 && ch.SpendMito((ulong) s.Money))
+            {
+                alt.GrantMito((ulong) s.Money, false, false);
+                var m = new RicePacket(138);
+                m.Writer.Write(1); m.Writer.Write(1); m.Writer.Write(-s.Money); m.Writer.Write(ch.Mito); m.Writer.Write((ushort) 0);
+                c.Send(m);
+                lines.Add(b.Name + " recebeu " + s.Money.ToString("N0") + " mito (agora tem " + alt.Mito.ToString("N0") + ").");
+            }
+            Log.WriteLine("Troca {0} -> {1} (outro corredor): {2}", ch.Name, b.Name, string.Join(" | ", lines));
+            return lines;
+        }
+
         static List<string> Exchange(RiceClient c, Rice.Game.Character ch, Session s)
         {
+            if (s.Bot != null && s.Bot.IsAlt) return ExchangeAlt(c, ch, s);
             var lines = new List<string>();
             var b = s.Bot;
             foreach (var o in s.Offers.Where(x => x.Kind == "gift"))

@@ -1719,7 +1719,7 @@ namespace Rice.Server.Packets.Game
                 foreach (var b in bots)
                 {
                     // parte dos bots anda pelo seu trajeto (ate DomeDriveSpeedMax, 80 mph); os outros ficam parados
-                    if (!b.Special && !b.IsAlt && domePoints.Count > 20 && Rng.NextDouble() < cfg.DomeDrivingShare)
+                    if (!b.Special && domePoints.Count > 20 && Rng.NextDouble() < cfg.DomeDrivingShare)
                     {
                         int k = Rng.Next(domePoints.Count);
                         var p0 = domePoints[k];
