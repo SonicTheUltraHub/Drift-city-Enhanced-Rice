@@ -1,4 +1,4 @@
-# Enhanced Rice (Offline Aprimorado) — V1
+# Enhanced Rice (Offline Aprimorado)
 
 Modo offline melhorado para o **cliente US 2016 do Drift City**, feito em cima do emulador Rice (C#, .NET 4.8). A cidade
 fica viva com jogadores simulados (bots) que correm, trocam, entram na sua party e crew, conversam e jogam os modos com voce.
@@ -34,6 +34,9 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 **Creditos:** emulador Rice de **amPerl** (com permissao); formatos de pacote da documentacao do openDC (Xerender13).
 
 ## Historico de atualizacoes
+
+**Atualizacao 199 — Nome:** o projeto passa a se chamar so **Enhanced Rice** (sem "V1"); o zip e a pasta do projeto
+agora sao `Enhanced Rice`. Codigo fonte tambem no GitHub (SonicTheUltraHub/drift-city-enhanced-rice).
 
 **Atualizacao 198 — Saves: conta admin montada uma vez so e copia dos saves ao instalar:**
 - A conta admin (RiceAdmin) era montada de novo TODA vez que o servidor abria: tirava os carros que voce comprou (ficava
