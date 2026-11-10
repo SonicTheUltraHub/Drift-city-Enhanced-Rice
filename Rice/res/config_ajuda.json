@@ -1,0 +1,1866 @@
+{
+"CloseWithGame": [
+"Rede",
+"Fecha o servidor sozinho quando o jogo fecha (DriftCity.exe fechado por CloseWithGameSeconds segundos)."
+],
+"CloseWithGameSeconds": [
+"Rede",
+"Fecha o servidor sozinho quando o jogo fecha (DriftCity.exe fechado por CloseWithGameSeconds segundos)."
+],
+"CloseGameWithServer": [
+"Rede",
+"Fecha o jogo quando o servidor fecha (\"sair\", o X da janela do servidor ou Ctrl+C), CloseGameDelaySeconds depois."
+],
+"CloseGameDelaySeconds": [
+"Rede",
+"Fecha o jogo quando o servidor fecha (\"sair\", o X da janela do servidor ou Ctrl+C), CloseGameDelaySeconds depois."
+],
+"DebugMode": [
+"Rede",
+"mostra mais detalhes no console do servidor (bom para achar erros)"
+],
+"PublicIP": [
+"Rede",
+"endereco que o servidor passa para o jogo (127.0.0.1 = este PC; nao mude jogando sozinho)"
+],
+"AuthPort": [
+"Rede",
+"porta do login (o jogo conecta aqui primeiro)"
+],
+"LobbyPort": [
+"Rede",
+"porta da selecao de corredor (lobby)"
+],
+"GamePort": [
+"Rede",
+"porta do jogo (inventario, lojas, missoes, chat)"
+],
+"AreaPort": [
+"Rede",
+"porta da area (carros andando na cidade)"
+],
+"RankingPort": [
+"Rede",
+"porta do ranking"
+],
+"Language": [
+"Rede",
+"Idioma do servidor (console, chat do jogo e menu): \"en\" = ingles (padrao) ou \"pt\" = portugues."
+],
+"MaxPlayerProfiles": [
+"Contas",
+"Quantidade total de corredores (slots) da conta, contando o perfil \"upado\"."
+],
+"UppedProfileName": [
+"Perfil upado",
+"Perfil \"upado\" (nivel alto, carro forte, bilionario): fica sempre no 1o slot."
+],
+"ProtectUppedProfile": [
+"Perfil upado",
+"Impede excluir o perfil upado pelo jogo."
+],
+"UppedCarID": [
+"Perfil upado",
+"Carro do perfil upado: 88 = BMW Patrol (carro de policia), grade 9 (V9)."
+],
+"UppedRefreshEveryStart": [
+"Perfil upado",
+"false (padrao): a conta admin e montada uma vez so (carro, pecas, inventario, missoes); depois o que voce fizer com ela fica. true: monta de novo toda vez que o servidor abre (tira os carros comprados, refaz o inventario)."
+],
+"UppedCarGrade": [
+"Perfil upado",
+"false (padrao): a conta admin e montada uma vez so (carro, pecas, inventario, missoes); depois o que voce fizer com ela fica. true: monta de novo toda vez que o servidor abre (tira os carros comprados, refaz o inventario)."
+],
+"UppedPartIds": [
+"Perfil upado",
+"Pecas equipadas nesse carro (2 de cada: velocidade, aceleracao, colisao, booster). Variantes \"_b\" = Sorched (vermelhas); sem sufixo = normal; \"_g\" = outra cor."
+],
+"UppedPoliceCarID": [
+"Perfil upado",
+"BMW Patrol (carro de policia, id 88): recebe as mesmas pecas do Shadow. 0 = desligado."
+],
+"UppedCarScope": [
+"Perfil upado",
+"\"extras\" = so os carros de UppedExtraCarIDs (padrao; evita travar em Loading data). \"dealership\" = carros da concessionaria + BMW Patrol + Shadow (cerca de 99 carros). \"all\" = todo carro que tem chave no jogo (cerca de 364; a garagem pode ficar pesada)."
+],
+"UppedExtraCarIDs": [
+"Perfil upado",
+"Carros extras sempre incluidos (alem da concessionaria)."
+],
+"UppedOnlyOneCar": [
+"Perfil upado",
+"Conta admin com um carro so (o UppedCarID, de policia): os outros carros do perfil upado saem da garagem."
+],
+"UppedCarAssists": [
+"Perfil upado",
+"Opcoes no carro do admin (fileiras de docks U): Turbo Start (start booster) e Drift Booster. Vazio = nenhuma."
+],
+"UppedInvenPages": [
+"Perfil upado",
+"Inventario: paginas preenchidas (a seguinte fica vazia) e espacos por pagina. As chaves dos carros nao contam nesses espacos."
+],
+"UppedInvenPageSize": [
+"Perfil upado",
+"Inventario: paginas preenchidas (a seguinte fica vazia) e espacos por pagina. As chaves dos carros nao contam nesses espacos."
+],
+"UppedStackSize": [
+"Perfil upado",
+"Quantidade dos itens empilhaveis (maximo 99)."
+],
+"UppedInvenExpansion": [
+"Perfil upado",
+"Expansoes de inventario/garagem enviadas ao cliente para o perfil upado (valores de teste)."
+],
+"ShopMaxBuysPerVisit": [
+"Lojas",
+"loja de carros: maximo de compras seguidas sem sair (0 = sem limite)"
+],
+"UppedGarageExpansion": [
+"Perfil upado",
+"andares extras da garagem (1F sempre aberto; 8 = abre ate 9F)"
+],
+"AutoRefuelOnEnter": [
+"Perfil upado",
+"Enche o tanque de todos os carros do corredor ao entrar no jogo."
+],
+"FuelCapacityMultiplier": [
+"Combustivel",
+"Multiplica o tamanho do tanque (e o combustivel enviado ao jogo). Quanto maior, mais o carro dura. O console mostra \"tanque cheio dura ~X min\": ajuste este valor para chegar nas horas que quiser."
+],
+"FuelMinCapacity": [
+"Combustivel",
+"Tanque minimo enviado ao jogo, para qualquer carro (carros iniciais tem tanque pequeno). Use 0 para desligar."
+],
+"FuelEfficiencyMultiplier": [
+"Combustivel",
+"Multiplica a \"eficiencia\" do carro enviada ao jogo (tabela do carro x este valor). 80 = o carro deve gastar ~80x menos. Se o consumo AUMENTAR em vez de diminuir, use 0.0125 (= 1/80)."
+],
+"StartCity": [
+"Contas",
+"Coordenadas onde o corredor aparece na PRIMEIRA vez. Para mudar: va ate o local desejado, olhe a linha \"SaveCarPos\" no console e copie os valores de pos (x, y, z)."
+],
+"StartPosX": [
+"Contas",
+"Coordenadas onde o corredor aparece na PRIMEIRA vez. Para mudar: va ate o local desejado, olhe a linha \"SaveCarPos\" no console e copie os valores de pos (x, y, z)."
+],
+"StartPosY": [
+"Contas",
+"Coordenadas onde o corredor aparece na PRIMEIRA vez. Para mudar: va ate o local desejado, olhe a linha \"SaveCarPos\" no console e copie os valores de pos (x, y, z)."
+],
+"StartPosZ": [
+"Contas",
+"Coordenadas onde o corredor aparece na PRIMEIRA vez. Para mudar: va ate o local desejado, olhe a linha \"SaveCarPos\" no console e copie os valores de pos (x, y, z)."
+],
+"ComboRewardEvery": [
+"Combos",
+"A cada N combos, o jogador ganha ComboRewardMito."
+],
+"ComboRewardMito": [
+"Combos",
+"A cada N combos, o jogador ganha ComboRewardMito."
+],
+"ComboRewardScale": [
+"Combos",
+"true = o mito multiplica pelo marco (x1, x2...); false = sempre ComboRewardMito"
+],
+"ComboRewardExp": [
+"Combos",
+"exp a cada marco de combo (20, 40, 60...)"
+],
+"ComboExpPerCombo": [
+"Combos",
+"(antigo, nao usado)"
+],
+"ComboItemRewards": [
+"Combos",
+"Itens extras do combo (a cada marco de ComboRewardEvery): Booster Protector F/D alternados. Mittron Enhancer: combo >= ComboEnhancerNAt = N; >= ComboEnhancerSAt = S; >= ComboEnhancerHAt = H; >= ComboEnhancerUAt = \"U\" (nao existe enhancer U nos dados do jogo: vai o ComboEnhancerUItem, H DELUXE)."
+],
+"NeoCityEnter": [
+"Neo City",
+"Itens extras do combo (a cada marco de ComboRewardEvery): Booster Protector F/D alternados. Mittron Enhancer: combo >= ComboEnhancerNAt = N; >= ComboEnhancerSAt = S; >= ComboEnhancerHAt = H; >= ComboEnhancerUAt = \"U\" (nao existe enhancer U nos dados do jogo: vai o ComboEnhancerUItem, H DELUXE)."
+],
+"NeoHpEnabled": [
+"Neo City",
+"HP maximo da Neo City = durabilidade total x NeoHpPerDurability"
+],
+"NeoHpPerDurability": [
+"Neo City",
+"+ nivel x NeoHpPerLevel + NeoHpBase"
+],
+"NeoHpPerLevel": [
+"Neo City",
+"Itens extras do combo (a cada marco de ComboRewardEvery): Booster Protector F/D alternados. Mittron Enhancer: combo >= ComboEnhancerNAt = N; >= ComboEnhancerSAt = S; >= ComboEnhancerHAt = H; >= ComboEnhancerUAt = \"U\" (nao existe enhancer U nos dados do jogo: vai o ComboEnhancerUItem, H DELUXE)."
+],
+"NeoBossRegenCount": [
+"Neo City",
+"Neo City: o servidor faz o chefe voltar N vezes (0 = o jogo mesmo pede de novo)"
+],
+"NeoBossRegenSeconds": [
+"Neo City",
+"... depois de N segundos (tabela do jogo: 10 vezes, 10 s)"
+],
+"NeoHuvRegenCount": [
+"Neo City",
+"HUVs normais: idem (0 = o jogo pede)"
+],
+"NeoHuvRegenSeconds": [
+"Neo City",
+"... depois de N segundos"
+],
+"NeoHuvExpPerLevel": [
+"Neo City",
+"Neo City: exp por HUV destruido = nivel do HUV x isto (HUV 60 = 600)"
+],
+"NeoHuvMitoPerLevel": [
+"Neo City",
+"mito por HUV destruido = nivel do HUV x isto (HUV 60 = 480)"
+],
+"NeoBossRewardMultiplier": [
+"Neo City",
+"chefe: x isto"
+],
+"NeoDropChance": [
+"Neo City",
+"chance de um HUV deixar cair arma/armadura/Amplifier/Fuse do seu grau"
+],
+"NeoDropBossChance": [
+"Neo City",
+"chance no chefe"
+],
+"NeoChapterBonusItem": [
+"Neo City",
+"Neo City: fim do capitulo da 1 item da Neo do seu nivel (tela CHAPTER CLEARED)"
+],
+"NeoBots": [
+"Neo City",
+"Neo City: cria os bots que moram so la (ficam parados pela base/lobby e entram na sua party)"
+],
+"NeoBotsCount": [
+"Neo City",
+"quantos bots da Neo City (ate 20)"
+],
+"NeoDomeLearn": [
+"Neo City",
+"base ROAD: false = os bots so usam o caminho gravado (neo_dome_points); true = continua aprendendo por onde voce anda"
+],
+"NeoLobbyRadius": [
+"Neo City",
+"ate quantos metros de onde voce aparece na Neo City os bots ficam parados"
+],
+"NeoBotsHelp": [
+"Neo City",
+"bots da sua party atiram nos HUVs das missoes da Neo City"
+],
+"NeoDurabilityEnabled": [
+"Neo City",
+"Durabilidade dos equipamentos da Neo City (arma, Amplifier, Fuse, armadura): o maximo vem da tabela (500 a 800). Na Neo City cada peca montada perde NeoDurabilityPerMinute por minuto e a arma perde NeoDurabilityPerShot por tiro. No 0 a peca sai do carro e so volta depois de reparar (Repair Kits da Neo City, na Drift Shop)."
+],
+"DrinkExpBonus": [
+"Combos",
+"Drinks da Drift Shop (Drift Item): EXP drink = +DrinkExpBonus de exp, MITO drink = +DrinkMitoBonus de mito (fora as recompensas de quest), Item Drink = cada item que cai do HUV vem DrinkItemDrops vezes. 0.3 = 30%."
+],
+"DrinkMitoBonus": [
+"Combos",
+"Drinks da Drift Shop (Drift Item): EXP drink = +DrinkExpBonus de exp, MITO drink = +DrinkMitoBonus de mito (fora as recompensas de quest), Item Drink = cada item que cai do HUV vem DrinkItemDrops vezes. 0.3 = 30%."
+],
+"DrinkItemDrops": [
+"Combos",
+"Drinks da Drift Shop (Drift Item): EXP drink = +DrinkExpBonus de exp, MITO drink = +DrinkMitoBonus de mito (fora as recompensas de quest), Item Drink = cada item que cai do HUV vem DrinkItemDrops vezes. 0.3 = 30%."
+],
+"NeoDurabilityPerMinute": [
+"Neo City",
+"Drinks da Drift Shop (Drift Item): EXP drink = +DrinkExpBonus de exp, MITO drink = +DrinkMitoBonus de mito (fora as recompensas de quest), Item Drink = cada item que cai do HUV vem DrinkItemDrops vezes. 0.3 = 30%."
+],
+"NeoDurabilityPerShot": [
+"Neo City",
+"Drinks da Drift Shop (Drift Item): EXP drink = +DrinkExpBonus de exp, MITO drink = +DrinkMitoBonus de mito (fora as recompensas de quest), Item Drink = cada item que cai do HUV vem DrinkItemDrops vezes. 0.3 = 30%."
+],
+"NeoDurabilityPerHit": [
+"Neo City",
+"armadura: perde isto a cada dano tomado na Neo City"
+],
+"NeoBotEngageRange": [
+"Neo City",
+"Neo City: a party so vai atras dos HUVs a ate N m de voce"
+],
+"NeoBotHpBase": [
+"Neo City",
+"Neo City: vida do bot da party = isto + nivel x NeoBotHpPerLevel + armadura x 2"
+],
+"NeoBotHpPerLevel": [
+"Neo City",
+"Drinks da Drift Shop (Drift Item): EXP drink = +DrinkExpBonus de exp, MITO drink = +DrinkMitoBonus de mito (fora as recompensas de quest), Item Drink = cada item que cai do HUV vem DrinkItemDrops vezes. 0.3 = 30%."
+],
+"NeoHuvDamagePerLevel": [
+"Neo City",
+"dano de cada tiro do HUV no bot = nivel do HUV x isto (chefe x3), menos a armadura"
+],
+"NeoBotRespawnSeconds": [
+"Neo City",
+"bot destruido volta depois de N s, com a vida cheia"
+],
+"NeoBaseRegenPercent": [
+"Neo City",
+"Neo City: na base ROAD a vida dos bots volta N% por segundo"
+],
+"NeoBotKitPercent": [
+"Neo City",
+"bot usa um kit que voce deu quando alguem da party ficar abaixo de N% da vida"
+],
+"NeoBotKitSeconds": [
+"Neo City",
+"intervalo minimo entre kits dos bots"
+],
+"NeoBotStandoff": [
+"Neo City",
+"Neo City: bot da party COM arma para a N m do HUV que persegue e atira de la"
+],
+"NeoBotHoldDistance": [
+"Neo City",
+"Neo City: o bot com arma vai atras do HUV e so para (mirando) quando chega a N m dele"
+],
+"NeoBotHoldToShoot": [
+"Neo City",
+"Neo City: bot com arma e com HUV no alcance para o carro, vira para o HUV e atira"
+],
+"NeoHuvHpPerLevel": [
+"Neo City",
+"vida estimada do HUV (nivel x isto, chefe x5) quando o seu jogo ainda nao informou"
+],
+"NeoBotRamDistance": [
+"Neo City",
+"bot SEM arma da Neo City vai para cima do HUV e so tira vida encostado (ate N m)"
+],
+"NeoBotKillsCountForYou": [
+"Neo City",
+"Neo City: o tiro do bot vai com o seu nome: o HUV que ele destroi conta no objetivo da missao"
+],
+"NeoBotShowShots": [
+"Neo City",
+"Neo City: desenhar o tiro do bot (molde: o seu ultimo tiro de arma do carro)"
+],
+"NeoHuvShootRange": [
+"Neo City",
+"Neo City: HUV/HUB atira no bot da party a ate N m (o bot so perde vida pelos HUVs)"
+],
+"NeoHuvRamRange": [
+"Neo City",
+"Neo City: HUS (o que bate) tira vida do bot encostando (N m)"
+],
+"NeoBotTeleportDistance": [
+"Neo City",
+"Neo City: bot da party a mais de N m de voce aparece atras de voce (0 = desliga)"
+],
+"NeoBotHitRange": [
+"Neo City",
+"distancia (m) do HUV para o bot atirar (ele atira de longe, sem ir bater)"
+],
+"NeoBotHitSeconds": [
+"Neo City",
+"um tiro a cada N s por bot (bot mais habilidoso atira mais rapido)"
+],
+"NeoBotDamage": [
+"Neo City",
+"dano do tiro do bot antes de voce acertar um HUV (x nivel da arma/80)"
+],
+"NeoBotDamageFactor": [
+"Neo City",
+"dano do tiro do bot = seu dano medio nos HUVs x (arma dele / sua arma) x isto"
+],
+"NeoBotKillShare": [
+"Neo City",
+"HUV destruido por um bot: voce ganha esta parte da exp/mito"
+],
+"AssistSpeedAsMph": [
+"Combos",
+"pecas de velocidade (+N): N vale como mph no Assist Option (sem converter de km/h)"
+],
+"SpeedBonusPerPoint": [
+"Combos",
+"velocidade maxima extra (aparece no Assist Option): mph por ponto (0 = desligado; o escondido e o Cliente/ferramentas/multiplicador_pontos.py)"
+],
+"SpeedBonusFromPoints": [
+"Combos",
+"... contando so os pontos acima deste numero"
+],
+"QuietSyncPackets": [
+"Combos",
+"nao escreve no console os pacotes de sincronia (209/555/556/725)"
+],
+"NeoHuvSpawnAll": [
+"Neo City",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"NeoHuvOwnerIsPlayer": [
+"Neo City",
+"Neo City: voce controla os HUVs (patrulham, perseguem e atiram)                     // Neo City: libera todos os HUVs pedidos (inclusive o chefe)"
+],
+"NeoTurretOwnerIsPlayer": [
+"Neo City",
+"torres da Neo City controladas por voce (atiram e levam dano)"
+],
+"NeoHpBase": [
+"Neo City",
+"Neo City: responde o \"Enter City\" (3720) com o 3721 NeoCityLoad"
+],
+"AlchemyBookPrice": [
+"Itens",
+"!!livro: preco de cada Skill Book"
+],
+"AlchemyKitPriceMultiplier": [
+"Itens",
+"!!kit: preco dos Manufacturing Kits (1200 / 700 / 2000) x isto"
+],
+"AlchemyChanceBonus": [
+"Itens",
+"+ pontos de % na chance de cada receita (45% na tabela)"
+],
+"AlchemyExpMultiplier": [
+"Itens",
+"exp de fabricacao x isto"
+],
+"ComboGetItemAnimation": [
+"Combos",
+"combo de 20: animacao \"Get Item\" com a voz (pacote 741)"
+],
+"ComboPowderItem": [
+"Combos",
+"Mittron Crystal Powder (Item Exchange das cidades)"
+],
+"ComboPowderChance": [
+"Combos",
+"chance em cada marco de combo (20, 40...)"
+],
+"ComboComponentItems": [
+"Combos",
+"Components H (acel, vel, dura, booster)"
+],
+"ComboComponentChance": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboAutoDriveItem": [
+"Combos",
+"Auto-Driver"
+],
+"ComboAutoDriveChance": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboDamageCount": [
+"Combos",
+"Damage Booster N/S/H (pelo seu nivel) x3"
+],
+"ComboDamageChance": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboEnhancerNAt": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboEnhancerSAt": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboEnhancerHAt": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboEnhancerUAt": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboEnhancerUItem": [
+"Combos",
+"// dano de cada tiro (x nivel do bot / 80 x habilidade)"
+],
+"ComboEnhancerUAbove": [
+"Combos",
+"(antigo, nao usado)"
+],
+"LevelRewardsEnabled": [
+"Economia",
+"Niveis 10-30: grau N; 40-70: grau S; 80+: grau U. Cada pacote: mito + 4 docks (A) + 4 pecas do grau."
+],
+"LevelRewardMitoN": [
+"Economia",
+"Niveis 10-30: grau N; 40-70: grau S; 80+: grau U. Cada pacote: mito + 4 docks (A) + 4 pecas do grau."
+],
+"LevelRewardMitoS": [
+"Economia",
+"Niveis 10-30: grau N; 40-70: grau S; 80+: grau U. Cada pacote: mito + 4 docks (A) + 4 pecas do grau."
+],
+"LevelRewardMitoU": [
+"Economia",
+"Niveis 10-30: grau N; 40-70: grau S; 80+: grau U. Cada pacote: mito + 4 docks (A) + 4 pecas do grau."
+],
+"LevelRewardMitoStep": [
+"Economia",
+"pacote de nivel: N x (nivel / 10) mito (0 = usa LevelRewardMitoN/S/U)"
+],
+"LevelRewardEnhancers": [
+"Economia",
+"pacote de nivel: N Mittron Enhancers do grau do pacote (N, S; U = H)"
+],
+"Level100CarSort": [
+"Economia",
+"Carro entregue ao chegar no nivel 100: 276 = Shadow Xmas (Lamborghini Reventon). 0 = desligado."
+],
+"DealershipUnlockAll": [
+"Lojas",
+"Libera a compra no servidor de carros com condicao (evento/gacha/etc.). A lista mostrada na loja vem do cliente."
+],
+"SpecialCarsMinLevel": [
+"Lojas",
+"Carros das categorias Xmas, BT, ST e MINI so podem ser comprados a partir deste nivel. Carros de cupom (SMALL) tambem ficam liberados."
+],
+"DockDrawEnabled": [
+"Itens",
+"Combine com Seed Part: sorteio do dock (A mais comum ... ultima letra mais rara)."
+],
+"DockStorePoints": [
+"Itens",
+"Grava no dock sorteado os pontos brancos (UpgradePoint) e roxos (Upgrade). Experimental."
+],
+"ConvertEnabled": [
+"Lojas",
+"Convert (Parts + Converting Solution): sorteia 2 opcoes aleatorias na peca."
+],
+"WeatherEnabled": [
+"Cidade e trafego",
+"Carros de trafego movidos pelo servidor (Moon Palace, Koinonia, Cras, Oros). Quantidade por cidade e alcance (m). Clima (640 Cmd_Weather, 1-4): ciclo automatico. WeatherOrder = sequencia de ceus, WeatherMinutes = duracao de cada um. Descubra qual numero e qual ceu com !!clima 1..4 no chat."
+],
+"WeatherCycle": [
+"Cidade e trafego",
+"Carros de trafego movidos pelo servidor (Moon Palace, Koinonia, Cras, Oros). Quantidade por cidade e alcance (m). Clima (640 Cmd_Weather, 1-4): ciclo automatico. WeatherOrder = sequencia de ceus, WeatherMinutes = duracao de cada um. Descubra qual numero e qual ceu com !!clima 1..4 no chat."
+],
+"WeatherDefault": [
+"Cidade e trafego",
+"Carros de trafego movidos pelo servidor (Moon Palace, Koinonia, Cras, Oros). Quantidade por cidade e alcance (m). Clima (640 Cmd_Weather, 1-4): ciclo automatico. WeatherOrder = sequencia de ceus, WeatherMinutes = duracao de cada um. Descubra qual numero e qual ceu com !!clima 1..4 no chat."
+],
+"WeatherOrder": [
+"Cidade e trafego",
+"1 limpo, 4 fim de tarde, 2 nublado (3 = chuva)"
+],
+"WeatherMinutes": [
+"Cidade e trafego",
+"Carros de trafego movidos pelo servidor (Moon Palace, Koinonia, Cras, Oros). Quantidade por cidade e alcance (m). Clima (640 Cmd_Weather, 1-4): ciclo automatico. WeatherOrder = sequencia de ceus, WeatherMinutes = duracao de cada um. Descubra qual numero e qual ceu com !!clima 1..4 no chat."
+],
+"WeatherRainChance": [
+"Cidade e trafego",
+"chance de chover no meio de cada fase"
+],
+"WeatherRainMinutes": [
+"Cidade e trafego",
+"Carros de trafego movidos pelo servidor (Moon Palace, Koinonia, Cras, Oros). Quantidade por cidade e alcance (m). Clima (640 Cmd_Weather, 1-4): ciclo automatico. WeatherOrder = sequencia de ceus, WeatherMinutes = duracao de cada um. Descubra qual numero e qual ceu com !!clima 1..4 no chat."
+],
+"CityTrafficEnabled": [
+"Cidade e trafego",
+"Carros de trafego movidos pelo servidor (Moon Palace, Koinonia, Cras, Oros). Quantidade por cidade e alcance (m). Clima (640 Cmd_Weather, 1-4): ciclo automatico. WeatherOrder = sequencia de ceus, WeatherMinutes = duracao de cada um. Descubra qual numero e qual ceu com !!clima 1..4 no chat."
+],
+"CityTrafficCars": [
+"Cidade e trafego",
+"carros por cidade (era 300)"
+],
+"CityTrafficRange": [
+"Cidade e trafego",
+"Carros de trafego movidos pelo servidor (Moon Palace, Koinonia, Cras, Oros). Quantidade por cidade e alcance (m). Clima (640 Cmd_Weather, 1-4): ciclo automatico. WeatherOrder = sequencia de ceus, WeatherMinutes = duracao de cada um. Descubra qual numero e qual ceu com !!clima 1..4 no chat."
+],
+"CityTrafficHitSeconds": [
+"Cidade e trafego",
+"carro do trafego batido: fica por conta do jogo N s e volta longe (0 = desliga)"
+],
+"HuvLevelFactor": [
+"HUV",
+"Nivel do HUV = nivel do jogador x HuvLevelFactor. Quantidade por chamado e multiplicador de exp/mito."
+],
+"HuvCountMin": [
+"HUV",
+"Nivel do HUV = nivel do jogador x HuvLevelFactor. Quantidade por chamado e multiplicador de exp/mito."
+],
+"HuvCountMax": [
+"HUV",
+"Nivel do HUV = nivel do jogador x HuvLevelFactor. Quantidade por chamado e multiplicador de exp/mito."
+],
+"HuvRewardMultiplier": [
+"HUV",
+"Nivel do HUV = nivel do jogador x HuvLevelFactor. Quantidade por chamado e multiplicador de exp/mito."
+],
+"DeliveryTierRewards": [
+"HUV",
+"Entregas por dificuldade (Missions.DeliveryTier): facil/normal/dificil/especial/evento com exp, mito e peca; ouro 100%, prata 2/3, bronze 1/3. Cada cidade seguinte (Koinonia, Cras, Oros) +DeliveryCityBonus."
+],
+"DeliveryPartRewards": [
+"HUV",
+"Entregas por dificuldade (Missions.DeliveryTier): facil/normal/dificil/especial/evento com exp, mito e peca; ouro 100%, prata 2/3, bronze 1/3. Cada cidade seguinte (Koinonia, Cras, Oros) +DeliveryCityBonus."
+],
+"DeliveryCityBonus": [
+"HUV",
+"Entregas por dificuldade (Missions.DeliveryTier): facil/normal/dificil/especial/evento com exp, mito e peca; ouro 100%, prata 2/3, bronze 1/3. Cada cidade seguinte (Koinonia, Cras, Oros) +DeliveryCityBonus."
+],
+"DeliveryUppedGold": [
+"HUV",
+"especial/evento com ouro: chance da peca vir upada"
+],
+"DeliveryUppedSilver": [
+"HUV",
+"... com prata"
+],
+"DeliveryTierOverride": [
+"HUV",
+"id da entrega -> facil/normal/dificil/especial/evento"
+],
+"DeliveryRewardMultiplier": [
+"HUV",
+"entregas (Delivery Service): multiplica exp/mito da medalha"
+],
+"PartyBotsHelpDeliveries": [
+"Party",
+"entregas: false = os bots da party so te seguem (voce pega os pontos)"
+],
+"PartyPatrolOffer": [
+"Party",
+"false = no posto de patrulha sai a patrulha normal, nao a \"em party\" (que nao mostra os pontos)"
+],
+"PartyBotsHelpMissions": [
+"Party",
+"patrulhas/entregas: bots da party vao aos pontos mais perto e pegam"
+],
+"MissionBotTeleportSeconds": [
+"Missoes",
+"bot que nao chega ao ponto em N s pula para la (0 = nunca)"
+],
+"MissionBotRoads": [
+"Missoes",
+"missao: o bot vai dirigindo pelas ruas ate o ponto (com os atributos do carro)"
+],
+"MissionBotReach": [
+"Missoes",
+"Entregas por dificuldade (Missions.DeliveryTier): facil/normal/dificil/especial/evento com exp, mito e peca; ouro 100%, prata 2/3, bronze 1/3. Cada cidade seguinte (Koinonia, Cras, Oros) +DeliveryCityBonus."
+],
+"MissionBotDriveRange": [
+"Missoes",
+"missao: ponto mais longe que isso -> o bot aparece la (nao anda reto pelo mapa)            // distancia (m) para o bot pegar o ponto"
+],
+"TradeBotsRefuse": [
+"HUV",
+"troca: bots as vezes recusam (party, amigos e crew sempre aceitam)"
+],
+"PartyPatrolSeconds": [
+"Party",
+"patrulha em party: tempo limite (s)"
+],
+"RushCountdown": [
+"Rush",
+"Rush Time: segundos de contagem depois de entrar na zona"
+],
+"RushWaitAtSpot": [
+"Rush",
+"Rush Time: os corredores esperam no lugar do Rush (aprendido na 1a vez) ate voce chegar"
+],
+"RushBots": [
+"Rush",
+"Rush Time: corredores (party + bots da cidade) que entram com voce"
+],
+"RushBotDamage": [
+"Rush",
+"(antigo, nao usado: veja RushBotBossHit / RushBotHuvHit)"
+],
+"BotRealDamage": [
+"Bots",
+"Bots batem no HUV/boss com o dano normal do carro (durabilidade do carro + pecas + nivel x 61-100%), como o jogador."
+],
+"HuvHitDropChance": [
+"HUV",
+"Batida no HUV da cidade: chance de cair item (protetor F/D, Speed/Accel/Dura Enhancer, peca do nivel), 1 a cada N s."
+],
+"HuvHitDropSeconds": [
+"HUV",
+"Batida no HUV da cidade: chance de cair item (protetor F/D, Speed/Accel/Dura Enhancer, peca do nivel), 1 a cada N s."
+],
+"HuvDropMittronChance": [
+"HUV",
+"... e no HUV e no Rush: chance desse item ser Mittron Enhancer ou Seed Part (N; S/H a partir do nivel da 1a peca S/H)"
+],
+"BotHitScale": [
+"Bots",
+"multiplicador desse dano"
+],
+"RushBotBossHit": [
+"Rush",
+"Rush: cada golpe de bot tira N da vida maxima do boss (x forca do carro do bot)"
+],
+"RushBotHuvHit": [
+"Rush",
+"... e dos HUVs que o boss solta"
+],
+"RushBotNearHuv": [
+"Rush",
+"Rush: depois que um HUV cai, a party te segue; bot a menos de N m de um HUV vai nele"
+],
+"RushPlayerDamage": [
+"Rush",
+"Rush: multiplicador do seu dano"
+],
+"RushPlayerMinDamage": [
+"Rush",
+"Rush: se o jogo mandar dano 0, conta N"
+],
+"RushHitDrops": [
+"Rush",
+"Rush: cada golpe seu pode dar uma peca do seu nivel para baixo"
+],
+"RushHitDropSeconds": [
+"Rush",
+"... no maximo uma a cada N s"
+],
+"RushHitUppedChance": [
+"Rush",
+"... e no HUV e no Rush: chance desse item ser Mittron Enhancer ou Seed Part (N; S/H a partir do nivel da 1a peca S/H)"
+],
+"RushRentChance": [
+"Rush",
+"Rush: chance da peca do golpe ser uma de aluguel (RENT)"
+],
+"RushShowBotDamage": [
+"Rush",
+"Rush: mostra o dano dos bots como no HUV"
+],
+"RushPowerRadius": [
+"Rush",
+"Rush: poder do boss pega os bots a ate N m de voce quando voce e jogado"
+],
+"RushBotPowerEvery": [
+"Rush",
+"Rush: o boss acerta um bot perto dele sozinho, em media a cada N s (0 = nunca)      // ... com N de chance de vir upada (+1 a +9) e com Convert"
+],
+"RushClockShift": [
+"Rush",
+"Rush Time: ajuste (s) da hora mandada ao cliente"
+],
+"PartyChaseTeleportDistance": [
+"Party",
+"HUV: bot a mais de N m do HUV pula para tras dele"
+],
+"PartyChaseCatchUp": [
+"Party",
+"HUV: velocidade x quando esta atras do HUV (para alcancar e bater)"
+],
+"PartyChaseSpeed": [
+"Party",
+"HUV: velocidade e aceleracao x da party na perseguicao (mais rapida, depende menos do pulo)"
+],
+"PartyChaseJoinDistance": [
+"Party",
+"HUV/Rush: a party te segue ate voce chegar a N m do HUV/boss; dai vai para cima"
+],
+"RushBotJumpSeconds": [
+"Rush",
+"Rush: o bot so pula para tras do boss depois de N s sem bater (ou longe)"
+],
+"RushBotJumpDistance": [
+"Rush",
+"Rush: \"longe\" do boss = mais de N m"
+],
+"RushBotBehind": [
+"Rush",
+"Rush: o bot pula para N m atras do boss"
+],
+"RushBotHitSlowSeconds": [
+"Rush",
+"Rush: depois de bater no boss, o bot fica devagar N s e volta com tudo"
+],
+"RushBotJumpAir": [
+"Rush",
+"Rush: poder do boss -> o bot fica N s no ar"
+],
+"RushBotJumpHeight": [
+"Rush",
+"... subindo ate N m"
+],
+"RushBotJumpRest": [
+"Rush",
+"... e depois de cair fica parado N s"
+],
+"RushBossRadius": [
+"Rush",
+"Rush: \"raio\" do boss (do centro ate a beirada); o bot nao entra nele"
+],
+"RushBotEdgeGap": [
+"Rush",
+"Rush: o bot anda ate N m da beirada do boss para bater"
+],
+"PartyHoldRadius": [
+"Party",
+"party parada na formacao: so volta a andar quando voce sai de N m dela"
+],
+"PartyKeepAway": [
+"Party",
+"party: nunca chega a menos de N m de voce (nao te empurra parado)"
+],
+"DomeShopChance": [
+"Cidade e trafego",
+"a cada ponto do caminho, chance do bot decidir ir a uma loja"
+],
+"DomeShopWaitSeconds": [
+"Cidade e trafego",
+"... e no HUV e no Rush: chance desse item ser Mittron Enhancer ou Seed Part (N; S/H a partir do nivel da 1a peca S/H)"
+],
+"BotGoalShopStay": [
+"Bots",
+"meta cumprida: depois de comprar fica N s na porta e volta         // parado na porta antes de entrar (no leilao: espera e compra)"
+],
+"DomeExits": [
+"Cidade e trafego",
+"saidas do lobby para a cidade (posicoes por onde voce saiu): os bots saem por elas e voltam depois"
+],
+"DomeExitChance": [
+"Cidade e trafego",
+"a cada ponto, chance do bot sair do lobby"
+],
+"DomeExitStayMin": [
+"Cidade e trafego",
+"segundos fora do lobby (foram para a cidade deles)"
+],
+"DomeExitStayMax": [
+"Cidade e trafego",
+"saidas do lobby para a cidade (posicoes por onde voce saiu): os bots saem por elas e voltam depois"
+],
+"BotLocalChatRange": [
+"Bots",
+"bot a ate N m de voce fala no chat local (balaozinho); mais longe, no geral"
+],
+"DomeShopStayMin": [
+"Cidade e trafego",
+"segundos parado na porta da loja depois da compra (nao some)"
+],
+"DomeShopStayMax": [
+"Cidade e trafego",
+"saidas do lobby para a cidade (posicoes por onde voce saiu): os bots saem por elas e voltam depois"
+],
+"DomeDrivingShare": [
+"Cidade e trafego",
+"Driver Dome: parte dos bots que anda pelo seu trajeto (o resto fica parado)"
+],
+"BotLicenses": [
+"Bots",
+"saidas do lobby para a cidade (posicoes por onde voce saiu): os bots saem por elas e voltam depois"
+],
+"BotLicensePassive": [
+"Bots",
+"false = licenca so sobe quando o bot participa de algo"
+],
+"BotActivityChance": [
+"Bots",
+"bot sem meta: chance por minuto de participar de algo (missao, HUV, Rush, corrida) e ganhar"
+],
+"BotGoalActivityChance": [
+"Bots",
+"bot com meta: chance por minuto de participar (ele corre atras)"
+],
+"BotActivityScale": [
+"Bots",
+"ganho de exp/mito dos bots quando participam (1 = como antes; menor = mais devagar)                // licencas dos bots evoluem: Rookie no comeco, depois o que eles conseguem"
+],
+"BotLicenseSpeed": [
+"Bots",
+"... velocidade do progresso (por minuto)"
+],
+"BotLicenseNeed": [
+"Bots",
+"... meta = N x (grade da proxima / 1000) pontos (Class E 6, Class C 20, No.9 140)"
+],
+"BotLicenseSwapChance": [
+"Bots",
+"saidas do lobby para a cidade (posicoes por onde voce saiu): os bots saem por elas e voltam depois"
+],
+"BotLicenseCatchUp": [
+"Bots",
+"... bot muito abaixo do que o nivel permite aprende N vezes mais rapido (1 = igual)"
+],
+"BotSpoilerChance": [
+"Bots",
+"chance do bot ter aerofolio"
+],
+"BotNeonLevel": [
+"Bots",
+"bots acima desse nivel tem neon (abaixo, nao)     // ... nivel 31+: chance por minuto de trocar a terceira licenca"
+],
+"CrewBotsTell": [
+"Crews",
+"bots da sua crew contam no chat da crew o que estao fazendo"
+],
+"PartyDomeErrandMinutes": [
+"Party",
+"saidas do lobby para a cidade (posicoes por onde voce saiu): os bots saem por elas e voltam depois"
+],
+"PartyDomeErrandIdle": [
+"Party",
+"... so quando voce esta parado no lobby ha N s      // Driver Dome: a cada ~N min um bot da party vai a uma loja e volta (0 = nunca)"
+],
+"DomeDriveSpeedMin": [
+"Cidade e trafego",
+"Driver Dome: velocidade (m/s) dos bots andando"
+],
+"DomeDriveSpeedMax": [
+"Cidade e trafego",
+"Driver Dome: limite 80 mph"
+],
+"UnderCityStageFallbackSeconds": [
+"HUV",
+"Undercity: sem a etapa 1 do cliente em N s, o servidor manda (0 = nao)"
+],
+"BotRaceStartSeconds": [
+"Bots",
+"desafio de corrida de bot: segundos depois que voce entra ate a largada"
+],
+"BotRaceAutoStart": [
+"Bots",
+"desafio: a corrida comeca sozinha (false = voce aperta Iniciar)"
+],
+"BotRaceBonusExp": [
+"Bots",
+"desafio aceito: exp extra"
+],
+"BotRaceBonusMito": [
+"Bots",
+"desafio aceito: mito extra"
+],
+"BotRaceOpenSeconds": [
+"Bots",
+"desafio: a sala do bot espera N s voce entrar; depois os bots correm sozinhos"
+],
+"PartyBotRaceLeaderShare": [
+"Party",
+"bot da party que correu na Battle Zone sem voce: o lider leva 2/3 do premio dele"
+],
+"BotRaceMinSeconds": [
+"Bots",
+"... corrida sem voce: dura entre N ..."
+],
+"BotRaceMaxSeconds": [
+"Bots",
+"... e N s (eles somem da porta da Battle Zone e voltam no fim)"
+],
+"AuctionHoldSeconds": [
+"Leilao",
+"leilao: o bot espera voce por N s quando voce se interessa"
+],
+"ChatResetMinutes": [
+"HUV",
+"a cada N minutos o chat e \"reiniciado\" (linhas vazias + dica do !!help); 0 = nunca"
+],
+"ChatResetLines": [
+"HUV",
+"quantas linhas vazias empurram as falas antigas para fora"
+],
+"HuvPartyBonusEach": [
+"HUV",
+"HUV: +5% da recompensa por membro da party"
+],
+"HuvPartyBonusMax": [
+"HUV",
+"HUV: no maximo +20% (4 membros)"
+],
+"BotHelpByBotChance": [
+"Bots",
+"outro bot topa ajudar o bot com meta (andam juntos, meta anda 70% mais rapido)"
+],
+"BotTradeRewardShare": [
+"Bots",
+"voce deu na troca o que o bot queria: 25% do valor da meta ..."
+],
+"BotTradeRewardMax": [
+"Bots",
+"... no maximo N mito"
+],
+"BotHelpAskChance": [
+"Bots",
+"bot com meta chama alguem para a party ajudar"
+],
+"BotHelpRewardShare": [
+"Bots",
+"ajudou: recompensa = 15% do valor da meta (mito) ..."
+],
+"BotHelpRewardMax": [
+"Bots",
+"... no maximo N mito"
+],
+"PartyTalk": [
+"Party",
+"party conversa com voce: discussao (Joaopvbr/Marsteh/Brunizin.X), sugestoes e elogios"
+],
+"PartyArgueSeconds": [
+"Party",
+"parado N s com 2+ dos tres na party: eles discutem"
+],
+"PartySuggestSeconds": [
+"Party",
+"intervalo minimo entre sugestoes da party"
+],
+"BotChatter": [
+"Bots",
+"bots conversam no chat (corrida, leilao, HUV, Rush, Undercity, trocas entre eles)"
+],
+"BotOffersWhenBusy": [
+"Bots",
+"false = bots nao chamam para party/corrida/leilao enquanto voce esta em missao, entrega, HUV, Rush..."
+],
+"BotOfferGapMin": [
+"Bots",
+"1 minuto entre chamadas            // intervalo minimo (s) entre ofertas no chat (party, corrida, leilao, crew, ajuda)"
+],
+"BotOfferGapMax": [
+"Bots",
+"... e maximo"
+],
+"BotOfferSeconds": [
+"Bots",
+"1 minuto para responder; depois o proximo bot chama"
+],
+"BotApproach": [
+"Bots",
+"bot vem ate voce na rua e pede para trocar, correr ou ajudar (chat local; o da sua crew tambem no chat da crew)"
+],
+"BotApproachGapMin": [
+"Bots",
+"bot vem ate voce na rua e pede para trocar, correr ou ajudar (chat local; o da sua crew tambem no chat da crew)"
+],
+"BotApproachGapMax": [
+"Bots",
+"bot vem ate voce na rua e pede para trocar, correr ou ajudar (chat local; o da sua crew tambem no chat da crew)"
+],
+"BotApproachPauseSeconds": [
+"Bots",
+"enquanto ele esta com voce, as outras chamadas param          // quanto tempo cada oferta fica valendo para responder (sim/bora)"
+],
+"BotChatterSeconds": [
+"Bots",
+"intervalo medio (s) das conversas"
+],
+"UnsupportedCars": [
+"HUV",
+"\"Support\" 0 no VehicleDisplay (o jogo desenha um tanque) + Monster CT (fechou o jogo)"
+],
+"OptionParts": [
+"Itens",
+"Option Parts (op_*) nos quadrados das pecas do carro"
+],
+"DockingParts": [
+"Itens",
+"Docking Parts (dock_*) nas pecas do carro"
+],
+"PartyFollowReplay": [
+"Party",
+"carros que o cliente 2016 nao lista na loja (e desenha errado / pode fechar o jogo)"
+],
+"PartyChaseReplay": [
+"Party",
+"HUV: true = repete o caminho do HUV; false = dirige atras dele (curvas pelo trajeto do HUV)         // party: repete os seus movimentos com atraso (false = dirige sozinho)"
+],
+"PartyFollowDelay": [
+"Party",
+"party (replay): atraso em segundos por posicao na fila"
+],
+"BattleAiEnabled": [
+"Battle Zone",
+"Corredores IA (botao de IA no assento da sala). Recompensa por corrida (com pelo menos 2 corredores): exp e mito = valor x pontos de colocacao (1o lugar = numero de corredores, ultimo = 1)."
+],
+"BattleBotWaitSeconds": [
+"Battle Zone",
+"bot que entrou numa sala da Battle Zone vai ate a porta dela e espera la ate N s"
+],
+"BattleBotRaceSeconds": [
+"Battle Zone",
+"na largada ele some (esta correndo) por ate N s; no resultado volta"
+],
+"BattleAiDifficulty": [
+"Battle Zone",
+"Dificuldade das IAs: nivel alvo = nivel do jogador x BattleAiDifficulty (0.1 = facil ... 1.0 = igual ao jogador), no maximo BattleAiMaxLevel (1-99), variando +-BattleAiLevelSpread."
+],
+"BattleAiMaxLevel": [
+"Battle Zone",
+"Dificuldade das IAs: nivel alvo = nivel do jogador x BattleAiDifficulty (0.1 = facil ... 1.0 = igual ao jogador), no maximo BattleAiMaxLevel (1-99), variando +-BattleAiLevelSpread."
+],
+"BattleAiLevelSpread": [
+"Battle Zone",
+"Dificuldade das IAs: nivel alvo = nivel do jogador x BattleAiDifficulty (0.1 = facil ... 1.0 = igual ao jogador), no maximo BattleAiMaxLevel (1-99), variando +-BattleAiLevelSpread."
+],
+"BattleAiExcludedCars": [
+"Battle Zone",
+"Carros que a IA nao usa (54 = Nevera/Enzo Ferrari: o bot ficava parado)."
+],
+"PoliceCars": [
+"Bots",
+"Carros que a IA nao usa (54 = Nevera/Enzo Ferrari: o bot ficava parado)."
+],
+"BattleFinishSeconds": [
+"Battle Zone",
+"Battle Zone: depois do primeiro na chegada, a corrida acaba em N s (ou quando todos chegam)"
+],
+"BattleCompleteBonus": [
+"Battle Zone",
+"paga o Complete Bonus Reward (estrelas) para quem termina a corrida"
+],
+"BattleBotsAsPlayers": [
+"Battle Zone",
+"na sala de espera os bots aparecem como jogador (nome, nivel, carro); na corrida viram IA"
+],
+"BattleBotsJoinRoom": [
+"Battle Zone",
+"bots entram sozinhos na sala que voce cria (voce tira clicando no assento)"
+],
+"BattleBotJoinSeconds": [
+"Battle Zone",
+"entra mais gente a cada 2 ate N segundos"
+],
+"BattleBotJoinMax": [
+"Battle Zone",
+"de 1 ate N bots de uma vez               // Leo Patrol TW/USA: so o admin tem; nenhum bot (cidade, corrida, troca, leilao)"
+],
+"BattleFrontAi": [
+"Battle Zone",
+"Posicao das IAs no grid (flag do cliente BattleZone.FrontAi): 0 = ao lado do jogador e visiveis na apresentacao."
+],
+"Evento": [
+"Eventos",
+"Evento especial: \"natal\" (neve, arvore de Natal, roupa de Papai Noel), \"valentine\", \"halloween\", \"auto\" (padrao: pelo mes do PC, cada evento dura 1 mes: outubro Halloween, dezembro Natal, fevereiro Valentine) ou \"nenhum\" (como o jogo veio). Vale ao entrar no jogo (relogue para trocar)."
+],
+"Events": [
+"Eventos",
+"Eventos do jogo ligados/desligados (nome -> 1/0), ex.: {\"Christmas\": 1, \"SnowEffectOn\": 1, \"ChristmasTree\": 1}. Nomes em Static.EventFlags. Vazio = como o jogo veio."
+],
+"LoadCharServerId": [
+"Battle Zone",
+"Id do servidor no LoadCharAck. Com 0 o cliente nao calcula a Vehicle Performance Info (mph, tempo, crash, boost do inventario: cliente 0x466876 testa o id guardado em 0x53c805)."
+],
+"BattleTeamColorReset": [
+"Battle Zone",
+"Ao sair de uma sala de time, remonta o carro para tirar a cor do time (pacote 1061, experimental)."
+],
+"BattleTeamRedColor": [
+"Battle Zone",
+"Corrida de time: pintura das IAs (formato do jogo 0x83BBGGRR). Time vermelho = assentos pares, azul = impares."
+],
+"BattleTeamBlueColor": [
+"Battle Zone",
+"Corrida de time: pintura das IAs (formato do jogo 0x83BBGGRR). Time vermelho = assentos pares, azul = impares."
+],
+"CrewCreateLevel": [
+"Crews",
+"(com o mod Escada de crews: nivel 1)"
+],
+"CrewCreateFee": [
+"Crews",
+"Crew: nivel minimo e custo para criar."
+],
+"BotsEnabled": [
+"Bots",
+"Bots (jogadores simulados): perfis em bots.json, crews de bots em crews.json (criados na 1a vez)."
+],
+"BotsCount": [
+"Bots",
+"Bots (jogadores simulados): perfis em bots.json, crews de bots em crews.json (criados na 1a vez)."
+],
+"BotsFrozen": [
+"Bots",
+"Bots so evoluem com voce: na sua party (rapido) ou na sua crew (devagar, so nivel). Os outros ficam parados."
+],
+"CityWholeCity": [
+"Cidade e trafego",
+"Moradores das cidades: CityBotsPerCity bots por cidade, espalhados pelas ruas da cidade inteira (nao em volta de voce) e nao somem quando voce se afasta. Faixa de nivel de cada cidade (min, max): Moon Palace, Koinonia, Cras, Oros."
+],
+"CityAllDriving": [
+"Cidade e trafego",
+"Moradores das cidades: CityBotsPerCity bots por cidade, espalhados pelas ruas da cidade inteira (nao em volta de voce) e nao somem quando voce se afasta. Faixa de nivel de cada cidade (min, max): Moon Palace, Koinonia, Cras, Oros."
+],
+"CrewLadder": [
+"Crews",
+"mod Escada de crews (ou ligue em Menu.bat > Mods)"
+],
+"CrewLeaderShare": [
+"Crews",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"CrewSlotsStart": [
+"Crews",
+"vagas da crew para bots chamados (recrutar/amizade); -1 = sem limite"
+],
+"CrewSlotsPerBoss": [
+"Crews",
+"+vagas por chefe da escada vencido"
+],
+"CrewTeamCallMinutes": [
+"Crews",
+"a cada ~N min um bot da sua crew chama para a dupla contra a crew da vez (0 = nunca)"
+],
+"MeetDistance": [
+"Battle Zone",
+"bot que vem ate voce (troca/presente) para a N m           // lider da crew ganha metade do mito que os membros (bots e seus slots) ganham"
+],
+"DuelNearSeconds": [
+"Battle Zone",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"DuelAutoLeaveSeconds": [
+"Battle Zone",
+"mano a mano: s depois do resultado voce sai sozinho da sala"
+],
+"DuelNearMeters": [
+"Battle Zone",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"BossMitoBase": [
+"Battle Zone",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"CrewGiftMinutes": [
+"Crews",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"CrewGiftMaxMinutes": [
+"Crews",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"CityBotsPerCity": [
+"Cidade e trafego",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"CityLevelBands": [
+"Cidade e trafego",
+"ele chama para correr. Ganhou: ele sai da crew dele e entra na sua. Sem membros: o chefe te chama e fica com a sala na Battle Zone ate perder (premio: carro dele, BossMitoBase x chefes vencidos, +1 andar na garagem). Membros na sua crew doam mito ou peca a cada CrewGiftMinutes-Max min (mais nivel, mais premio)."
+],
+"CityGroupGapMin": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityGroupGapMax": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityGroupMax": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityGroupHuvChance": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityGroupBattleChance": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityPostWaitSeconds": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityBattleMinMinutes": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityBattleMaxMinutes": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityHuvSpeedFactor": [
+"Cidade e trafego",
+"grupos de bots da mesma cidade (os de crew so com a propria crew): a cada CityGroupGapMin-Max s um grupo de 2 a CityGroupMax sai junto: HUV (sirene, mais rapido), passeio ou Battle Zone (vai ao posto, para CityPostWaitSeconds, entra, fica CityBattleMinMinutes-Max min e volta pelo mesmo posto ate o lugar de origem)."
+],
+"CityBattlePosts": [
+"Cidade e trafego",
+"postos da Battle Zone por cidade {x, y, z, direcao} (alem dos aprendidos em battle_posts.json quando voce entra na Battle Zone pela rua) e ponto fixo de cada crew na cidade (nome da crew -> {x, y}; sem = sorteado)"
+],
+"CrewSpots": [
+"Crews",
+"postos da Battle Zone por cidade {x, y, z, direcao} (alem dos aprendidos em battle_posts.json quando voce entra na Battle Zone pela rua) e ponto fixo de cada crew na cidade (nome da crew -> {x, y}; sem = sorteado)"
+],
+"BattleAiOnlyBots": [
+"Battle Zone",
+"Battle Zone: IA so com os nossos bots (carro e visual deles)"
+],
+"BotCrewExpScale": [
+"Bots",
+"exp dos bots da sua crew (0.1 = 10% do normal)"
+],
+"PartyBotGrowMinutes": [
+"Party",
+"Bots da party: a cada PartyBotGrowMinutes (ou quando voce ganha exp, no maximo 1x a cada PartyBotGrowMinGapSeconds) sobem PartyBotGrowLevels nivel(is) (ate o seu nivel + PartyBotLevelAbove), chance de peca melhor, carro do V do nivel e licencas (x PartyBotLicenseBoost)."
+],
+"PartyBotGrowMinGapSeconds": [
+"Party",
+"Bots da party: a cada PartyBotGrowMinutes (ou quando voce ganha exp, no maximo 1x a cada PartyBotGrowMinGapSeconds) sobem PartyBotGrowLevels nivel(is) (ate o seu nivel + PartyBotLevelAbove), chance de peca melhor, carro do V do nivel e licencas (x PartyBotLicenseBoost)."
+],
+"PartyBotGrowLevels": [
+"Party",
+"Bots da party: a cada PartyBotGrowMinutes (ou quando voce ganha exp, no maximo 1x a cada PartyBotGrowMinGapSeconds) sobem PartyBotGrowLevels nivel(is) (ate o seu nivel + PartyBotLevelAbove), chance de peca melhor, carro do V do nivel e licencas (x PartyBotLicenseBoost)."
+],
+"PartyBotLevelAbove": [
+"Party",
+"Bots da party: a cada PartyBotGrowMinutes (ou quando voce ganha exp, no maximo 1x a cada PartyBotGrowMinGapSeconds) sobem PartyBotGrowLevels nivel(is) (ate o seu nivel + PartyBotLevelAbove), chance de peca melhor, carro do V do nivel e licencas (x PartyBotLicenseBoost)."
+],
+"PartyBotPartChance": [
+"Party",
+"Bots da party: a cada PartyBotGrowMinutes (ou quando voce ganha exp, no maximo 1x a cada PartyBotGrowMinGapSeconds) sobem PartyBotGrowLevels nivel(is) (ate o seu nivel + PartyBotLevelAbove), chance de peca melhor, carro do V do nivel e licencas (x PartyBotLicenseBoost)."
+],
+"PartyBotLicenseBoost": [
+"Party",
+"Bots da party: a cada PartyBotGrowMinutes (ou quando voce ganha exp, no maximo 1x a cada PartyBotGrowMinGapSeconds) sobem PartyBotGrowLevels nivel(is) (ate o seu nivel + PartyBotLevelAbove), chance de peca melhor, carro do V do nivel e licencas (x PartyBotLicenseBoost)."
+],
+"BotsAppearOnline": [
+"Bots",
+"Mostra os bots como \"online\" (na cidade) na lista de membros da crew."
+],
+"BotsCrewChat": [
+"Bots",
+"Bots respondem no chat da crew quando voce escreve no canal \"team\"."
+],
+"PartyBotBonus": [
+"Party",
+"Bonus por bot na party nas recompensas de HUV (0.1 = +10% por bot)."
+],
+"CityBotsEnabled": [
+"Cidade e trafego",
+"Bots na rua: os da party seguem voce (atraso em segundos entre cada um); Marsteh e Brunizin.X estacionados."
+],
+"CityBotsSellers": [
+"Cidade e trafego",
+"Bots na rua: os da party seguem voce (atraso em segundos entre cada um); Marsteh e Brunizin.X estacionados."
+],
+"CitySellersCity": [
+"Cidade e trafego",
+"vendedores (Brunizin.X, Marsteh) so nesta cidade (4 = Oros; 0 = todas)"
+],
+"CitySellersChance": [
+"Cidade e trafego",
+"... e cada um aparece com essa chance quando voce entra"
+],
+"CityParkBots": [
+"Cidade e trafego",
+"false = sem bots estacionados na cidade (so andando)"
+],
+"CityBotFollowDelay": [
+"Cidade e trafego",
+"Bots na rua: os da party seguem voce (atraso em segundos entre cada um); Marsteh e Brunizin.X estacionados."
+],
+"CityBotFollowGap": [
+"Cidade e trafego",
+"party: para a N metros de voce (x posicao na fila)"
+],
+"CityBotSideGap": [
+"Cidade e trafego",
+"party: desvia N metros para o lado ao parar"
+],
+"CityBotHeadingMode": [
+"Cidade e trafego",
+"0-3: ajuste da rotacao dos carros dos bots (se ficarem virados errado)"
+],
+"CityDrivingBots": [
+"Cidade e trafego",
+"bots andando pelas ruas"
+],
+"CityDrivingShare": [
+"Cidade e trafego",
+"parte dos bots da cidade que anda (o resto estaciona)"
+],
+"CityDriveSpeedMin": [
+"Cidade e trafego",
+"metros por segundo (12 = 43 km/h)"
+],
+"CityDriveSpeedMax": [
+"Cidade e trafego",
+"Bots na rua: os da party seguem voce (atraso em segundos entre cada um); Marsteh e Brunizin.X estacionados."
+],
+"DomeParkedBots": [
+"Cidade e trafego",
+"bots no lobby (Driver Dome), no maximo (contando os vendedores)"
+],
+"CityBotMinDistance": [
+"Cidade e trafego",
+"party: nunca fica a menos de N m de voce (se encostar, se afasta)"
+],
+"CityOvertakeSide": [
+"Cidade e trafego",
+"bots andando: desvio lateral para ultrapassar"
+],
+"PartyChaseHuv": [
+"Party",
+"numa perseguicao de HUV, a party vai atras do HUV"
+],
+"PartyChaseDelay": [
+"Party",
+"carregando: segue o ponto do caminho do HUV de N s atras"
+],
+"PartyChaseCharge": [
+"Party",
+"segundos seguindo o HUV (carregando o booster)"
+],
+"PartyChaseAttack": [
+"Party",
+"segundos atacando (vai com tudo em cima do HUV)"
+],
+"PartyChaseBoost": [
+"Party",
+"velocidade x no ataque"
+],
+"DomeLearnLimit": [
+"Cidade e trafego",
+"pontos do Driver Dome aprendidos por onde voce anda (mais pontos = bots andam por mais lugares)"
+],
+"UppedAllQuests": [
+"Perfil upado",
+"perfil upado com todas as missoes principais feitas"
+],
+"UppedAllLicenses": [
+"Perfil upado",
+"perfil upado com todas as licencas"
+],
+"LicenseRaceCountsBoth": [
+"Crews",
+"licencas: toda corrida (tambem contra bots) conta como individual E de time"
+],
+"LicenseRewardHour": [
+"Crews",
+"recompensa das licencas todo dia a partir desta hora (relogio do PC; -1 = desliga)"
+],
+"VShopPermanentMultiplier": [
+"Battle Zone",
+"drift shop: item sem preco \"para sempre\" = maior periodo x N"
+],
+"VShopCcToMito": [
+"Battle Zone",
+"drift shop: sem CC suficiente, cada CC vale N mito"
+],
+"PartyBotDrift": [
+"Party",
+"Bots na rua: os da party seguem voce (atraso em segundos entre cada um); Marsteh e Brunizin.X estacionados."
+],
+"PartyChaseTeleportSeconds": [
+"Party",
+"HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)"
+],
+"CityBotFarSnapSeconds": [
+"Cidade e trafego",
+"seguindo: longe do lugar dele por N s, pula para o lugar            // party: derrapa e faz fumaca onde voce derrapou"
+],
+"PartyHuvContact": [
+"Party",
+"distancia (centro a centro, m) em que o bot \"encosta\" no HUV e conta o golpe"
+],
+"CityHuvHits": [
+"Cidade e trafego",
+"golpes da party no HUV da cidade"
+],
+"CityHuvHitSeconds": [
+"Cidade e trafego",
+"intervalo minimo entre golpes de um bot"
+],
+"CityHuvHitDamage": [
+"Cidade e trafego",
+"dano por golpe (fracao da durabilidade do HUV)"
+],
+"ApprenticeTutorial": [
+"Battle Zone",
+"Tutorial do proprio jogo (Apprentice): corredor novo nasce com o Birdie RTI de treino (tipo 95), faz a corrida de treino do Battle Zone e no fim escolhe o carro inicial (o de treino sai da garagem)."
+],
+"ApprenticeCarType": [
+"Battle Zone",
+"Tutorial do proprio jogo (Apprentice): corredor novo nasce com o Birdie RTI de treino (tipo 95), faz a corrida de treino do Battle Zone e no fim escolhe o carro inicial (o de treino sai da garagem)."
+],
+"CityBotSnapSeconds": [
+"Cidade e trafego",
+"voce parado: se o bot nao se arrumar em N s (ou ficar colado), pula para o lugar dele (0 = nunca)"
+],
+"PartyChaseKeepSeconds": [
+"Party",
+"HUV continua \"ativo\" ate N s sem movimento novo (evita a party ficar indo e voltando)"
+],
+"UnderCityEnabled": [
+"Battle Zone",
+"Undercity (Tatiana ou /ucm /uck /ucc /uco). Vai sozinho com sua party de bots."
+],
+"UnderCityFee": [
+"Battle Zone",
+"cobra a taxa de entrada"
+],
+"UnderCityFees": [
+"Battle Zone",
+"Moon Palace, Koinonia, Cras, Oros"
+],
+"UnderCityRewardMultiplier": [
+"Battle Zone",
+"Undercity (Tatiana ou /ucm /uck /ucc /uco). Vai sozinho com sua party de bots."
+],
+"UnderCityStartPhase": [
+"Battle Zone",
+"teste: 2 pula a Missao 1, 3 tambem a 2, 4 vai direto ao BossHUV"
+],
+"UnderCityBarrierPlayers": [
+"Battle Zone",
+"Missao 2: HUBs barreira como numa party de N (2 = 5/4/3)"
+],
+"UnderCityMission2ExtraSeconds": [
+"Battle Zone",
+"tempo extra na Missao 2"
+],
+"UnderCityBotHubSeconds": [
+"Battle Zone",
+"Missao 1: cada bot da party destroi 1 HUB a cada ~N s (0 = nao)"
+],
+"UnderCityHubsLeftForYou": [
+"Battle Zone",
+"os bots sempre deixam pelo menos N HUBs para voce"
+],
+"UnderCityBotHitSeconds": [
+"Battle Zone",
+"Missoes 3/4: cada bot perto de um HUV bate a cada ~N s (0 = nao)"
+],
+"UnderCityBotHitRange": [
+"Battle Zone",
+"metros do HUV para o golpe contar"
+],
+"UnderCityBotHitAnywhere": [
+"Battle Zone",
+"true = os bots batem mesmo sem estar perto (se nao acharem o HUV)"
+],
+"UnderCityBotDamage": [
+"Battle Zone",
+"dano de cada golpe de bot (fracao da vida do HUV)"
+],
+"UnderCityBotBossDamage": [
+"Battle Zone",
+"no BossHUV"
+],
+"UnderCityBotKillShare": [
+"Battle Zone",
+"voce ganha esta parte da exp/mito dos HUVs que os bots pegam"
+],
+"UnderCityBetaClass": [
+"Battle Zone",
+"classe (4 = A) a partir da qual a peca do set e Beta"
+],
+"UnderCityEnhancer": [
+"Battle Zone",
+"Mittron Enhancer"
+],
+"UnderCityEnhancers": [
+"Battle Zone",
+"quantos por classe D, C, B, A, S          // Driver Dome: para de aprender pontos novos depois de N (fica fixo)"
+],
+"BotVisuals": [
+"Bots",
+"pecas visuais nos bots (menos Marsteh, Brunizin.X e seus corredores)"
+],
+"PlayerCrewLevel": [
+"Battle Zone",
+"cor da placa das crews criadas por voce: 0 verde, 1 azul, 2 rosa, 3 laranja            // bots estacionados no Driver Dome (onde voce ja passou)"
+],
+"CityParkedBots": [
+"Cidade e trafego",
+"Undercity (Tatiana ou /ucm /uck /ucc /uco). Vai sozinho com sua party de bots."
+],
+"MarstehColor": [
+"Battle Zone",
+"pintura (paleta do jogo 0-28): 24 Carmine (vermelho)"
+],
+"BrunizinColor": [
+"Battle Zone",
+"22 Black pearl (preto)"
+],
+"BotColorByte": [
+"Bots",
+"onde fica a cor no carro (3 ou 0) — mude se as cores nao aparecerem           // outros bots estacionados pela cidade"
+],
+"CityParkedRadius": [
+"Cidade e trafego",
+"ate quantos metros de onde voce entrou"
+],
+"CityBotViewRange": [
+"Cidade e trafego",
+"distancia em que os estacionados aparecem"
+],
+"CityBotsDebugMove": [
+"Cidade e trafego",
+"registra um movimento do jogador no log (ajuda a calibrar)"
+],
+"PartyBotComboChance": [
+"Party",
+"Combo da party: chance de cada bot da party somar +1 a cada combo seu; mito a cada N combos da party."
+],
+"PartyComboRewardEvery": [
+"Party",
+"Combo da party: chance de cada bot da party somar +1 a cada combo seu; mito a cada N combos da party."
+],
+"PartyComboRewardMito": [
+"Party",
+"Combo da party: chance de cada bot da party somar +1 a cada combo seu; mito a cada N combos da party."
+],
+"PartyComboRewards": [
+"Party",
+"false = o combo da party nao da recompensa (so conta)"
+],
+"AltRewardShare": [
+"Battle Zone",
+"Outros corredores da sua conta na party ganham exp/mito junto (1.0 = 100% do que voce ganhou)."
+],
+"PartyBotExpShare": [
+"Party",
+"bots da party (nao os seus corredores) ganham essa parte da sua exp/mito"
+],
+"PartyBotExpTable": [
+"Party",
+"... e mostram no chat da party: exp p/ o proximo nivel e progresso das licencas"
+],
+"BotLicenseActivity": [
+"Bots",
+"... pontos de licenca por atividade feita com voce"
+],
+"BotExpPerLevel": [
+"Bots",
+"exp do bot para subir do nivel N = max(100, N x isso)"
+],
+"BotAvatarIds": [
+"Bots",
+"Personagens (rostos) usados pelos bots, em rodizio. Ajuste se algum numero nao existir no seu cliente."
+],
+"AuctionEnabled": [
+"Leilao",
+"Leilao vivo: bots anunciam itens e compram os seus."
+],
+"AuctionBotStock": [
+"Leilao",
+"quantos anuncios de bots ficam a venda"
+],
+"AuctionCarStock": [
+"Leilao",
+"carros de bots a venda (alem dos bots fixos Marsteh e Brunizin.X)"
+],
+"AuctionCarMaxKm": [
+"Leilao",
+"Preco dos carros conforme o estado: km rodados (ate AuctionCarMaxKm tira ate AuctionCarKmDiscount) e combustivel (tanque vazio tira ate AuctionCarFuelDiscount). 0.12 = 12%."
+],
+"AuctionCarKmDiscount": [
+"Leilao",
+"Preco dos carros conforme o estado: km rodados (ate AuctionCarMaxKm tira ate AuctionCarKmDiscount) e combustivel (tanque vazio tira ate AuctionCarFuelDiscount). 0.12 = 12%."
+],
+"AuctionCarFuelDiscount": [
+"Leilao",
+"Preco dos carros conforme o estado: km rodados (ate AuctionCarMaxKm tira ate AuctionCarKmDiscount) e combustivel (tanque vazio tira ate AuctionCarFuelDiscount). 0.12 = 12%."
+],
+"AuctionFeePercent": [
+"Leilao",
+"taxa de registro (perdida), como no jogo original"
+],
+"AuctionDays": [
+"Leilao",
+"anuncio expira depois de N dias"
+],
+"AuctionBuyChanceBargain": [
+"Leilao",
+"Chance (por minuto) de um bot comprar o SEU anuncio. Comparado a loja e ao anuncio mais barato do leilao: abaixo da loja = Bargain (~3 min), abaixo do leilao = Cheap (~5 min), ate 1.5x = Fair (~17 min), ate 2.5x = Pricey (~1 h), ate 5x = Expensive (~8 h), acima disso VeryExpensive (cai quanto mais caro)."
+],
+"AuctionBuyChanceCheap": [
+"Leilao",
+"Chance (por minuto) de um bot comprar o SEU anuncio. Comparado a loja e ao anuncio mais barato do leilao: abaixo da loja = Bargain (~3 min), abaixo do leilao = Cheap (~5 min), ate 1.5x = Fair (~17 min), ate 2.5x = Pricey (~1 h), ate 5x = Expensive (~8 h), acima disso VeryExpensive (cai quanto mais caro)."
+],
+"AuctionBuyChanceFair": [
+"Leilao",
+"Chance (por minuto) de um bot comprar o SEU anuncio. Comparado a loja e ao anuncio mais barato do leilao: abaixo da loja = Bargain (~3 min), abaixo do leilao = Cheap (~5 min), ate 1.5x = Fair (~17 min), ate 2.5x = Pricey (~1 h), ate 5x = Expensive (~8 h), acima disso VeryExpensive (cai quanto mais caro)."
+],
+"AuctionBuyChancePricey": [
+"Leilao",
+"Chance (por minuto) de um bot comprar o SEU anuncio. Comparado a loja e ao anuncio mais barato do leilao: abaixo da loja = Bargain (~3 min), abaixo do leilao = Cheap (~5 min), ate 1.5x = Fair (~17 min), ate 2.5x = Pricey (~1 h), ate 5x = Expensive (~8 h), acima disso VeryExpensive (cai quanto mais caro)."
+],
+"AuctionBuyChanceExpensive": [
+"Leilao",
+"Chance (por minuto) de um bot comprar o SEU anuncio. Comparado a loja e ao anuncio mais barato do leilao: abaixo da loja = Bargain (~3 min), abaixo do leilao = Cheap (~5 min), ate 1.5x = Fair (~17 min), ate 2.5x = Pricey (~1 h), ate 5x = Expensive (~8 h), acima disso VeryExpensive (cai quanto mais caro)."
+],
+"AuctionBuyChanceVeryExpensive": [
+"Leilao",
+"Chance (por minuto) de um bot comprar o SEU anuncio. Comparado a loja e ao anuncio mais barato do leilao: abaixo da loja = Bargain (~3 min), abaixo do leilao = Cheap (~5 min), ate 1.5x = Fair (~17 min), ate 2.5x = Pricey (~1 h), ate 5x = Expensive (~8 h), acima disso VeryExpensive (cai quanto mais caro)."
+],
+"AuctionRareItemValue": [
+"Leilao",
+"Item que vale mais que isso tem menos compradores: a chance cai (10x o valor = metade da chance)."
+],
+"AuctionBotTurnover": [
+"Leilao",
+"Chance (por minuto) de um anuncio de bot sumir (outro bot comprou) e ser trocado por outro."
+],
+"BattleExpPerPlace": [
+"Battle Zone",
+"Chance (por minuto) de um anuncio de bot sumir (outro bot comprou) e ser trocado por outro."
+],
+"BattleMitoPerPlace": [
+"Battle Zone",
+"Chance (por minuto) de um anuncio de bot sumir (outro bot comprou) e ser trocado por outro."
+],
+"BattleRewardCards": [
+"Battle Zone",
+"Cartas \"?\" no fim da corrida: cada carta aberta da um item aleatorio (ate o seu nivel)."
+],
+"ModifyEnabled": [
+"Battle Zone",
+"Modify (peca + Mittron Enhancer): sobe o nivel +1 com +1..3 pontos. Taxa de mito = ModifyFeePerLevel x (nivel+1)."
+],
+"PartShopSendAcks": [
+"Lojas",
+"Responde Modify/Convert com um pacote de confirmacao (eco do pedido) para o Part Shop nao ficar bloqueado. Palpite."
+],
+"PartQualityRoll": [
+"Lojas",
+"pecas de desempenho (loja, Rush, entregas, RENT) sorteiam a qualidade"
+],
+"PartQualityRange": [
+"Lojas",
+"... de 0 ate N pontos a mais sobre o padrao: N, S, H, U"
+],
+"ModifyFeePerLevel": [
+"Battle Zone",
+"Responde Modify/Convert com um pacote de confirmacao (eco do pedido) para o Part Shop nao ficar bloqueado. Palpite."
+],
+"SellBonus": [
+"Battle Zone",
+"Part Shop, venda: +SellBonus mito por item; +SellQualityMito por ponto de qualidade (peca/dock/option); +SellUpgradeMito por nivel de up."
+],
+"AuctionConvertedChance": [
+"Leilao",
+"leilao: chance de option/dock anunciado ja vir com Convert"
+],
+"AuctionItemPriceMultiplier": [
+"Leilao",
+"leilao, precos: itens = preco da loja x AuctionItemPriceMultiplier; +AuctionLevelBonus por nivel/100 da peca (nivel 100 = 2x com 1.0); +AuctionUpgradeBonus por +N; +AuctionQualityBonus por ponto de qualidade; Convert x AuctionConvertedMultiplier; carros = preco da loja x AuctionCarPriceMultiplier"
+],
+"AuctionLevelBonus": [
+"Leilao",
+"leilao, precos: itens = preco da loja x AuctionItemPriceMultiplier; +AuctionLevelBonus por nivel/100 da peca (nivel 100 = 2x com 1.0); +AuctionUpgradeBonus por +N; +AuctionQualityBonus por ponto de qualidade; Convert x AuctionConvertedMultiplier; carros = preco da loja x AuctionCarPriceMultiplier"
+],
+"AuctionUpgradeBonus": [
+"Leilao",
+"leilao, precos: itens = preco da loja x AuctionItemPriceMultiplier; +AuctionLevelBonus por nivel/100 da peca (nivel 100 = 2x com 1.0); +AuctionUpgradeBonus por +N; +AuctionQualityBonus por ponto de qualidade; Convert x AuctionConvertedMultiplier; carros = preco da loja x AuctionCarPriceMultiplier"
+],
+"AuctionQualityBonus": [
+"Leilao",
+"leilao, precos: itens = preco da loja x AuctionItemPriceMultiplier; +AuctionLevelBonus por nivel/100 da peca (nivel 100 = 2x com 1.0); +AuctionUpgradeBonus por +N; +AuctionQualityBonus por ponto de qualidade; Convert x AuctionConvertedMultiplier; carros = preco da loja x AuctionCarPriceMultiplier"
+],
+"AuctionConvertedMultiplier": [
+"Leilao",
+"leilao, precos: itens = preco da loja x AuctionItemPriceMultiplier; +AuctionLevelBonus por nivel/100 da peca (nivel 100 = 2x com 1.0); +AuctionUpgradeBonus por +N; +AuctionQualityBonus por ponto de qualidade; Convert x AuctionConvertedMultiplier; carros = preco da loja x AuctionCarPriceMultiplier"
+],
+"AuctionCarPriceMultiplier": [
+"Leilao",
+"leilao, precos: itens = preco da loja x AuctionItemPriceMultiplier; +AuctionLevelBonus por nivel/100 da peca (nivel 100 = 2x com 1.0); +AuctionUpgradeBonus por +N; +AuctionQualityBonus por ponto de qualidade; Convert x AuctionConvertedMultiplier; carros = preco da loja x AuctionCarPriceMultiplier"
+],
+"AuctionCarShopPrice": [
+"Leilao",
+"carros dos bots no leilao = preco da loja (so o desconto de km/combustivel)"
+],
+"AuctionCouponChance": [
+"Leilao",
+"leilao: chance de cada anuncio novo de bot ser um cupom de carro (Coupon Book); preco = preco do carro x fator"
+],
+"AuctionCouponPriceFactor": [
+"Leilao",
+"leilao: chance de cada anuncio novo de bot ser um cupom de carro (Coupon Book); preco = preco do carro x fator"
+],
+"OptionQualityRange": [
+"Itens",
+"Option Part: 0 ate N pontos a mais ao ganhar/comprar"
+],
+"SellQualityMito": [
+"Battle Zone",
+"leilao: chance de cada anuncio novo de bot ser um cupom de carro (Coupon Book); preco = preco do carro x fator"
+],
+"SellUpgradeMito": [
+"Battle Zone",
+"leilao: chance de cada anuncio novo de bot ser um cupom de carro (Coupon Book); preco = preco do carro x fator"
+],
+"DockPointRoll": [
+"Itens",
+"Pontos do Dock (somam direto no tipo dele: Speed, Accel, Crash ou Boost), sorteados pela letra. Por grau N, S, H, U: letra A sorteia de DockPointMin ate DockPointMin + DockPointSpread; a ultima letra de DockPointMax ate DockPointMax + DockPointSpread; as do meio ficam no caminho. Mais facil sair perto do minimo."
+],
+"CouponsEnabled": [
+"Itens",
+"Livro de cupons: guarda os contadores do cliente (coupons.json), marca/abre/entrega o cupom e a loja vende o carro de cupom gastando o item do cupom."
+],
+"DockRowEnabled": [
+"Itens",
+"Docks do pacote de nivel: os 4 (Speed, Accel, Crash, Booster) na mesma fileira do carro dao +DockRowBonus em cada atributo e a opcao sorteada no pacote (Turbo Start ou Drift Booster)."
+],
+"DockRowBonus": [
+"Itens",
+"Docks do pacote de nivel: os 4 (Speed, Accel, Crash, Booster) na mesma fileira do carro dao +DockRowBonus em cada atributo e a opcao sorteada no pacote (Turbo Start ou Drift Booster)."
+],
+"DockPointMin": [
+"Itens",
+"Docks do pacote de nivel: os 4 (Speed, Accel, Crash, Booster) na mesma fileira do carro dao +DockRowBonus em cada atributo e a opcao sorteada no pacote (Turbo Start ou Drift Booster)."
+],
+"DockPointMax": [
+"Itens",
+"Docks do pacote de nivel: os 4 (Speed, Accel, Crash, Booster) na mesma fileira do carro dao +DockRowBonus em cada atributo e a opcao sorteada no pacote (Turbo Start ou Drift Booster)."
+],
+"DockPointSpread": [
+"Itens",
+"Docks do pacote de nivel: os 4 (Speed, Accel, Crash, Booster) na mesma fileira do carro dao +DockRowBonus em cada atributo e a opcao sorteada no pacote (Turbo Start ou Drift Booster)."
+],
+"DockPointStep": [
+"Itens",
+"Cada letra soma N pontos sobre a anterior (A = DockPointMin, B = +N, C = +2N...). 0 = usa DockPointMax."
+],
+"SecondaryQuestRewardMultiplier": [
+"Battle Zone",
+"Recompensa de missao que nao existe na tabela (nao deve acontecer): evita travar o servidor. Missoes secundarias (rq_*): o jogo mostra o DOBRO da tabela (ex.: 280 exp / 1600 mito contra 140 / 800)."
+],
+"UnknownQuestExp": [
+"Battle Zone",
+"exp de uma quest que nao esta na tabela do servidor"
+],
+"UnknownQuestMito": [
+"Battle Zone",
+"mito de uma quest que nao esta na tabela do servidor"
+],
+"AutoLogin": [
+"Battle Zone",
+"Se true, qualquer usuario/senha digitado no login entra na conta offline."
+],
+"NormalAccount": [
+"Contas",
+"Duas contas no AutoLogin: qualquer nome entra na conta NORMAL (NormalAccount, sem o perfil upado). Para entrar na conta ADMIN (a que tem o perfil upado), digite AdminAccount como usuario no login (no Start.bat) ou deixe AdminLogin = true."
+],
+"AdminAccount": [
+"Contas",
+"Duas contas no AutoLogin: qualquer nome entra na conta NORMAL (NormalAccount, sem o perfil upado). Para entrar na conta ADMIN (a que tem o perfil upado), digite AdminAccount como usuario no login (no Start.bat) ou deixe AdminLogin = true."
+],
+"AdminLogin": [
+"Contas",
+"Duas contas no AutoLogin: qualquer nome entra na conta NORMAL (NormalAccount, sem o perfil upado). Para entrar na conta ADMIN (a que tem o perfil upado), digite AdminAccount como usuario no login (no Start.bat) ou deixe AdminLogin = true."
+],
+"AutoCreateAccounts": [
+"Battle Zone",
+"Login com outro nome: cria a conta na hora (vazia) e guarda os corredores dela. Os outros corredores da conta viram bots (amigos, party). Nome vazio = NormalAccount."
+],
+"RefreshListAfterCreate": [
+"Battle Zone",
+"Reenvia a lista de corredores ao cliente logo apos criar um corredor."
+],
+"StartLevel": [
+"Battle Zone",
+"Estado inicial de um perfil novo."
+],
+"StartMito": [
+"Battle Zone",
+"Estado inicial de um perfil novo."
+],
+"StartCarID": [
+"Battle Zone",
+"1 = Kicker (V1)"
+],
+"CarTierLevels": [
+"Lojas",
+"Nivel minimo do personagem para COMPRAR carros de cada tier (V1..V9)."
+],
+"EconomiaEnergia": [
+"Battle Zone",
+"Economia de energia: menos carros do trafego e bots que o jogo precisa desenhar e simular (o DriftCity.exe e quem mais gasta). Desligada por padrao; ligue com \"EconomiaEnergia\": true no server.json."
+]
+}

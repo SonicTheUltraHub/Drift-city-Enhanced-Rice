@@ -1,0 +1,9 @@
+
+# Arquivos do jogo (cliente Drift City) - nao vao para o repositorio.
+# Ficam so no download do forum (RaGEZONE).
+Cliente/DriftCity.exe
+Cliente/*.agt
+Cliente/Patch/
+Cliente/Data_US/World.agt
+Cliente/Data/GameUI/
+Instalador/modificacoes/*.completo

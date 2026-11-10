@@ -1,0 +1,2041 @@
+{
+"gc": {
+"GC_LadderPoint_2x": 0,
+"GC_LadderPoint_3x": 1,
+"GC_LadderPoint_4x": 2,
+"GC_LadderPoint_6x": 3,
+"GC_LadderPoint_8x": 4,
+"GC_MQuestClear": 5,
+"GC_BattleTeam": 6,
+"GC_BattlePersonal": 7,
+"GC_BattleTimePercent": 8,
+"GC_FieldTime": 9,
+"GC_PartypatrolMoon": 10,
+"GC_PartypatrolKoi": 11,
+"GC_PartypatrolCras": 12,
+"GC_PartypatrolOros": 13,
+"GC_BattleTrackMoon": 14,
+"GC_BattleTrackKoi": 15,
+"GC_BattleTrackCras": 16,
+"GC_BattleTrackOros": 17,
+"GC_ChasingClear": 18,
+"GC_RushtimeClear": 19,
+"GC_LuckyDriver": 20,
+"GC_QuickGold": 21,
+"GC_QuickSiver": 22,
+"GC_QuickBronze": 23,
+"GC_QuickService": 24,
+"GC_UndercityClear": 25,
+"GC_RQuestClear": 26,
+"GC_PatrolClear": 27,
+"GC_PartyPatrolClear": 28,
+"GC_MitaCritical": 29,
+"GC_MitaEnhance": 30,
+"GC_CamoKitUseTime": 31,
+"GC_MissionToken": 32,
+"GC_AuctionOn": 33,
+"GC_AuctionSuccess": 34,
+"GC_Challenger": 35,
+"GC_Guardian": 36,
+"GC_PartsEnhanceX": 37,
+"GC_PartsEnhanceXII": 38,
+"GC_OMD": 39,
+"GC_TEAMROO": 40,
+"GC_LicenseGain_7022": 41,
+"GC_LicenseGain_7026": 42,
+"GC_LicenseGain_7030": 43,
+"GC_LicenseGain_7034": 44,
+"GC_LicenseGain_7014": 142,
+"GC_LicenseGain_7017": 46,
+"GC_LicenseGain_7040": 47,
+"GC_LicenseGain_7038": 48,
+"GC_LicenseGain_7043": 49,
+"GC_LicenseGain_7041": 50,
+"GC_LicenseGain_7003": 51,
+"GC_LicenseGain_7004": 52,
+"GC_LicenseGain_7005": 53,
+"GC_GhostBattle": 54,
+"GC_GhostBattle_ch": 55,
+"GC_QuickMoon_001": 56,
+"GC_QuickMoon_002": 57,
+"GC_QuickMoon_003": 58,
+"GC_QuickMoon_004": 59,
+"GC_QuickMoon_005": 60,
+"GC_QuickMoon_006": 61,
+"GC_QuickMoon_007": 62,
+"GC_QuickMoon_008": 63,
+"GC_QuickMoon_009": 64,
+"GC_QuickMoon_010": 65,
+"GC_QuickMoon_011": 66,
+"GC_QuickMoon_012": 67,
+"GC_QuickGMoon_001": 68,
+"GC_QuickGMoon_002": 69,
+"GC_QuickGMoon_003": 70,
+"GC_QuickGMoon_004": 71,
+"GC_QuickGMoon_005": 72,
+"GC_QuickGMoon_006": 73,
+"GC_QuickGMoon_007": 74,
+"GC_QuickGMoon_008": 75,
+"GC_QuickGMoon_009": 76,
+"GC_QuickGMoon_010": 77,
+"GC_QuickGMoon_011": 78,
+"GC_QuickGMoon_012": 79,
+"GC_QuickGKoi_013": 80,
+"GC_QuickGKoi_014": 81,
+"GC_QuickGKoi_015": 82,
+"GC_QuickGKoi_016": 83,
+"GC_QuickGKoi_017": 84,
+"GC_QuickGKoi_018": 85,
+"GC_QuickGKoi_019": 86,
+"GC_QuickGKoi_020": 87,
+"GC_QuickGKoi_021": 88,
+"GC_QuickGKoi_022": 89,
+"GC_QuickGKoi_023": 90,
+"GC_QuickGKoi_024": 91,
+"GC_QuickGCras_025": 92,
+"GC_QuickGCras_026": 93,
+"GC_QuickGCras_027": 94,
+"GC_QuickGCras_028": 95,
+"GC_QuickGCras_029": 96,
+"GC_QuickGCras_030": 97,
+"GC_QuickGCras_031": 98,
+"GC_QuickGCras_032": 99,
+"GC_QuickGCras_033": 100,
+"GC_QuickGCras_034": 101,
+"GC_QuickGCras_035": 102,
+"GC_QuickGCras_036": 103,
+"GC_QuickGOros_037": 104,
+"GC_QuickGOros_038": 105,
+"GC_QuickGOros_039": 106,
+"GC_QuickGOros_040": 107,
+"GC_QuickGOros_041": 108,
+"GC_QuickGOros_042": 109,
+"GC_QuickGOros_043": 110,
+"GC_QuickGOros_044": 111,
+"GC_QuickGOros_045": 112,
+"GC_QuickGOros_046": 113,
+"GC_QuickGOros_047": 114,
+"GC_ChasingClear_Mo": 115,
+"GC_ChasingClear_Ko": 116,
+"GC_ChasingClear_Cr": 117,
+"GC_ChasingClear_Or": 118,
+"GC_PartyChasingClear_Mo": 119,
+"GC_PartyChasingClear_Ko": 120,
+"GC_PartyChasingClear_Cr": 121,
+"GC_PartyChasingClear_Or": 122,
+"GC_PartyChasingClear": 123,
+"GC_UndercityClear_MO": 124,
+"GC_UndercityClear_KO": 125,
+"GC_UndercityClear_CR": 126,
+"GC_PatrolMoon": 127,
+"GC_PatrolKoi": 128,
+"GC_PatrolCras": 129,
+"GC_PatrolOros": 130,
+"GC_LicenseGain_7054": 131,
+"GC_LicenseGain_7055": 132,
+"GC_LicenseGain_7056": 133,
+"GC_LicenseGain_7057_7058": 134,
+"GC_RQuestClear_Mo": 135,
+"GC_RQuestClear_Ko": 136,
+"GC_LicenseGain_7035": 137,
+"GC_LicenseGain_7036": 138,
+"GC_LicenseGain_7037": 139,
+"GC_LicenseGain_7012": 140,
+"GC_LicenseGain_7013": 141,
+"GC_LicenseGain_7019": 143,
+"GC_LicenseGain_7020": 144,
+"GC_LicenseGain_7021": 145,
+"GC_Reputation_01": 146,
+"GC_Reputation_02": 147,
+"GC_Reputation_03": 148,
+"GC_DCbadge_01": 149,
+"GC_DCbadge_02": 150,
+"GC_DCbadge_03": 151,
+"GC_DCbadge_04": 152,
+"GC_DCbadge_05": 153,
+"GC_DCbadge_06": 154,
+"GC_DCbadge_07": 155,
+"GC_DCbadge_08": 156,
+"GC_DCbadge_09": 157,
+"GC_DCbadge_10": 158,
+"GC_DCbadge_11": 159,
+"GC_DCbadge_12": 160,
+"GC_ThirdAnni_01": 161,
+"GC_ThirdAnni_02": 162,
+"GC_ThirdAnni_03": 163,
+"GC_QuickGMoon_048": 164,
+"GC_QuickGMoon_049": 165,
+"GC_QuickGMoon_050": 166,
+"GC_QuickGMoon_051": 167,
+"GC_QuickGKoi_052": 168,
+"GC_QuickGKoi_053": 169,
+"GC_QuickGKoi_054": 170,
+"GC_QuickGKoi_055": 171,
+"GC_QuickGCras_056": 172,
+"GC_QuickGCras_057": 173,
+"GC_QuickGCras_058": 174,
+"GC_QuickGCras_059": 175,
+"GC_MitaCount": 176,
+"GC_UpgradeLastMonth": 177,
+"GC_EnchantLastMonth": 178,
+"GC_CreateLastMonth": 179,
+"GC_UpgradeThisMonth": 180,
+"GC_EnchantThisMonth": 181,
+"GC_CreateThisMonth": 182,
+"GC_LicenseGain_7047": 183,
+"GC_LicenseGain_7010": 184,
+"GC_LicenseGain_7050": 185,
+"GC_LicenseGain_7048": 186,
+"GC_PartsEnhanceXI": 187,
+"GC_PartsEnhanceXIII": 188,
+"GC_PartsEnhanceXV": 189,
+"GC_PartsEnhanceXIX": 190,
+"GC_MoQuestClear": 191,
+"GC_CoQuestClear": 192,
+"GC_CrQuestClear": 193,
+"GC_OrQuestClear": 194,
+"GC_NeoChapterClear": 195,
+"GC_indecoinCount": 196,
+"GC_Carupgrade": 197,
+"GC_Neocity_Huv": 198,
+"GC_DCGP_Win": 199
+},
+"licenses": [
+{
+"id": 7000,
+"name": "Rookie",
+"support": true,
+"any": true,
+"conds": [
+[
+"GC_LadderPoint_2x",
+0
+],
+[
+"GC_LadderPoint_3x",
+0
+],
+[
+"GC_LadderPoint_4x",
+0
+],
+[
+"GC_LadderPoint_6x",
+0
+],
+[
+"GC_LadderPoint_8x",
+0
+]
+]
+},
+{
+"id": 7001,
+"name": "Class E",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_BattleTeam",
+20
+],
+[
+"GC_BattlePersonal",
+10
+]
+]
+},
+{
+"id": 7002,
+"name": "Class D",
+"support": true,
+"any": true,
+"conds": [
+[
+"GC_BattleTeam",
+60
+],
+[
+"GC_BattlePersonal",
+30
+],
+[
+"GC_BattleTrackMoon",
+100
+]
+]
+},
+{
+"id": 7003,
+"name": "Class C",
+"support": true,
+"any": true,
+"conds": [
+[
+"GC_BattleTeam",
+150
+],
+[
+"GC_BattlePersonal",
+100
+],
+[
+"GC_BattleTrackMoon",
+100
+],
+[
+"GC_BattleTrackKoi",
+100
+]
+]
+},
+{
+"id": 7004,
+"name": "Class B",
+"support": true,
+"any": true,
+"conds": [
+[
+"GC_BattleTeam",
+300
+],
+[
+"GC_BattlePersonal",
+200
+],
+[
+"GC_BattleTrackMoon",
+100
+],
+[
+"GC_BattleTrackKoi",
+100
+],
+[
+"GC_BattleTrackCras",
+200
+]
+]
+},
+{
+"id": 7005,
+"name": "Class A",
+"support": true,
+"any": true,
+"conds": [
+[
+"GC_BattleTeam",
+300
+],
+[
+"GC_BattlePersonal",
+300
+],
+[
+"GC_BattleTrackMoon",
+100
+],
+[
+"GC_BattleTrackKoi",
+100
+],
+[
+"GC_BattleTrackCras",
+200
+],
+[
+"GC_BattleTrackOros",
+300
+]
+]
+},
+{
+"id": 7006,
+"name": "Class AA",
+"support": true,
+"any": true,
+"conds": [
+[
+"GC_BattleTrackMoon",
+1000
+],
+[
+"GC_BattleTrackKoi",
+1000
+],
+[
+"GC_BattleTrackCras",
+1000
+],
+[
+"GC_BattleTrackOros",
+1000
+]
+]
+},
+{
+"id": 7007,
+"name": "Class AAA",
+"support": true,
+"any": true,
+"conds": [
+[
+"GC_BattleTrackMoon",
+2000
+],
+[
+"GC_BattleTrackKoi",
+2000
+],
+[
+"GC_BattleTrackCras",
+2000
+],
+[
+"GC_BattleTrackOros",
+2000
+]
+]
+},
+{
+"id": 7008,
+"name": "OMD Special",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_OMD",
+1
+],
+[
+"GC_MQuestClear",
+1
+],
+[
+"GC_BattleTrackMoon",
+2000
+],
+[
+"GC_BattleTrackKoi",
+2000
+],
+[
+"GC_BattleTrackCras",
+2000
+],
+[
+"GC_BattleTrackOros",
+2000
+]
+]
+},
+{
+"id": 7009,
+"name": "ROO Special",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_TEAMROO",
+1
+],
+[
+"GC_MQuestClear",
+1
+],
+[
+"GC_BattleTrackMoon",
+2000
+],
+[
+"GC_BattleTrackKoi",
+2000
+],
+[
+"GC_BattleTrackCras",
+2000
+],
+[
+"GC_BattleTrackOros",
+2000
+]
+]
+},
+{
+"id": 7010,
+"name": "No.9",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_MQuestClear",
+1
+],
+[
+"GC_BattleTrackMoon",
+5000
+],
+[
+"GC_BattleTrackKoi",
+5000
+],
+[
+"GC_BattleTrackCras",
+5000
+],
+[
+"GC_BattleTrackOros",
+5000
+]
+]
+},
+{
+"id": 7011,
+"name": "Mittron Island Guardian",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7040",
+1
+],
+[
+"GC_LicenseGain_7043",
+1
+],
+[
+"GC_LicenseGain_7038",
+1
+],
+[
+"GC_LicenseGain_7041",
+1
+],
+[
+"GC_LicenseGain_7034",
+1
+],
+[
+"GC_LicenseGain_7047",
+1
+],
+[
+"GC_LicenseGain_7010",
+1
+],
+[
+"GC_LicenseGain_7050",
+1
+],
+[
+"GC_LicenseGain_7048",
+1
+]
+]
+},
+{
+"id": 7012,
+"name": "Team Battle Semi Pro",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7003",
+1
+],
+[
+"GC_BattleTeam",
+1000
+]
+]
+},
+{
+"id": 7013,
+"name": "Team Battle Pro",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7004",
+1
+],
+[
+"GC_BattleTeam",
+3000
+]
+]
+},
+{
+"id": 7014,
+"name": "Team Battle Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7005",
+1
+],
+[
+"GC_BattleTeam",
+5000
+]
+]
+},
+{
+"id": 7015,
+"name": "Ind. Battle Semi Pro",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7003",
+1
+],
+[
+"GC_BattlePersonal",
+1000
+]
+]
+},
+{
+"id": 7016,
+"name": "Ind. Battle Pro",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7004",
+1
+],
+[
+"GC_BattlePersonal",
+3000
+]
+]
+},
+{
+"id": 7017,
+"name": "Ind. Battle Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7005",
+1
+],
+[
+"GC_BattlePersonal",
+5000
+]
+]
+},
+{
+"id": 7018,
+"name": "Underground",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7038",
+1
+],
+[
+"GC_LicenseGain_7041",
+1
+],
+[
+"GC_LicenseGain_7043",
+1
+],
+[
+"GC_FieldTime",
+180000
+]
+]
+},
+{
+"id": 7019,
+"name": "Moon Palace Grade C",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGMoon_001",
+1
+],
+[
+"GC_QuickGMoon_002",
+1
+],
+[
+"GC_QuickGMoon_003",
+1
+],
+[
+"GC_PatrolMoon",
+5
+]
+]
+},
+{
+"id": 7020,
+"name": "Moon Palace Grade B",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGMoon_004",
+1
+],
+[
+"GC_QuickGMoon_005",
+1
+],
+[
+"GC_QuickGMoon_006",
+1
+],
+[
+"GC_PatrolMoon",
+10
+],
+[
+"GC_ChasingClear_Mo",
+10
+]
+]
+},
+{
+"id": 7021,
+"name": "Moon Palace Grade A",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGMoon_007",
+1
+],
+[
+"GC_QuickGMoon_008",
+1
+],
+[
+"GC_QuickGMoon_009",
+1
+],
+[
+"GC_PatrolMoon",
+20
+],
+[
+"GC_ChasingClear_Mo",
+20
+]
+]
+},
+{
+"id": 7022,
+"name": "Moon Palace Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGMoon_010",
+1
+],
+[
+"GC_QuickGMoon_011",
+1
+],
+[
+"GC_QuickGMoon_012",
+1
+],
+[
+"GC_PatrolMoon",
+30
+],
+[
+"GC_ChasingClear_Mo",
+40
+],
+[
+"GC_MoQuestClear",
+1
+]
+]
+},
+{
+"id": 7023,
+"name": "Koinonia C",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGKoi_013",
+1
+],
+[
+"GC_QuickGKoi_014",
+1
+],
+[
+"GC_QuickGKoi_015",
+1
+],
+[
+"GC_PatrolKoi",
+5
+]
+]
+},
+{
+"id": 7024,
+"name": "Koinonia B",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGKoi_016",
+1
+],
+[
+"GC_QuickGKoi_017",
+1
+],
+[
+"GC_QuickGKoi_018",
+1
+],
+[
+"GC_PatrolKoi",
+10
+],
+[
+"GC_ChasingClear_Ko",
+10
+]
+]
+},
+{
+"id": 7025,
+"name": "Koinonia A",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGKoi_019",
+1
+],
+[
+"GC_QuickGKoi_020",
+1
+],
+[
+"GC_QuickGKoi_021",
+1
+],
+[
+"GC_PatrolKoi",
+20
+],
+[
+"GC_ChasingClear_Ko",
+20
+]
+]
+},
+{
+"id": 7026,
+"name": "Koinonia Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGKoi_022",
+1
+],
+[
+"GC_QuickGKoi_023",
+1
+],
+[
+"GC_QuickGKoi_024",
+1
+],
+[
+"GC_PatrolKoi",
+30
+],
+[
+"GC_ChasingClear_Ko",
+40
+],
+[
+"GC_CoQuestClear",
+1
+]
+]
+},
+{
+"id": 7027,
+"name": "Cras Grade C",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGCras_025",
+1
+],
+[
+"GC_QuickGCras_026",
+1
+],
+[
+"GC_QuickGCras_027",
+1
+],
+[
+"GC_PatrolCras",
+5
+]
+]
+},
+{
+"id": 7028,
+"name": "Cras Grade B",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGCras_028",
+1
+],
+[
+"GC_QuickGCras_029",
+1
+],
+[
+"GC_QuickGCras_030",
+1
+],
+[
+"GC_PatrolCras",
+10
+],
+[
+"GC_ChasingClear_Cr",
+10
+]
+]
+},
+{
+"id": 7029,
+"name": "Cras Grade A",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGCras_031",
+1
+],
+[
+"GC_QuickGCras_032",
+1
+],
+[
+"GC_QuickGCras_033",
+1
+],
+[
+"GC_PatrolCras",
+20
+],
+[
+"GC_ChasingClear_Cr",
+20
+]
+]
+},
+{
+"id": 7030,
+"name": "Cras Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGCras_034",
+1
+],
+[
+"GC_QuickGCras_035",
+1
+],
+[
+"GC_QuickGCras_036",
+1
+],
+[
+"GC_PatrolCras",
+30
+],
+[
+"GC_ChasingClear_Cr",
+40
+],
+[
+"GC_CrQuestClear",
+1
+]
+]
+},
+{
+"id": 7031,
+"name": "Oros Grade C",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7022",
+1
+],
+[
+"GC_PatrolOros",
+5
+]
+]
+},
+{
+"id": 7032,
+"name": "Oros Grade B",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7022",
+1
+],
+[
+"GC_LicenseGain_7026",
+1
+],
+[
+"GC_PatrolOros",
+10
+],
+[
+"GC_ChasingClear_Or",
+10
+]
+]
+},
+{
+"id": 7033,
+"name": "Oros Grade A",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7022",
+1
+],
+[
+"GC_LicenseGain_7026",
+1
+],
+[
+"GC_LicenseGain_7030",
+1
+],
+[
+"GC_PatrolOros",
+20
+],
+[
+"GC_ChasingClear_Or",
+20
+]
+]
+},
+{
+"id": 7034,
+"name": "Oros Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_LicenseGain_7022",
+1
+],
+[
+"GC_LicenseGain_7026",
+1
+],
+[
+"GC_LicenseGain_7030",
+1
+],
+[
+"GC_PatrolOros",
+30
+],
+[
+"GC_ChasingClear_Or",
+40
+],
+[
+"GC_OrQuestClear",
+1
+]
+]
+},
+{
+"id": 7035,
+"name": "HUV Hunter Grade C",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_ChasingClear",
+100
+]
+]
+},
+{
+"id": 7036,
+"name": "HUV Hunter Grade B",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_ChasingClear",
+300
+],
+[
+"GC_RushtimeClear",
+10
+]
+]
+},
+{
+"id": 7037,
+"name": "HUV Hunter Grade A",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_ChasingClear",
+500
+],
+[
+"GC_RushtimeClear",
+30
+]
+]
+},
+{
+"id": 7038,
+"name": "HUV Hunter Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_ChasingClear",
+1000
+],
+[
+"GC_RushtimeClear",
+100
+],
+[
+"GC_LuckyDriver",
+10
+]
+]
+},
+{
+"id": 7039,
+"name": "Delivery Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGold",
+50
+],
+[
+"GC_QuickSiver",
+100
+],
+[
+"GC_QuickBronze",
+200
+],
+[
+"GC_QuickService",
+1000
+]
+]
+},
+{
+"id": 7053,
+"name": "Delivery Medalist License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickMoon_001",
+1
+],
+[
+"GC_QuickMoon_002",
+1
+],
+[
+"GC_QuickMoon_003",
+1
+],
+[
+"GC_QuickMoon_004",
+1
+],
+[
+"GC_QuickMoon_005",
+1
+],
+[
+"GC_QuickMoon_006",
+1
+],
+[
+"GC_QuickMoon_007",
+1
+],
+[
+"GC_QuickMoon_008",
+1
+],
+[
+"GC_QuickMoon_009",
+1
+],
+[
+"GC_QuickMoon_010",
+1
+],
+[
+"GC_QuickMoon_011",
+1
+],
+[
+"GC_QuickMoon_012",
+1
+]
+]
+},
+{
+"id": 7054,
+"name": "Moon Palace Delivery Gold Medalist License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGMoon_001",
+1
+],
+[
+"GC_QuickGMoon_002",
+1
+],
+[
+"GC_QuickGMoon_003",
+1
+],
+[
+"GC_QuickGMoon_004",
+1
+],
+[
+"GC_QuickGMoon_005",
+1
+],
+[
+"GC_QuickGMoon_006",
+1
+],
+[
+"GC_QuickGMoon_007",
+1
+],
+[
+"GC_QuickGMoon_008",
+1
+],
+[
+"GC_QuickGMoon_009",
+1
+],
+[
+"GC_QuickGMoon_010",
+1
+],
+[
+"GC_QuickGMoon_011",
+1
+],
+[
+"GC_QuickGMoon_012",
+1
+]
+]
+},
+{
+"id": 7055,
+"name": "Koinonia Delivery Gold Medalist License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGKoi_013",
+1
+],
+[
+"GC_QuickGKoi_014",
+1
+],
+[
+"GC_QuickGKoi_015",
+1
+],
+[
+"GC_QuickGKoi_016",
+1
+],
+[
+"GC_QuickGKoi_017",
+1
+],
+[
+"GC_QuickGKoi_018",
+1
+],
+[
+"GC_QuickGKoi_019",
+1
+],
+[
+"GC_QuickGKoi_020",
+1
+],
+[
+"GC_QuickGKoi_021",
+1
+],
+[
+"GC_QuickGKoi_022",
+1
+],
+[
+"GC_QuickGKoi_023",
+1
+],
+[
+"GC_QuickGKoi_024",
+1
+]
+]
+},
+{
+"id": 7056,
+"name": "Cras Delivery Gold Medalist License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGCras_025",
+1
+],
+[
+"GC_QuickGCras_026",
+1
+],
+[
+"GC_QuickGCras_027",
+1
+],
+[
+"GC_QuickGCras_028",
+1
+],
+[
+"GC_QuickGCras_029",
+1
+],
+[
+"GC_QuickGCras_030",
+1
+],
+[
+"GC_QuickGCras_031",
+1
+],
+[
+"GC_QuickGCras_032",
+1
+],
+[
+"GC_QuickGCras_033",
+1
+],
+[
+"GC_QuickGCras_034",
+1
+],
+[
+"GC_QuickGCras_035",
+1
+],
+[
+"GC_QuickGCras_036",
+1
+]
+]
+},
+{
+"id": 7057,
+"name": "Oros Delivery Gold Medalist License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGOros_043",
+1
+],
+[
+"GC_QuickGOros_044",
+1
+],
+[
+"GC_QuickGOros_045",
+1
+],
+[
+"GC_QuickGOros_046",
+1
+],
+[
+"GC_QuickGOros_047",
+1
+]
+]
+},
+{
+"id": 7058,
+"name": "Oros Time Attack Gold Medalist License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGOros_037",
+1
+],
+[
+"GC_QuickGOros_038",
+1
+],
+[
+"GC_QuickGOros_039",
+1
+],
+[
+"GC_QuickGOros_040",
+1
+],
+[
+"GC_QuickGOros_041",
+1
+],
+[
+"GC_QuickGOros_042",
+1
+]
+]
+},
+{
+"id": 7064,
+"name": "Delivery Service EX Medalist License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_QuickGMoon_048",
+1
+],
+[
+"GC_QuickGMoon_049",
+1
+],
+[
+"GC_QuickGMoon_050",
+1
+],
+[
+"GC_QuickGMoon_051",
+1
+],
+[
+"GC_QuickGKoi_052",
+1
+],
+[
+"GC_QuickGKoi_053",
+1
+],
+[
+"GC_QuickGKoi_054",
+1
+],
+[
+"GC_QuickGKoi_055",
+1
+],
+[
+"GC_QuickGCras_056",
+1
+],
+[
+"GC_QuickGCras_057",
+1
+],
+[
+"GC_QuickGCras_058",
+1
+],
+[
+"GC_QuickGCras_059",
+1
+]
+]
+},
+{
+"id": 7040,
+"name": "Undercity Guardian",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_UndercityClear",
+50
+]
+]
+},
+{
+"id": 7041,
+"name": "Quest Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_MQuestClear",
+1
+],
+[
+"GC_RQuestClear",
+1000
+]
+]
+},
+{
+"id": 7042,
+"name": "Special Patrol",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_PatrolClear",
+300
+],
+[
+"GC_PartyPatrolClear",
+500
+]
+]
+},
+{
+"id": 7043,
+"name": "Veteran Patrol",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_PatrolClear",
+500
+],
+[
+"GC_PartyPatrolClear",
+1000
+]
+]
+},
+{
+"id": 7044,
+"name": "Mita 500 Addict License",
+"support": false,
+"any": false,
+"conds": [
+[
+"GC_MitaCount",
+300
+]
+]
+},
+{
+"id": 7045,
+"name": "Pro Camouflage",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_CamoKitUseTime",
+720000
+]
+]
+},
+{
+"id": 7046,
+"name": "Daily Mission Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_MissionToken",
+200
+]
+]
+},
+{
+"id": 7047,
+"name": "Auction Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_AuctionOn",
+1000
+],
+[
+"GC_AuctionSuccess",
+1000
+]
+]
+},
+{
+"id": 7048,
+"name": "Tuning Master",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_PartsEnhanceXV",
+8
+],
+[
+"GC_PartsEnhanceXIX",
+1
+]
+]
+},
+{
+"id": 7049,
+"name": "Challenger",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_Challenger",
+100
+]
+]
+},
+{
+"id": 7050,
+"name": "Guardian",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_Guardian",
+100
+]
+]
+},
+{
+"id": 7051,
+"name": "Test",
+"support": false,
+"any": false,
+"conds": []
+},
+{
+"id": 7052,
+"name": "Ghost Rider",
+"support": false,
+"any": false,
+"conds": [
+[
+"GC_GhostBattle_ch",
+72000
+]
+]
+},
+{
+"id": 7059,
+"name": "Mitro Airport Base Reputation License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_Reputation_01",
+1
+]
+]
+},
+{
+"id": 7060,
+"name": "Mitro City Hall Reputation License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_Reputation_02",
+1
+]
+]
+},
+{
+"id": 7061,
+"name": "Mafia Reputation License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_Reputation_03",
+1
+]
+]
+},
+{
+"id": 7062,
+"name": "Gotcha DC Character Badge Collector 1",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_DCbadge_01",
+1
+],
+[
+"GC_DCbadge_02",
+1
+],
+[
+"GC_DCbadge_03",
+1
+],
+[
+"GC_DCbadge_04",
+1
+],
+[
+"GC_DCbadge_05",
+1
+],
+[
+"GC_DCbadge_06",
+1
+],
+[
+"GC_DCbadge_07",
+1
+],
+[
+"GC_DCbadge_08",
+1
+],
+[
+"GC_DCbadge_09",
+1
+],
+[
+"GC_DCbadge_10",
+1
+],
+[
+"GC_DCbadge_11",
+1
+],
+[
+"GC_DCbadge_12",
+1
+]
+]
+},
+{
+"id": 7063,
+"name": "스키드러쉬 3주년 기념 라이선스",
+"support": false,
+"any": false,
+"conds": [
+[
+"GC_ThirdAnni_01",
+1
+],
+[
+"GC_ThirdAnni_02",
+1
+],
+[
+"GC_ThirdAnni_03",
+1
+]
+]
+},
+{
+"id": 7065,
+"name": "드리프트시티 20만 돌파 기념 라이선스",
+"support": false,
+"any": false,
+"conds": [
+[
+"GC_BattlePersonal",
+20
+],
+[
+"GC_BattleTeam",
+20
+],
+[
+"GC_ChasingClear",
+20
+],
+[
+"GC_PatrolClear",
+20
+],
+[
+"GC_RushtimeClear",
+20
+],
+[
+"GC_UndercityClear",
+20
+],
+[
+"GC_RQuestClear_Mo",
+20
+],
+[
+"GC_RQuestClear_Ko",
+20
+]
+]
+},
+{
+"id": 7066,
+"name": "SR 독립 기념 라이선스",
+"support": false,
+"any": false,
+"conds": [
+[
+"GC_BattlePersonal",
+20
+],
+[
+"GC_BattleTeam",
+20
+],
+[
+"GC_ChasingClear",
+20
+],
+[
+"GC_PatrolClear",
+20
+],
+[
+"GC_RushtimeClear",
+20
+]
+]
+},
+{
+"id": 7067,
+"name": "Parts Meister License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_UpgradeLastMonth",
+300
+],
+[
+"GC_EnchantLastMonth",
+300
+]
+]
+},
+{
+"id": 7068,
+"name": "Production Meistser License",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_CreateLastMonth",
+500
+]
+]
+},
+{
+"id": 7069,
+"name": "Neo City Class C",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_NeoChapterClear",
+1
+]
+]
+},
+{
+"id": 7070,
+"name": "Overkill",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_Neocity_Huv",
+1000
+]
+]
+},
+{
+"id": 7071,
+"name": "DCGP Win",
+"support": true,
+"any": false,
+"conds": [
+[
+"GC_DCGP_Win",
+1
+]
+]
+}
+],
+"tracks": {
+"0": 1,
+"1": 1,
+"2": 1,
+"3": 1,
+"4": 1,
+"5": 1,
+"6": 1,
+"7": 1,
+"8": 1,
+"9": 1,
+"10": 1,
+"11": 1,
+"12": 1,
+"13": 1,
+"14": 1,
+"15": 1,
+"16": 2,
+"17": 2,
+"18": 2,
+"19": 2,
+"20": 2,
+"21": 2,
+"22": 2,
+"23": 2,
+"24": 2,
+"25": 2,
+"26": 2,
+"27": 2,
+"28": 2,
+"29": 2,
+"30": 3,
+"31": 3,
+"32": 3,
+"33": 3,
+"34": 3,
+"35": 3,
+"36": 3,
+"37": 3,
+"38": 3,
+"39": 3,
+"40": 3,
+"41": 3,
+"42": 3,
+"43": 3,
+"44": 1,
+"45": 1,
+"46": 1,
+"47": 1,
+"48": 2,
+"49": 2,
+"50": 2,
+"51": 2,
+"52": 3,
+"53": 3,
+"54": 3,
+"55": 3,
+"79": 3,
+"80": 3,
+"56": 4,
+"57": 4,
+"58": 4,
+"59": 4,
+"60": 4,
+"61": 4,
+"62": 4,
+"63": 4,
+"64": 4,
+"65": 4,
+"66": 4,
+"67": 4,
+"68": 4,
+"69": 4,
+"81": 4,
+"82": 4,
+"86": 4,
+"90": 4,
+"70": 1,
+"71": 2,
+"72": 3,
+"73": 4,
+"74": 1,
+"75": 1,
+"76": 1,
+"91": 5,
+"92": 5,
+"83": 1,
+"87": 1,
+"84": 2,
+"88": 2,
+"94": 3,
+"85": 3,
+"89": 3,
+"77": 2,
+"78": 2,
+"98": 4,
+"95": 2,
+"93": 5,
+"96": 5,
+"97": 5,
+"99": 3,
+"100": 3,
+"101": 2,
+"102": 2
+}
+}

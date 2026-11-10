@@ -1,0 +1,222 @@
+[
+ {
+  "path": "DriftCity.exe",
+  "base": "DriftCity.exe",
+  "md5": "eab9ae30c16c7e1736b48938191060ec",
+  "size": 6185472,
+  "from": [
+   {
+    "md5": "completo",
+    "patch": "DriftCity.exe.completo"
+   }
+  ]
+ },
+ {
+  "path": "Data/Init.agt",
+  "base": "Data/Init.agt",
+  "md5": "d00b8ed42620d90ca80eef8278f8b9a9",
+  "size": 858056,
+  "from": [
+   {
+    "md5": "503228c2104c5081ebb0703730fa7298",
+    "patch": "Data_Init.agt.503228c2.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data_US/Init_us.agt",
+  "base": "Data_US/Init_us.agt",
+  "md5": "cc507f0c78dfb92b2db4a4475fd9dd84",
+  "size": 879917,
+  "from": [
+   {
+    "md5": "49c718a481619d6d555dffc48b27fb6d",
+    "patch": "Data_US_Init_us.agt.49c718a4.dcp"
+   },
+   {
+    "md5": "db91e8e5fd53c5adc6b2b302485e7d4c",
+    "patch": "Data_US_Init_us.agt.db91e8e5.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data_US/World.agt",
+  "base": "Data_US/World.agt",
+  "md5": "4522ad62f2b5079132f0d09383ebff65",
+  "size": 15828593,
+  "from": [
+   {
+    "md5": "a081568f813edc17177acd0753c962e6",
+    "patch": "Data_US_World.agt.a081568f.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Patch/patch.003",
+  "base": "Patch/patch.003",
+  "md5": "800d6dc2ad4f8caf965878a6f81506e6",
+  "size": 20798503,
+  "from": [
+   {
+    "md5": "e03849640a38bcb8e679356872b13307",
+    "patch": "Patch_patch.003.e0384964.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Patch/patch.008",
+  "base": "Patch/patch.008",
+  "md5": "e4441c903eacdfeb00dfe163e9adef87",
+  "size": 53706586,
+  "from": [
+   {
+    "md5": "cefdff3df2d9fd8c5d0ecf2e2adbb01e",
+    "patch": "Patch_patch.008.cefdff3d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Patch/patch.009",
+  "base": "Patch/patch.009",
+  "md5": "58ae8cde721de06d1bf73cc1078bac3f",
+  "size": 73740816,
+  "from": [
+   {
+    "md5": "aabf76384815c6caa4bda49a82208e0b",
+    "patch": "Patch_patch.009.aabf7638.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/01",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "8a3e93af7defd47c37e8daabf3649fef",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_01.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/02",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "fb864b17cb413e76593f760dfbfb896a",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_02.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/03",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "5c8bb4b53509571b8e2c918fbf2dd625",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_03.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/04",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "86d5170a4ec725c4f36b0ec07accf480",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_04.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/05",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "214a1cea445647035f3bdd2ba227bacc",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_05.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/06",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "2844d9604b457d8349fb3fe4586a2cb4",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_06.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/07",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "3b0ffff85d6b5d8a4c33cfe6f5bc0f16",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_07.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/08",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "a1968dddfb1b681fa6b1a01d2b663963",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_08.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/09",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "dec47a1eb607185071fec0c97047f527",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_09.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data/GameUI/teammark/10",
+  "base": "Data/GameUI/teammark/00",
+  "md5": "fe74638535bf535101b68de4c9707a22",
+  "size": 3128,
+  "from": [
+   {
+    "md5": "d789383d0d9e5d468c1cd37f36f351f9",
+    "patch": "Data_GameUI_teammark_10.d789383d.dcp"
+   }
+  ]
+ },
+ {
+  "path": "Data_US/audio/bgm/music.txt",
+  "base": "Data_US/audio/bgm/music.txt",
+  "md5": "25fdc03a0fd7eeb9fee35007a80c9409",
+  "size": 1603,
+  "from": [
+   {
+    "md5": "836ca9a31ed49071ed8dd22a1c425221",
+    "patch": "Data_US_audio_bgm_music.txt.836ca9a3.dcp"
+   }
+  ]
+ }
+]

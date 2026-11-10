@@ -1,0 +1,63 @@
+{
+  "CrewLadder": true,
+  "DuelNearSeconds": 10,
+  "DuelAutoLeaveSeconds": 30,
+  "DuelNearMeters": 25,
+  "BossMitoBase": 50000,
+  "CrewGiftMinutes": 12,
+  "CrewGiftMaxMinutes": 18,
+  "CrewLeaderShare": true,
+  "CrewSlotsStart": 3,
+  "CrewSlotsPerBoss": 3,
+  "CrewTeamCallMinutes": 8,
+  "CrewRegions": {
+    "Rookies": [
+      0,
+      0.5,
+      0,
+      1
+    ],
+    "MoonFlow": [
+      0.5,
+      1,
+      0,
+      1
+    ],
+    "MitoKings": [
+      0,
+      1,
+      0,
+      0.5
+    ],
+    "KoiGhost": [
+      0,
+      1,
+      0.5,
+      1
+    ],
+    "CrasRacers": [
+      0.5,
+      1,
+      0,
+      1
+    ],
+    "CrasElite": [
+      0,
+      0.5,
+      0,
+      1
+    ],
+    "OrosLegends": [
+      0.5,
+      1,
+      0.5,
+      1
+    ],
+    "LegendsDC": [
+      0,
+      1,
+      0,
+      1
+    ]
+  }
+}

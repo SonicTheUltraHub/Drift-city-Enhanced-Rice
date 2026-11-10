@@ -1,0 +1,853 @@
+{
+"levels": [
+8610,
+66420,
+221430,
+521640
+],
+"recipes": [
+{
+"book": "enhanplus_skb",
+"level": 1,
+"group": "low",
+"name": "Mittron Enhancer PLUS Skill Book",
+"need": [
+[
+"i_n_00003",
+1
+],
+[
+"mitron_cristal",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_00003_plus",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "enhandeluxe_skb",
+"level": 3,
+"group": "high",
+"name": "Mittron Enhancer DELUXE Skill Book",
+"need": [
+[
+"i_n_00003_plus",
+1
+],
+[
+"mitron_cristal",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_00003_deluxe",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 600,
+"failExp": 60
+},
+{
+"book": "n_seedplus_skb",
+"level": 2,
+"group": "med",
+"name": "N Seed Part PLUS Skill Book",
+"need": [
+[
+"i_n_Seed_N",
+1
+],
+[
+"mitrondust_N",
+2
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_Seedplus_N",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 300,
+"failExp": 30
+},
+{
+"book": "s_seedplus_skb",
+"level": 2,
+"group": "med",
+"name": "S Seed Part PLUS Skill Book",
+"need": [
+[
+"i_n_Seed_S",
+1
+],
+[
+"mitrondust_S",
+2
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_Seedplus_S",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 300,
+"failExp": 30
+},
+{
+"book": "h_seedplus_skb",
+"level": 2,
+"group": "med",
+"name": "H Seed Part PLUS Skill Book",
+"need": [
+[
+"i_n_Seed_H",
+1
+],
+[
+"mitrondust_H",
+2
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_Seedplus_H",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 300,
+"failExp": 30
+},
+{
+"book": "u_seed_skb",
+"level": 2,
+"group": "med",
+"name": "Ultra Seed Parts Skill Book",
+"need": [
+[
+"i_n_Seedplus_H",
+1
+],
+[
+"mitrondust_H",
+10
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_Seed_U",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 300,
+"failExp": 30
+},
+{
+"book": "a_transplus_skb",
+"level": 1,
+"group": "low",
+"name": "Converting Solution Type A PLUS Skill Book",
+"need": [
+[
+"i_n_00040",
+1
+],
+[
+"modipart_piece",
+1
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_n_00040_plus",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "b_transplus_skb",
+"level": 1,
+"group": "low",
+"name": "Converting Solution Type B PLUS Skill Book",
+"need": [
+[
+"i_n_00041",
+1
+],
+[
+"modipart_piece",
+1
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_n_00041_plus",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "c_transplus_skb",
+"level": 1,
+"group": "low",
+"name": "Converting Solution Type C PLUS Skill Book",
+"need": [
+[
+"i_n_00042",
+1
+],
+[
+"modipart_piece",
+1
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_n_00042_plus",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "warp_skb",
+"level": 2,
+"group": "med",
+"name": "Warp Item Skill Book",
+"need": [
+[
+"i_n_warpengine",
+1
+],
+[
+"modipart_piece",
+1
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_n_alchemy_warp",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 300,
+"failExp": 30
+},
+{
+"book": "bacchus_f_skb",
+"level": 1,
+"group": "low",
+"name": "Bacchus F Skill Book",
+"need": [
+[
+"i_n_00096",
+1
+],
+[
+"modipart_piece",
+1
+],
+[
+"i_n_00015",
+5
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_bacchus_f",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "bacchus_d_skb",
+"level": 2,
+"group": "med",
+"name": "Bacchus D Skill Book",
+"need": [
+[
+"i_n_00096",
+1
+],
+[
+"modipart_piece",
+1
+],
+[
+"i_n_00016",
+5
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_bacchus_d",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 300,
+"failExp": 30
+},
+{
+"book": "n_mcristal_skb",
+"level": 1,
+"group": "low",
+"name": "Mittron Crystal Skill Book(N)",
+"need": [
+[
+"mitrondust_N",
+40
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "mitron_cristal",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "s_mcristal_skb",
+"level": 1,
+"group": "low",
+"name": "Mittron Crystal Skill Book(S)",
+"need": [
+[
+"mitrondust_S",
+10
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "mitron_cristal",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "h_mcristal_skb",
+"level": 1,
+"group": "low",
+"name": "Mittron Crystal Skill Book(H)",
+"need": [
+[
+"mitrondust_H",
+2
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "mitron_cristal",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "pulseshield_skb",
+"level": 2,
+"group": "med",
+"name": "Pulse Shield Skill Book",
+"need": [
+[
+"i_n_00020",
+10
+],
+[
+"i_n_00096",
+1
+],
+[
+"i_n_alchemy_warp",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_pulseshield",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 300,
+"failExp": 30
+},
+{
+"book": "pulseshield_plus_skb",
+"level": 3,
+"group": "high",
+"name": "Pulse Shield PLUS Skill Book",
+"need": [
+[
+"mitron_cristal",
+1
+],
+[
+"i_n_00032",
+10
+],
+[
+"i_n_alchemy_warp",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_pulseshield_plus",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 600,
+"failExp": 60
+},
+{
+"book": "quickslot1_skb",
+"level": 3,
+"group": "high",
+"name": "Field QuickSlot Skill Book",
+"need": [
+[
+"i_n_00021",
+10
+],
+[
+"i_n_00019",
+10
+],
+[
+"i_n_00020",
+10
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_quickslot1",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 600,
+"failExp": 60
+},
+{
+"book": "quickslot2_skb",
+"level": 4,
+"group": "very high",
+"name": "Field QuickSlot PLUS Skill Book",
+"need": [
+[
+"i_n_00033",
+20
+],
+[
+"i_n_00031",
+20
+],
+[
+"i_n_quickslot1",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_quickslot2",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 1000,
+"failExp": 100
+},
+{
+"book": "Jack_plus_skb",
+"level": 4,
+"group": "very high",
+"name": "Jack O’ Lantern PLUS Skill Book",
+"need": [
+[
+"pvp_roof_box_1",
+1
+],
+[
+"pvp_roof_box_2",
+1
+],
+[
+"mitron_cristal",
+1
+]
+],
+"kit": "user_create_kit3",
+"kitCount": 1,
+"result": "i_n_roof_jackbox",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 800,
+"failExp": 80
+},
+{
+"book": "Xcat_plus_skb",
+"level": 4,
+"group": "very high",
+"name": "X-Cat PLUS Skill Book",
+"need": [
+[
+"pvp_roof_box_3",
+1
+],
+[
+"pvp_roof_box_2",
+1
+],
+[
+"mitron_cristal",
+1
+]
+],
+"kit": "user_create_kit3",
+"kitCount": 1,
+"result": "i_n_roof_xcatbox",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 700,
+"failExp": 70
+},
+{
+"book": "u_mcristal_skb",
+"level": 1,
+"group": "low",
+"name": "Mittron Crystal Skill Book(U)",
+"need": [
+[
+"mitrondust_U",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "mitron_cristal",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "u_seedplus_skb",
+"level": 3,
+"group": "high",
+"name": "Ultra Seed Parts PLUS Skill Book",
+"need": [
+[
+"i_n_Seed_U",
+1
+],
+[
+"mitrondust_U",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_Seedplus_U",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 600,
+"failExp": 60
+},
+{
+"book": "u_heatkit_skb",
+"level": 3,
+"group": "high",
+"name": "Ultra Parts Heat Treatment Kit Skill Book",
+"need": [
+[
+"i_n_00025",
+1
+],
+[
+"i_n_00003_plus",
+1
+],
+[
+"i_n_00016",
+5
+]
+],
+"kit": "user_create_kit3",
+"kitCount": 1,
+"result": "i_n_00025_U",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 600,
+"failExp": 60
+},
+{
+"book": "neowslotex_skb",
+"level": 4,
+"group": "very high",
+"name": "NEO Weapon Slot Skill Book",
+"need": [
+[
+"i_n_quickslot1",
+1
+],
+[
+"i_n_pulseshield",
+1
+],
+[
+"mitron_cristal",
+3
+]
+],
+"kit": "user_create_kit3",
+"kitCount": 1,
+"result": "neo_i_neowslotex",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 1000,
+"failExp": 100
+},
+{
+"book": "car_upgrade_skb",
+"level": 3,
+"group": "high",
+"name": "Vehicle Enhancer Skill Book",
+"need": [
+[
+"i_n_upgrade_base",
+1
+],
+[
+"i_n_00096",
+1
+],
+[
+"i_n_00003",
+1
+]
+],
+"kit": "user_create_kit1",
+"kitCount": 1,
+"result": "i_n_upgrade",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 600,
+"failExp": 60
+},
+{
+"book": "mitron_dust_skb",
+"level": 1,
+"group": "low",
+"name": "Mittron Crystal Powder Skill Book",
+"need": [
+[
+"i_n_gacha_D",
+1
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_n_00096",
+"resultCount": 2,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "upgrade_base_skb",
+"level": 1,
+"group": "low",
+"name": "Mittron Oil Skill Book",
+"need": [
+[
+"i_n_gacha_A",
+1
+]
+],
+"kit": "user_create_kit2",
+"kitCount": 1,
+"result": "i_n_upgrade_base",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 45,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "2012_christ_token_re",
+"level": 1,
+"group": "low",
+"name": "X-MAS Token Recipe",
+"need": [
+[
+"user_create_kit1",
+1
+],
+[
+"mitron_cristal",
+1
+]
+],
+"kit": "2012_huv_destroy",
+"kitCount": 1,
+"result": "2012_christ_token",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 70,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "2012_christ_neo_re",
+"level": 1,
+"group": "low",
+"name": "X-MAS Campaign Box Recipe (Neocity)",
+"need": [
+[
+"user_create_kit1",
+1
+],
+[
+"mitron_cristal",
+1
+]
+],
+"kit": "2012_neo_receipt",
+"kitCount": 1,
+"result": "2012_chist_lo_neo",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 70,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "2012_christ_quick_re",
+"level": 1,
+"group": "low",
+"name": "X-MAS Campaign Box Recipe (Quick Service)",
+"need": [
+[
+"user_create_kit1",
+1
+],
+[
+"mitron_cristal",
+1
+]
+],
+"kit": "2012_quick_receipt",
+"kitCount": 1,
+"result": "2012_chist_lo_quick",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "i_n_00049",
+"failCount": 1,
+"chance": 70,
+"exp": 100,
+"failExp": 10
+},
+{
+"book": "2013_valen_receipt",
+"level": 1,
+"group": "low",
+"name": "2014 Happy Valentine Chocolate Recipe",
+"need": [],
+"kit": "2013_valen_key_item",
+"kitCount": 10,
+"result": "2013_valen_choco_success",
+"resultCount": 1,
+"failChance": 100,
+"failItem": "2013_valen_choco_fail",
+"failCount": 1,
+"chance": 60,
+"exp": 100,
+"failExp": 10
+}
+]
+}

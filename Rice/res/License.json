@@ -1,0 +1,650 @@
+[
+{
+"id": 7000,
+"name": "Rookie",
+"support": true,
+"grade": 3000,
+"cat": "l_ladder",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7001,
+"name": "Class E",
+"support": true,
+"grade": 3000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "1"
+},
+{
+"id": 7002,
+"name": "Class D",
+"support": true,
+"grade": 5000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "3"
+},
+{
+"id": 7003,
+"name": "Class C",
+"support": true,
+"grade": 10000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "5"
+},
+{
+"id": 7004,
+"name": "Class B",
+"support": true,
+"grade": 20000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "7"
+},
+{
+"id": 7005,
+"name": "Class A",
+"support": true,
+"grade": 30000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "9"
+},
+{
+"id": 7006,
+"name": "Class AA",
+"support": true,
+"grade": 50000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "11"
+},
+{
+"id": 7007,
+"name": "Class AAA",
+"support": true,
+"grade": 50000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "13"
+},
+{
+"id": 7008,
+"name": "OMD Special",
+"support": true,
+"grade": 50000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "7"
+},
+{
+"id": 7009,
+"name": "ROO Special",
+"support": true,
+"grade": 50000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "7"
+},
+{
+"id": 7010,
+"name": "No.9",
+"support": true,
+"grade": 70000,
+"cat": "l_ladder",
+"effect": "ME_UseBoost50Recovery",
+"value": "15"
+},
+{
+"id": 7011,
+"name": "Mittron Island Guardian",
+"support": true,
+"grade": 100000,
+"cat": "l_mguardian",
+"effect": "ME_FeeDis",
+"value": "50"
+},
+{
+"id": 7012,
+"name": "Team Battle Semi Pro",
+"support": true,
+"grade": 10000,
+"cat": "l_team",
+"effect": "ME_BattleTeamMito",
+"value": "1"
+},
+{
+"id": 7013,
+"name": "Team Battle Pro",
+"support": true,
+"grade": 20000,
+"cat": "l_team",
+"effect": "ME_BattleTeamMito",
+"value": "3"
+},
+{
+"id": 7014,
+"name": "Team Battle Master",
+"support": true,
+"grade": 30000,
+"cat": "l_team",
+"effect": "ME_BattleTeamMito",
+"value": "5"
+},
+{
+"id": 7015,
+"name": "Ind. Battle Semi Pro",
+"support": true,
+"grade": 5000,
+"cat": "l_personal",
+"effect": "ME_BattlePersonalMito",
+"value": "1"
+},
+{
+"id": 7016,
+"name": "Ind. Battle Pro",
+"support": true,
+"grade": 10000,
+"cat": "l_personal",
+"effect": "ME_BattlePersonalMito",
+"value": "3"
+},
+{
+"id": 7017,
+"name": "Ind. Battle Master",
+"support": true,
+"grade": 20000,
+"cat": "l_personal",
+"effect": "ME_BattlePersonalMito",
+"value": "5"
+},
+{
+"id": 7018,
+"name": "Underground",
+"support": true,
+"grade": 70000,
+"cat": "l_ug",
+"effect": "ME_PartDropRate",
+"value": "7"
+},
+{
+"id": 7019,
+"name": "Moon Palace Grade C",
+"support": true,
+"grade": 5000,
+"cat": "l_moon",
+"effect": "ME_AllExpMito",
+"value": "1"
+},
+{
+"id": 7020,
+"name": "Moon Palace Grade B",
+"support": true,
+"grade": 10000,
+"cat": "l_moon",
+"effect": "ME_AllExpMito",
+"value": "1"
+},
+{
+"id": 7021,
+"name": "Moon Palace Grade A",
+"support": true,
+"grade": 20000,
+"cat": "l_moon",
+"effect": "ME_AllExpMito",
+"value": "2"
+},
+{
+"id": 7022,
+"name": "Moon Palace Master",
+"support": true,
+"grade": 30000,
+"cat": "l_moon",
+"effect": "ME_AllExpMito",
+"value": "2"
+},
+{
+"id": 7023,
+"name": "Koinonia C",
+"support": true,
+"grade": 5000,
+"cat": "l_koi",
+"effect": "ME_AllExpMito",
+"value": "2"
+},
+{
+"id": 7024,
+"name": "Koinonia B",
+"support": true,
+"grade": 10000,
+"cat": "l_koi",
+"effect": "ME_AllExpMito",
+"value": "2"
+},
+{
+"id": 7025,
+"name": "Koinonia A",
+"support": true,
+"grade": 20000,
+"cat": "l_koi",
+"effect": "ME_AllExpMito",
+"value": "3"
+},
+{
+"id": 7026,
+"name": "Koinonia Master",
+"support": true,
+"grade": 30000,
+"cat": "l_koi",
+"effect": "ME_AllExpMito",
+"value": "3"
+},
+{
+"id": 7027,
+"name": "Cras Grade C",
+"support": true,
+"grade": 5000,
+"cat": "l_cras",
+"effect": "ME_AllExpMito",
+"value": "3"
+},
+{
+"id": 7028,
+"name": "Cras Grade B",
+"support": true,
+"grade": 10000,
+"cat": "l_cras",
+"effect": "ME_AllExpMito",
+"value": "3"
+},
+{
+"id": 7029,
+"name": "Cras Grade A",
+"support": true,
+"grade": 20000,
+"cat": "l_cras",
+"effect": "ME_AllExpMito",
+"value": "4"
+},
+{
+"id": 7030,
+"name": "Cras Master",
+"support": true,
+"grade": 30000,
+"cat": "l_cras",
+"effect": "ME_AllExpMito",
+"value": "4"
+},
+{
+"id": 7031,
+"name": "Oros Grade C",
+"support": true,
+"grade": 10000,
+"cat": "l_oros",
+"effect": "ME_AllExpMito",
+"value": "4"
+},
+{
+"id": 7032,
+"name": "Oros Grade B",
+"support": true,
+"grade": 20000,
+"cat": "l_oros",
+"effect": "ME_AllExpMito",
+"value": "4"
+},
+{
+"id": 7033,
+"name": "Oros Grade A",
+"support": true,
+"grade": 30000,
+"cat": "l_oros",
+"effect": "ME_AllExpMito",
+"value": "5"
+},
+{
+"id": 7034,
+"name": "Oros Master",
+"support": true,
+"grade": 50000,
+"cat": "l_oros",
+"effect": "ME_AllExpMito",
+"value": "5"
+},
+{
+"id": 7035,
+"name": "HUV Hunter Grade C",
+"support": true,
+"grade": 5000,
+"cat": "l_huv",
+"effect": "ME_ChasingExpMito",
+"value": "1"
+},
+{
+"id": 7036,
+"name": "HUV Hunter Grade B",
+"support": true,
+"grade": 10000,
+"cat": "l_huv",
+"effect": "ME_ChasingExpMito",
+"value": "3"
+},
+{
+"id": 7037,
+"name": "HUV Hunter Grade A",
+"support": true,
+"grade": 20000,
+"cat": "l_huv",
+"effect": "ME_ChasingExpMito",
+"value": "5"
+},
+{
+"id": 7038,
+"name": "HUV Hunter Master",
+"support": true,
+"grade": 30000,
+"cat": "l_huv",
+"effect": "ME_ChasingExpMito",
+"value": "8"
+},
+{
+"id": 7039,
+"name": "Delivery Master",
+"support": true,
+"grade": 50000,
+"cat": "l_quick",
+"effect": "ME_QuickExpMito",
+"value": "8"
+},
+{
+"id": 7053,
+"name": "Delivery Medalist License",
+"support": true,
+"grade": 3000,
+"cat": "l_quick",
+"effect": "ME_QuickMoonExp",
+"value": "4"
+},
+{
+"id": 7054,
+"name": "Moon Palace Delivery Gold Medalist License",
+"support": true,
+"grade": 3000,
+"cat": "l_quick",
+"effect": "ME_QuickKoiExp",
+"value": "5"
+},
+{
+"id": 7055,
+"name": "Koinonia Delivery Gold Medalist License",
+"support": true,
+"grade": 5000,
+"cat": "l_quick",
+"effect": "ME_QuickCrasExp",
+"value": "5"
+},
+{
+"id": 7056,
+"name": "Cras Delivery Gold Medalist License",
+"support": true,
+"grade": 10000,
+"cat": "l_quick",
+"effect": "ME_QuickOrosExp",
+"value": "5"
+},
+{
+"id": 7057,
+"name": "Oros Delivery Gold Medalist License",
+"support": true,
+"grade": 20000,
+"cat": "l_quick",
+"effect": "ME_QuickExpMito",
+"value": "6"
+},
+{
+"id": 7058,
+"name": "Oros Time Attack Gold Medalist License",
+"support": true,
+"grade": 20000,
+"cat": "l_quick",
+"effect": "ME_QuickExpMito",
+"value": "6"
+},
+{
+"id": 7064,
+"name": "Delivery Service EX Medalist License",
+"support": true,
+"grade": 30000,
+"cat": "l_quick",
+"effect": "ME_QuickExpMito",
+"value": "7"
+},
+{
+"id": 7040,
+"name": "Undercity Guardian",
+"support": true,
+"grade": 10000,
+"cat": "l_under",
+"effect": "ME_UnderExpMito",
+"value": "5"
+},
+{
+"id": 7041,
+"name": "Quest Master",
+"support": true,
+"grade": 30000,
+"cat": "l_quest",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7042,
+"name": "Special Patrol",
+"support": true,
+"grade": 10000,
+"cat": "l_patrol",
+"effect": "ME_AllPatrolExpMito",
+"value": "250"
+},
+{
+"id": 7043,
+"name": "Veteran Patrol",
+"support": true,
+"grade": 20000,
+"cat": "l_patrol",
+"effect": "ME_AllPatrolExpMito",
+"value": "300"
+},
+{
+"id": 7044,
+"name": "Mita 500 Addict License",
+"support": false,
+"grade": 3000,
+"cat": "l_mita",
+"effect": "ME_Mita500",
+"value": "50000"
+},
+{
+"id": 7045,
+"name": "Pro Camouflage",
+"support": true,
+"grade": 5000,
+"cat": "l_camo",
+"effect": "ME_CarTransExp",
+"value": "5"
+},
+{
+"id": 7046,
+"name": "Daily Mission Master",
+"support": true,
+"grade": 30000,
+"cat": "l_day",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7047,
+"name": "Auction Master",
+"support": true,
+"grade": 50000,
+"cat": "l_auction",
+"effect": "ME_AuctionFeeDis",
+"value": "10"
+},
+{
+"id": 7048,
+"name": "Tuning Master",
+"support": true,
+"grade": 30000,
+"cat": "l_tuning",
+"effect": "ME_EnhanceFeeDis",
+"value": "50"
+},
+{
+"id": 7049,
+"name": "Challenger",
+"support": true,
+"grade": 50000,
+"cat": "l_challenger",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7050,
+"name": "Guardian",
+"support": true,
+"grade": 70000,
+"cat": "l_guardian",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7051,
+"name": "Test",
+"support": false,
+"grade": 1,
+"cat": "l_example",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7052,
+"name": "Ghost Rider",
+"support": false,
+"grade": 20000,
+"cat": "l_ghost",
+"effect": "ME_AllExpMito",
+"value": "2"
+},
+{
+"id": 7059,
+"name": "Mitro Airport Base Reputation License",
+"support": true,
+"grade": 3000,
+"cat": "l_reputation",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7060,
+"name": "Mitro City Hall Reputation License",
+"support": true,
+"grade": 5000,
+"cat": "l_reputation",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7061,
+"name": "Mafia Reputation License",
+"support": true,
+"grade": 5000,
+"cat": "l_reputation",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7062,
+"name": "Gotcha DC Character Badge Collector 1",
+"support": true,
+"grade": 10000,
+"cat": "l_dcbadge",
+"effect": "ME_AllExpMito",
+"value": "8"
+},
+{
+"id": 7063,
+"name": "스키드러쉬 3주년 기념 라이선스",
+"support": false,
+"grade": 3000,
+"cat": "l_thirdanni",
+"effect": "ME_AllExpMito",
+"value": "3"
+},
+{
+"id": 7065,
+"name": "드리프트시티 20만 돌파 기념 라이선스",
+"support": false,
+"grade": 3000,
+"cat": "l_200_thousand",
+"effect": "ME_MittronGuardian",
+"value": "5"
+},
+{
+"id": 7066,
+"name": "SR 독립 기념 라이선스",
+"support": false,
+"grade": 3000,
+"cat": "l_service_move",
+"effect": "ME_MittronGuardian",
+"value": "3"
+},
+{
+"id": 7067,
+"name": "Parts Meister License",
+"support": true,
+"grade": 70000,
+"cat": "l_Meister",
+"effect": "ME_DoubleChanceTime",
+"value": "2"
+},
+{
+"id": 7068,
+"name": "Production Meistser License",
+"support": true,
+"grade": 70000,
+"cat": "l_Meister",
+"effect": "ME_DoubleUserCreate",
+"value": "15"
+},
+{
+"id": 7069,
+"name": "Neo City Class C",
+"support": true,
+"grade": 3000,
+"cat": "l_neocity",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7070,
+"name": "Overkill",
+"support": true,
+"grade": 5000,
+"cat": "l_neocity",
+"effect": "n/a",
+"value": "-1"
+},
+{
+"id": 7071,
+"name": "DCGP Win",
+"support": true,
+"grade": 50000,
+"cat": "l_dcgpwin",
+"effect": "ME_AllExpMito",
+"value": "5"
+}
+]
