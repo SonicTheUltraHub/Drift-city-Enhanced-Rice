@@ -848,6 +848,34 @@ namespace Rice.Server.Packets.Game
                         InTutorial = Bots.InTutorial(c)
                     };
                 }
+                // corredores das OUTRAS contas (outros logins) tambem viram bots seus: amigos, aparecem no lobby, podem
+                // entrar na party e ganham junto - mas nao fazem nada sozinhos (AltsAllAccounts)
+                if (RiceServer.Config.AltsAllAccounts)
+                {
+                    try
+                    {
+                        var mine = new HashSet<long>(p.Characters.Where(x => x != null).Select(x => (long) x.CID));
+                        using (var rc = Rice.Database.GetContext())
+                        {
+                            var others = rc.Characters.Where(x => !mine.Contains(x.ID)).ToList();
+                            var ids = others.Select(x => x.ID).ToList();
+                            var cars = rc.Vehicles.Where(v => ids.Contains(v.CID)).ToList();
+                            foreach (var oc in others)
+                            {
+                                var cv = cars.Where(v => v.CID == oc.ID).ToList();
+                                var v = cv.FirstOrDefault(g => g.CarID == oc.CurrentCarID) ?? cv.FirstOrDefault();
+                                alts[oc.ID] = new BotProfile
+                                {
+                                    Cid = oc.ID, Name = oc.Name, Level = oc.Level, Car = v != null ? v.CarType : 1,
+                                    Color = v != null && v.Color != 0 ? (uint) v.Color : 0x01010102, Avatar = oc.Avatar, Personality = "amigavel",
+                                    IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                                    InTutorial = cv.Count > 0 && cv.All(g => Rice.Game.Vehicle.IsTrainingType(g.CarType))
+                                };
+                            }
+                        }
+                    }
+                    catch (Exception ex) { Log.WriteError("Corredores das outras contas: " + ex.Message); }
+                }
             }
         }
 

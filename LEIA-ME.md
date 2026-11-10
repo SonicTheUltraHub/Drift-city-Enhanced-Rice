@@ -35,6 +35,22 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 203 — Precos da Drift Shop, corredores de todas as contas viram bots e dados dos stickers:**
+- **Precos da Drift Shop** (tabela `VShopCoolStuff` do `Init_us.agt` e `Rice/res/VisualShop.json`, todos para sempre):
+  Paint S15/C15 15.000 mito; Window Tint S15/C15 5.000; Neon S15/C15 16.000; Sticker Glue L1 1.000;
+  AeroMK2+ 2.000 CC; Aero 20.000; Aero2 50.000; SuperBooster B10 10.000; SuperBooster B30+ 35.000; Tire S5 15.000;
+  Tire SC15 30.000; AeroWing S5 15.000; AeroWing SB15 30.000; BoosterWing S5 25.000; BoosterWing SB20 40.000;
+  Air Duct+ 500 CC; Air Duct 55.000. (Os Aero valem para todos os carros.) Ferramenta: `Cliente/ferramentas/vshop_precos.py`.
+  O instalador aplica a tabela nova (patch do Init_us e, em outros clientes, pela tabela). **Instale de novo** para o
+  jogo mostrar os precos novos.
+- **Todos os corredores viram bots:** os corredores de TODAS as contas (outros logins), e nao so os da mesma conta,
+  viram bots seus: aparecem na lista de amigos, podem entrar na party, ganham junto (`AltRewardShare`) e ficam sempre
+  estacionados no lobby do Driver Dome. Eles nao fazem nada sozinhos (nao compram, nao vendem, nao correm sozinhos).
+  `AltsAllAccounts`, `AltsInLobby`.
+- **Stickers:** o registro do sticker, a lista da comunidade, a imagem e o "colar no carro" (salvar) ainda nao tem
+  resposta do servidor (o jogo nao guarda nada). Agora esses pacotes aparecem no log com o conteudo ("Sticker: ...")
+  para montar isso: registre um sticker, abra a lista da comunidade e cole um no carro, e mande o log.
+
 **Atualizacao 202 — Turbo Start pela Option Part:**
 - O "PassiveAssist" da Drift Shop (Atualizacao 200) nao ligou o Turbo Start / Drift Booster: os itens postos saem.
 - O jogo so liga o Turbo Start pela propria Option Part (campo `partassist` da tabela de itens do cliente), nao pela

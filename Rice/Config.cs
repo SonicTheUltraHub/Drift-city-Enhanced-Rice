@@ -573,6 +573,10 @@ namespace Rice
         public bool PartyComboRewards = false;      // false = o combo da party nao da recompensa (so conta)
         // Outros corredores da sua conta na party ganham exp/mito junto (1.0 = 100% do que voce ganhou).
         public double AltRewardShare = 1.0;
+        // Corredores das OUTRAS contas (outros logins) tambem viram bots seus (amigos, party, ganham junto); nao fazem nada sozinhos.
+        public bool AltsAllAccounts = true;
+        // Seus outros corredores (de todas as contas) ficam sempre estacionados no lobby do Driver Dome.
+        public bool AltsInLobby = true;
         public double PartyBotExpShare = 0.5;          // bots da party (nao os seus corredores) ganham essa parte da sua exp/mito
         public bool PartyBotExpTable = true;           // ... e mostram no chat da party: exp p/ o proximo nivel e progresso das licencas
         public double BotLicenseActivity = 2.0;        // ... pontos de licenca por atividade feita com voce

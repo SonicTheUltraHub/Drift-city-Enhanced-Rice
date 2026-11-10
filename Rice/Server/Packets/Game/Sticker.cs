@@ -31,6 +31,32 @@ namespace Rice.Server.Packets.Game
             packet.Sender.Send(ack);
         }
 
+        // ---- coleta de dados (Atualizacao 203): os pacotes de sticker que o servidor ainda nao responde aparecem no log
+        // com o conteudo, para montar a lista da comunidade, a imagem e o "colar no carro" (salvar) -------------------
+        static int dumps;
+        static void Dump(RicePacket packet, string name)
+        {
+            if (dumps++ > 60) return;
+            var b = packet.Buffer ?? new byte[0];
+            Log.WriteLine("Sticker: {0} ({1} bytes): {2}", name, b.Length, Hex(b, 128));
+        }
+        [RicePacket(73, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
+        public static void List(RicePacket packet) { Dump(packet, "StickerList 73"); }
+        [RicePacket(64, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
+        public static void GetImage(RicePacket packet) { Dump(packet, "GetImage 64"); }
+        [RicePacket(67, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
+        public static void PushImage(RicePacket packet) { Dump(packet, "PushImageData 67"); }
+        [RicePacket(75, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
+        public static void SmallImage(RicePacket packet) { Dump(packet, "StickerSmallImage 75"); }
+        [RicePacket(77, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
+        public static void Search(RicePacket packet) { Dump(packet, "StickerSearch 77"); }
+        [RicePacket(1350, RiceServer.ServerType.Game)]
+        public static void MyList(RicePacket packet) { Dump(packet, "MyStickerList 1350"); }
+        [RicePacket(1352, RiceServer.ServerType.Game)]
+        public static void Attach(RicePacket packet) { Dump(packet, "AttachSticker 1352"); }
+        [RicePacket(1354, RiceServer.ServerType.Game)]
+        public static void Detach(RicePacket packet) { Dump(packet, "DetachSticker 1354"); }
+
         [RicePacket(71, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
         public static void Upload(RicePacket packet)
         {

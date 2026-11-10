@@ -463,6 +463,8 @@
   "PartyComboRewardEvery": 20,
   "PartyComboRewardMito": 0,
   "AltRewardShare": 1.0,
+  "AltsAllAccounts": true,
+  "AltsInLobby": true,
   "PartyBotExpShare": 0.5,
   "PartyBotExpTable": true,
   "BotLicenseActivity": 2.0,

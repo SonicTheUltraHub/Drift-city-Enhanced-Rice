@@ -1635,6 +1635,14 @@
 "Battle Zone",
 "Outros corredores da sua conta na party ganham exp/mito junto (1.0 = 100% do que voce ganhou)."
 ],
+"AltsAllAccounts": [
+"Battle Zone",
+"Corredores das OUTRAS contas (outros logins) tambem viram bots seus (amigos, party, ganham junto); nao fazem nada sozinhos."
+],
+"AltsInLobby": [
+"Battle Zone",
+"Seus outros corredores (de todas as contas) ficam sempre estacionados no lobby do Driver Dome."
+],
 "PartyBotExpShare": [
 "Party",
 "bots da party (nao os seus corredores) ganham essa parte da sua exp/mito"

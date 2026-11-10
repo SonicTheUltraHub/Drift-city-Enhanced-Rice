@@ -1711,12 +1711,15 @@ namespace Rice.Server.Packets.Game
             {
                 // Driver Dome: posicoes aleatorias entre os pontos onde voce ja andou (sempre dentro da area)
                 var bots = sellers.Concat(pool.Take(Math.Max(0, cfg.DomeParkedBots - sellers.Count()))).Take(Math.Max(sellers.Count(), cfg.DomeParkedBots)).ToList();   // no maximo DomeParkedBots no lobby
+                // seus outros corredores (todas as contas) ficam sempre estacionados no lobby (AltsInLobby)
+                if (cfg.AltsInLobby && !curNeo)
+                    bots = Bots.AltsOf(ch).Where(x => !party.Contains(x)).Concat(bots.Where(x => !x.IsAlt)).ToList();
                 var pts = domePoints.OrderBy(x => Rng.Next()).ToList();
                 var used = new List<float[]>();
                 foreach (var b in bots)
                 {
                     // parte dos bots anda pelo seu trajeto (ate DomeDriveSpeedMax, 80 mph); os outros ficam parados
-                    if (!b.Special && domePoints.Count > 20 && Rng.NextDouble() < cfg.DomeDrivingShare)
+                    if (!b.Special && !b.IsAlt && domePoints.Count > 20 && Rng.NextDouble() < cfg.DomeDrivingShare)
                     {
                         int k = Rng.Next(domePoints.Count);
                         var p0 = domePoints[k];
