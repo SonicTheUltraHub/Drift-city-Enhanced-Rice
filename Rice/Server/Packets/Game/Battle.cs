@@ -1373,6 +1373,20 @@ namespace Rice.Server.Packets.Game
             ai.BaseSerial = (uint) (ai.Key << 16);
             // cor e visual: o bot com o carro dele (pintura, vidro, neon, rodas...); IA comum: uma cor da paleta
             var bp = forcedName != null ? Bots.ByName(forcedName) : null;
+            // seu corredor: o nivel de agora no banco (o perfil do bot guardava o do login; subir de nivel jogando com ele
+            // depois nao aparecia na sala)
+            if (bp != null && bp.IsAlt)
+            {
+                try
+                {
+                    using (var rc = Rice.Database.GetContext())
+                    {
+                        var dc = rc.Characters.Find(bp.Cid);
+                        if (dc != null && dc.Level > 0) bp.Level = dc.Level;
+                    }
+                }
+                catch (Exception) { }
+            }
             if (bp != null && bp.Level > 0) ai.Level = bp.Level;    // nivel de verdade do bot / do seu corredor (nao o da linha de IA)
             ai.Color = bp != null ? bp.Color : Bots.PaintColor(Rng.Next(0, 29));
             if (bp != null && bp.Look != null && bp.Look.Tint != 0) ai.Tint = bp.Look.Tint;

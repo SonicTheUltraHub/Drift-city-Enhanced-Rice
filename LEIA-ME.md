@@ -46,6 +46,9 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   carregada no login, que podia estar velha; ao ganhar, gravava o valor velho + o premio (parecia que nao ganhou).
   Agora atualiza do banco antes de dar o premio, e o log mostra "Sala N: Fernando (seu corredor) ganhou +X exp e +Y
   mito (nivel, mito)" e "Party: ... ganhou ..." para conferir.
+- **Nivel do seu corredor na sala:** vinha do perfil guardado no login (ex.: Fernando 10 depois de subir para 11 jogando
+  com ele). Agora a sala le o nivel atual do banco. Na corrida em si o nivel vem do Init_us.agt do jogo, que so muda
+  quando o jogo fecha e abre de novo (o servidor grava o nivel novo ao fechar o jogo).
 
 **Atualizacao 208 — Hora do jogo (drinks/cola), espectadores, salas de desafio, seus corredores na corrida:**
 - **Drinks e cola de sticker "vencidos":** o jogo calcula "agora" com a hora que o servidor manda (LobbyTimeAck 47 e
