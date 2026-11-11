@@ -42,7 +42,7 @@ namespace Rice.Server.Packets.Game
         const string FileName = "vsitems.json";
         const int New = 1, Changed = 3, Removed = 2, OnCar = 1;
         // 20 = Sticker Glue (cola do sticker): vale no carro em que foi comprada (sem carro o jogo dizia "expirada")
-        static readonly HashSet<int> Equippable = new HashSet<int>(Enumerable.Range(1, 13).Concat(new[] { 20, 32, 38, 47, 48, 52, 58 }));
+        static readonly HashSet<int> Equippable = new HashSet<int>(Enumerable.Range(1, 13).Concat(new[] { 32, 38, 47, 48, 52, 58 }));
         static readonly Dictionary<int, string> FixedSlots = new Dictionary<int, string> { { 1, "paint" }, { 32, "paint" }, { 2, "neon" }, { 3, "tint" } };
         static readonly object Sync = new object();
         static Dictionary<int, Shop> table;
@@ -295,12 +295,12 @@ namespace Rice.Server.Packets.Game
             List<VsItem> items;
             lock (Sync)
             {
-                // cola de sticker comprada antes sem carro: vai para o carro atual
+                // cola de sticker: o jogo (DriftCity.exe 0x6e58a0 / 0x557600 / 0x634f80) so procura a cola na lista dos
+                // itens FORA do carro (estado 0). Posta no carro ela "sumia" e o jogo dizia vencida / sem cola.
                 var all = ItemsOf(ch);
                 bool fixedGlue = false;
-                foreach (var g in all.Where(x => CatOf(x) == 20 && x.Car == 0).ToList())
-                    if (ch.Vehicle != null && !all.Any(x => x != g && CatOf(x) == 20 && x.Car == ch.Vehicle.CarID && x.State == OnCar))
-                    { g.Car = ch.Vehicle.CarID; g.State = OnCar; fixedGlue = true; }
+                foreach (var g in all.Where(x => CatOf(x) == 20 && (x.State != 0 || x.Car != 0)).ToList())
+                { g.Car = 0; g.State = 0; fixedGlue = true; }
                 if (fixedGlue) Save();
                 items = all.ToList();
             }
@@ -309,6 +309,32 @@ namespace Rice.Server.Packets.Game
             ack.Writer.Write(items.Count);
             foreach (var v in items) WriteItem(ack.Writer, v);
             packet.Sender.Send(ack);
+            foreach (var v in items) if (IsDrink(v)) SendUseAck(packet.Sender, v);   // drinks ja "bebidos": icone no canto
+        }
+
+        // Drinks (EXP 15, MITO 17, Item 28): o jogo so marca o drink como em uso com o Cmd_VisualItemUseAck (1210,
+        // DriftCity.exe 0x52a760: u32 inven -> item em uso). O servidor manda sozinho (na lista e na compra) e responde
+        // o pedido de usar (1209).
+        static bool IsDrink(VsItem v) { int c = CatOf(v); return c == 15 || c == 17 || c == 28; }
+
+        static void SendUseAck(RiceClient c, VsItem v)
+        {
+            var use = new RicePacket(1210);
+            use.Writer.Write((uint) v.Inven);
+            use.Writer.Write(0);
+            c.Send(use);
+        }
+
+        [RicePacket(1209, RiceServer.ServerType.Game, CheckedIn = true)]
+        public static void VisualItemUse(RicePacket packet)
+        {
+            var buf = packet.Buffer;
+            Log.WriteLine("Drift shop: usar item ({0} bytes): {1}", buf.Length, BitConverter.ToString(buf, 0, Math.Min(buf.Length, 32)));
+            if (buf.Length < 4) return;
+            int inven = BitConverter.ToInt32(buf, 0);
+            VsItem v;
+            lock (Sync) v = ItemsOf(packet.Sender.Player.ActiveCharacter).FirstOrDefault(x => x.Inven == inven);
+            if (v != null) SendUseAck(packet.Sender, v);
         }
 
         [RicePacket(1203, RiceServer.ServerType.Game, CheckedIn = true)]
@@ -373,6 +399,7 @@ namespace Rice.Server.Packets.Game
             ack.Writer.Write(0);
             ack.Writer.Write(0);
             c.Send(ack);
+            if (IsDrink(v)) SendUseAck(c, v);
             if (ccPaid > 0) GetMyHancoinTo(c);
             AfterChange(c, ch, v.Car);
             Log.WriteLine("Drift shop: {0} comprou {1} ({2}) para sempre por {3} mito e {4} CC{5}.", ch.Name, s.market, uid,

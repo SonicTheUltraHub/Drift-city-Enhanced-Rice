@@ -35,6 +35,14 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 209 — Cola de sticker e drinks (de novo):**
+- **Cola de sticker:** o jogo procura a cola so entre os itens que estao FORA do carro (DriftCity.exe 0x6e58a0,
+  0x557600, 0x634f80). Desde a 207 o servidor colocava a cola "no carro", entao o jogo nao achava e dizia vencida /
+  sem cola. Agora a cola fica sempre fora do carro (a que ja estava no carro volta sozinha ao abrir a Drift Shop).
+- **Drinks:** o jogo so marca o drink como "em uso" quando recebe o Cmd_VisualItemUseAck (1210). O servidor agora
+  manda esse aviso sozinho para cada drink (ao abrir a lista e ao comprar) e responde o pedido de usar (1209, aparece
+  no log como "Drift shop: usar item").
+
 **Atualizacao 208 — Hora do jogo (drinks/cola), espectadores, salas de desafio, seus corredores na corrida:**
 - **Drinks e cola de sticker "vencidos":** o jogo calcula "agora" com a hora que o servidor manda (LobbyTimeAck 47 e
   GetDateTimeAck 785). O servidor mandava o TickCount (tempo ligado do PC) e nem respondia o 785, entao a conta dos dias
