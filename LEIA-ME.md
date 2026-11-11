@@ -35,6 +35,14 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 205 — Cola de sticker funcionando e L1 com 10 stickers:**
+- Achado no DriftCity.exe (0x6e58a0): a cola (Sticker Glue) so vale se tiver prazo maior que 0 (dias que faltam =
+  prazo - dias desde a compra, 0x7856f0). O servidor mandava 0 ("para sempre") e o jogo dizia "Your sticker adhesive
+  spray has expired". Agora a cola vai com 12000 dias (nao vence).
+- Quantos stickers cada cola deixa colar e fixo no jogo: Sticker Glue 6, L1 1, L3 3, L6 6. O `DriftCity.exe` do
+  instalador agora da **10 com a L1** (byte em 0x6e59df). **Instale de novo** para trocar o DriftCity.exe.
+- A lista de stickers da comunidade (os que voce registra) ainda nao aparece: em estudo.
+
 **Atualizacao 204 — Bots nao imitam mais o seu carro, seus corredores correm e vao as lojas, cola de sticker:**
 - **Bots imitando o seu carro:** os bots (parados ou andando) copiavam o estado do SEU carro: volante virado, fumaca
   de drift/arrancada, freio. Agora o carro deles vai neutro (so a vida vem do estado). `BotsCopyMyState: true` volta

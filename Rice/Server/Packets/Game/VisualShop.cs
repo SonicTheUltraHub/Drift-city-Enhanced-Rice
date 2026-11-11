@@ -161,9 +161,12 @@ namespace Rice.Server.Packets.Game
             var e = Encoding.Unicode.GetBytes(v.Text ?? "");
             Array.Copy(e, t, Math.Min(e.Length, 38));
             w.Write(t);
-            w.Write(0);              // periodo 0 = para sempre
+            // Cola de sticker: o jogo (DriftCity.exe 0x6e58a0 / 0x7856f0) so aceita a cola com prazo > 0 (dias que faltam =
+            // prazo - dias desde a compra); com 0 ("para sempre") dizia "adhesive spray has expired". Vai com 12000 dias.
+            bool glue = CatOf(v) == 20;
+            w.Write(glue ? 12000 : 0);   // periodo 0 = para sempre
             w.Write(0);
-            w.Write(v.Ctime);
+            w.Write(glue ? (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds() : v.Ctime);
             w.Write(new byte[48]);   // assists / pontos do Aero
             w.Write(new byte[4]);
         }
