@@ -1796,6 +1796,10 @@ namespace Rice.Server.Packets.Game
             if (team) foreach (var x in all) { if (isBlue(x)) blue += pointsOf(x); else red += pointsOf(x); }
             if (team) Log.WriteLine("Sala {0}: corrida de time - azul {1} x {2} vermelho.", room.Id, blue, red);
             float toGoal = 0;
+            // seus corredores na sua party que correram: ganham pela colocacao deles (como voce), sem dividir o seu premio
+            var partyAlts = new HashSet<long>(room.Humans.Where(h => h.Char != null).SelectMany(h => BotSocial.PartyBots(h.Char)).Where(b => b.IsAlt).Select(b => b.Cid));
+            var altPaid = new HashSet<long>(all.Where(x => x.IsAi).Select(x => Bots.ByName(x.Name)).Where(x => x != null && x.IsAlt && partyAlts.Contains(x.Cid)).Select(x => x.Cid));
+            var altLines = new List<string>();
             foreach (var m in all.OrderBy(x => x.Ended && x.EndType == Finished && x.Rank > 0 ? x.Rank : n + 1).ThenBy(x => x.IsAi ? 1 : 0))
             {
                 int endType = m.Ended && m.EndType == Finished && m.Rank > 0 ? Finished : Retired;
@@ -1805,6 +1809,34 @@ namespace Rice.Server.Packets.Game
                 if (endType != Finished) { toGoal += 120 + Rng.Next(380); record = toGoal; }
                 if (m.IsAi)
                 {
+                    var ab = Bots.ByName(m.Name);
+                    var hm = room.Humans.FirstOrDefault();
+                    if (ab != null && ab.IsAlt && partyAlts.Contains(ab.Cid) && hm != null && n > 1)
+                    {
+                        try
+                        {
+                            var ach = BotSocial.AltCharacter(hm.Client.Player, ab);
+                            int aplace = n - rank + 1;
+                            long aExp = cfg.BattleExpPerPlace * aplace, aMito = cfg.BattleMitoPerPlace * aplace;
+                            if (endType == Finished && cfg.BattleCompleteBonus)
+                            {
+                                uint abe, abm; int ast;
+                                CompleteBonus(room, n, out abe, out abm, out ast);
+                                aExp += abe; aMito += abm;
+                            }
+                            if (ach != null)
+                            {
+                                int before = ach.Level;
+                                if (aExp > 0) ach.GrantExperience(aExp);
+                                if (aMito > 0) ach.GrantMito((ulong) aMito);
+                                ab.Level = ach.Level;
+                                altPaid.Add(ab.Cid);
+                                altLines.Add(ab.Name + " (seu corredor) " + (endType == Finished ? shown + "o lugar" : "nao terminou") + ": +" + aExp + " exp, +" + aMito + " mito"
+                                             + (ach.Level > before ? " (nivel " + ach.Level + "!)" : "") + ".");
+                            }
+                        }
+                        catch (Exception ex) { Log.WriteError("Corrida (seu corredor): " + ex.Message); }
+                    }
                     entries.Add(Build(w =>
                     {
                         w.Write(endType); w.Write(m.Serial); w.Write(0u); w.Write(0UL); w.Write(0u); w.Write(record);
@@ -1836,7 +1868,7 @@ namespace Rice.Server.Packets.Game
                 }
                 if (exp > 0) c.GrantExperience(exp);
                 if (mito > 0) c.GrantMito(mito);
-                BotSocial.ShareRewards(c, exp, mito);         // corredores da conta na party ganham junto
+                BotSocial.ShareRewards(c, exp, mito, altPaid);   // corredores da party que nao correram ganham junto
                 if (n > 1) { try { Licenses.CountRace(c, (room.Type & 1) != 0, room.Map); } catch (Exception lex) { Log.WriteError("Licencas (corrida): " + lex.Message); } }
                 if (room.DuelBot != 0)
                 {
@@ -1907,6 +1939,7 @@ namespace Rice.Server.Packets.Game
             foreach (var m in room.Humans)
             {
                 try { m.Char.FlushModInfo(m.Client); m.Char.FlushNotices(m.Client); } catch (Exception) { }
+                foreach (var al in altLines) { try { Chat.SendSystemMessage(m.Client, al); } catch (Exception) { } }
             }
         }
     }

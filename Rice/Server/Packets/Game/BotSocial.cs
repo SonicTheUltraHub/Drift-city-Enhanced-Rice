@@ -617,7 +617,7 @@ namespace Rice.Server.Packets.Game
             catch (Exception ex) { Log.WriteError("Corredor " + b.Name + ": " + ex.Message); return null; }
         }
 
-        public static void ShareRewards(Rice.Game.Character ch, long exp, long mito)
+        public static void ShareRewards(Rice.Game.Character ch, long exp, long mito, HashSet<long> skipAlts = null)
         {
             if (ch == null || (exp <= 0 && mito <= 0)) return;
             var player = RiceServer.GetPlayers().FirstOrDefault(p => p.ActiveCharacter == ch);
@@ -641,7 +641,7 @@ namespace Rice.Server.Packets.Game
                 if (player.GameClient != null && cfg0.PartyBotExpTable) Bots.SayLater(player.GameClient, 1500 + 900 * said++, "party", b.Name, line);
             }
             Bots.Save();
-            var party = PartyBots(ch).Where(b => b.IsAlt).ToList();
+            var party = PartyBots(ch).Where(b => b.IsAlt && (skipAlts == null || !skipAlts.Contains(b.Cid))).ToList();
             if (party.Count == 0) return;
             double share = RiceServer.Config.AltRewardShare;
             var parts = new List<string>();

@@ -2432,5 +2432,11 @@
 "Nao achei o corredor ": "Couldn't find racer ",
 "Recebi, valeu!": "Got it, thanks!",
 "Seus outros corredores tambem entram nas salas da Battle Zone e correm (sem ganhar nada).": "Your other racers also join Battle Zone rooms and race (without earning anything).",
-"Bots copiam o estado do SEU carro (volante, fumaca de drift/arrancada, freio): false = carro neutro (so andam).": "Bots copy the state of YOUR car (steering, drift/launch smoke, brake): false = neutral car (they just drive)."
+"Bots copiam o estado do SEU carro (volante, fumaca de drift/arrancada, freio): false = carro neutro (so andam).": "Bots copy the state of YOUR car (steering, drift/launch smoke, brake): false = neutral car (they just drive).",
+" (seu corredor) ": " (your racer) ",
+"o lugar": " place",
+"nao terminou": "did not finish",
+": +": ": +",
+" exp, +": " exp, +",
+"Corrida (seu corredor): ": "Race (your racer): "
 }
