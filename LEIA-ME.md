@@ -35,6 +35,12 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 207 — Drinks com o icone e o efeito no jogo:**
+- Relato do forum: EXP drink, MITO drink e Item Drink "nao funcionam e nem aparecem no canto inferior direito". Igual a
+  cola de sticker, o jogo so considera o item valido com prazo maior que 0; o servidor mandava 0 ("para sempre").
+  Agora os drinks (categorias 15, 17 e 28) vao com 12000 dias, entao o icone aparece e nao vencem. O bonus continua
+  no servidor (+30% exp, +50% mito, itens em dobro; nao vale no premio de quest).
+
 **Atualizacao 206 — Recorde de corridas salvo e perfil de verdade (F2 / seus corredores):**
 - **Battle Record:** cada corredor agora tem o recorde de corridas da Battle Zone salvo (individual e time, corridas e
   vitorias) em `save/<conta>/<corredor>/battle_record.json`. Conta toda corrida com 2 ou mais corredores; vitoria =

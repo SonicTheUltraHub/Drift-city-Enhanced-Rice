@@ -150,6 +150,8 @@ namespace Rice.Server.Packets.Game
             catch (Exception ex) { Log.WriteError("vsitems.json: " + ex.Message); }
         }
 
+        static readonly HashSet<int> TimedCats = new HashSet<int> { 20, 15, 17, 28 };
+
         static int CatOf(VsItem v) { Shop s; return Table().TryGetValue(v.Uid, out s) ? s.cat : -1; }
         static string SlotOf(VsItem v) { int c = CatOf(v); string f; return FixedSlots.TryGetValue(c, out f) ? f : c.ToString(); }
 
@@ -165,7 +167,9 @@ namespace Rice.Server.Packets.Game
             w.Write(t);
             // Cola de sticker: o jogo (DriftCity.exe 0x6e58a0 / 0x7856f0) so aceita a cola com prazo > 0 (dias que faltam =
             // prazo - dias desde a compra); com 0 ("para sempre") dizia "adhesive spray has expired". Vai com 12000 dias.
-            bool glue = CatOf(v) == 20;
+            // O mesmo vale para os drinks (EXP 15, MITO 17, Item 28): sem prazo o jogo nao mostra o icone do efeito no canto
+            // inferior direito e trata como vencido.
+            bool glue = TimedCats.Contains(CatOf(v));
             w.Write(glue ? 12000 : 0);   // periodo 0 = para sempre
             w.Write(0);
             w.Write(glue ? (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds() : v.Ctime);
