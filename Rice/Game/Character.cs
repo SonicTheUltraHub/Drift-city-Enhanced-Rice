@@ -684,6 +684,10 @@ namespace Rice.Game
                 TeamName = CrewName(),
                 TeamRank = CrewRank(),
                 MitoMoney = Mito,
+                PvpCnt = (uint) Rice.Server.Packets.Game.BattleRecord.Of((long) CID)[0],
+                PvpWinCnt = (uint) Rice.Server.Packets.Game.BattleRecord.Of((long) CID)[1],
+                TPvpCnt = (uint) Rice.Server.Packets.Game.BattleRecord.Of((long) CID)[2],
+                TPvpWinCnt = (uint) Rice.Server.Packets.Game.BattleRecord.Of((long) CID)[3],
                 Flags = -1
             };
         }

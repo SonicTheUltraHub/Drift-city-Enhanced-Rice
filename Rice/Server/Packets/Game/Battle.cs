@@ -1859,6 +1859,7 @@ namespace Rice.Server.Packets.Game
                                 if (aMito > 0) ach.GrantMito((ulong) aMito);
                                 ab.Level = ach.Level;
                                 altPaid.Add(ab.Cid);
+                                BattleRecord.Add((long) ach.CID, team, endType == Finished && (team ? (isBlue(m) ? blue > red : red > blue) : rank == 1));
                                 altLines.Add(ab.Name + " (seu corredor) " + (endType == Finished ? shown + "o lugar" : "nao terminou") + ": +" + aExp + " exp, +" + aMito + " mito"
                                              + (ach.Level > before ? " (nivel " + ach.Level + "!)" : "") + ".");
                             }
@@ -1898,6 +1899,7 @@ namespace Rice.Server.Packets.Game
                 if (mito > 0) c.GrantMito(mito);
                 BotSocial.ShareRewards(c, exp, mito, altPaid);   // corredores da party que nao correram ganham junto
                 if (n > 1) { try { Licenses.CountRace(c, (room.Type & 1) != 0, room.Map); } catch (Exception lex) { Log.WriteError("Licencas (corrida): " + lex.Message); } }
+                if (n > 1) BattleRecord.Add((long) c.CID, team, endType == Finished && (team ? (isBlue(m) ? blue > red : red > blue) : rank == 1));
                 if (room.DuelBot != 0)
                 {
                     long db = room.DuelBot;
@@ -1968,6 +1970,50 @@ namespace Rice.Server.Packets.Game
             {
                 try { m.Char.FlushModInfo(m.Client); m.Char.FlushNotices(m.Client); } catch (Exception) { }
                 foreach (var al in altLines) { try { Chat.SendSystemMessage(m.Client, al); } catch (Exception) { } }
+            }
+        }
+    }
+
+    // Recorde de corridas na Battle Zone de cada corredor (individual e time, corridas e vitorias): aparece no perfil
+    // ("Battle Record"). Salvo em save/<conta>/<corredor>/battle_record.json.
+    public static class BattleRecord
+    {
+        const string FileName = "battle_record.json";
+        static readonly object Sync = new object();
+        static Dictionary<string, int[]> data;
+
+        static Dictionary<string, int[]> Data()
+        {
+            if (data != null) return data;
+            try { data = CharFiles.Exists(FileName) ? Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, int[]>>(CharFiles.ReadAllText(FileName)) : null; }
+            catch (Exception ex) { Log.WriteError("battle_record.json: " + ex.Message); data = null; }
+            if (data == null) data = new Dictionary<string, int[]>();
+            return data;
+        }
+
+        // [corridas individuais, vitorias individuais, corridas de time, vitorias de time]
+        public static int[] Of(long cid)
+        {
+            lock (Sync)
+            {
+                int[] r;
+                return Data().TryGetValue(cid + ":pvp", out r) && r != null && r.Length >= 4 ? (int[]) r.Clone() : new int[4];
+            }
+        }
+
+        public static void Add(long cid, bool team, bool win)
+        {
+            lock (Sync)
+            {
+                string k = cid + ":pvp";
+                int[] r;
+                if (!Data().TryGetValue(k, out r) || r == null || r.Length < 4) r = new int[4];
+                int i = team ? 2 : 0;
+                r[i]++;
+                if (win) r[i + 1]++;
+                data[k] = r;
+                try { CharFiles.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(data)); }
+                catch (Exception ex) { Log.WriteError("battle_record.json: " + ex.Message); }
             }
         }
     }

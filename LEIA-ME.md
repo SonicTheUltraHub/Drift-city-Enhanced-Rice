@@ -35,6 +35,15 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 206 — Recorde de corridas salvo e perfil de verdade (F2 / seus corredores):**
+- **Battle Record:** cada corredor agora tem o recorde de corridas da Battle Zone salvo (individual e time, corridas e
+  vitorias) em `save/<conta>/<corredor>/battle_record.json`. Conta toda corrida com 2 ou mais corredores; vitoria =
+  1o lugar (individual) ou time vencedor. Seus corredores na party que correm contam tambem.
+- **Perfil (User Information):** o seu corredor de outra conta mostrava numeros inventados (ex.: 20 corridas / 5
+  vitorias). Agora o perfil dele (e o seu) vem do corredor de verdade: nivel, carro atual, atributos, crew e o recorde salvo.
+- **F2 (My Information):** o servidor nao respondia o pedido do perfil quando o nome era de um jogador (so de bot), por
+  isso nao abria. Agora responde com os seus dados. Se ainda nao abrir, mande o log logo depois de apertar F2.
+
 **Atualizacao 205 — Cola de sticker funcionando e L1 com 10 stickers:**
 - Achado no DriftCity.exe (0x6e58a0): a cola (Sticker Glue) so vale se tiver prazo maior que 0 (dias que faltam =
   prazo - dias desde a compra, 0x7856f0). O servidor mandava 0 ("para sempre") e o jogo dizia "Your sticker adhesive

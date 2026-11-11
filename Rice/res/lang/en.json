@@ -2439,5 +2439,8 @@
 ": +": ": +",
 " exp, +": " exp, +",
 "Corrida (seu corredor): ": "Race (your racer): ",
-" (seu corredor) ganhou na carta: ": " (your racer) won from the card: "
+" (seu corredor) ganhou na carta: ": " (your racer) won from the card: ",
+"Perfil do corredor ": "Profile of racer ",
+"Perfil de ": "Profile of ",
+"Perfil: ": "Profile: "
 }

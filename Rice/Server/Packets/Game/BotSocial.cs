@@ -678,7 +678,22 @@ namespace Rice.Server.Packets.Game
         {
             string name = ReadWStr(packet.Buffer, 0, 42);
             var b = Bots.ByName(name);
-            if (b == null) return;           // jogador: o cliente ja tem os dados dele
+            // corredor de verdade (voce no F2 "My Information", ou um corredor seu de outra conta): os dados reais dele
+            if (b == null || b.IsAlt)
+            {
+                Rice.Game.Character real = null;
+                try
+                {
+                    real = RiceServer.GetPlayers().Where(p => p != null && p.ActiveCharacter != null).Select(p => p.ActiveCharacter)
+                                     .FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
+                    if (real == null)
+                        using (var rc = Rice.Database.GetContext())
+                            if (rc.Characters.Any(x => x.Name == name)) real = Rice.Game.Character.Retrieve(name);
+                }
+                catch (Exception ex) { Log.WriteError("Perfil de " + name + ": " + ex.Message); }
+                if (real != null) { SendRealInfo(packet.Sender, real, b); return; }
+                if (b == null) { Log.WriteLine("Perfil: {0} nao encontrado.", name); return; }
+            }
             Log.WriteLine("Perfil do bot {0}.", b.Name);
             var t = Crew.Of(b.Cid);
             var ms = new MemoryStream();
@@ -725,6 +740,28 @@ namespace Rice.Server.Packets.Game
 
             var data = ms.ToArray();
             Send(packet.Sender, 661, w => w.Write(data, 0, 0x497));
+        }
+
+        // perfil (661) de um corredor de verdade: nivel, carro, atributos, crew e o recorde de corridas salvo
+        static void SendRealInfo(RiceClient c, Rice.Game.Character ch, Bots.BotProfile asBot)
+        {
+            Log.WriteLine("Perfil do corredor {0}.", ch.Name);
+            var ms = new MemoryStream();
+            var pw = new PacketWriter(ms);
+            pw.Write(ch.GetInfo());
+            Pad(ms, pw, 0x141);
+            var car = ch.Vehicle ?? (ch.Garage != null ? ch.Garage.FirstOrDefault() : null);
+            if (car != null) pw.Write(car.GetInfo());
+            Pad(ms, pw, 0x141 + 0x32);
+            try { pw.Write(ch.GetStatUpdate()); } catch (Exception) { }
+            Pad(ms, pw, 0x141 + 0x32 + 0x70);
+            pw.Write(Crew.Info(Crew.Of((long) ch.CID)));
+            uint serial = asBot != null ? (Online(asBot) ? SerialOf(asBot) : 0u) : ch.Serial;
+            pw.Write(serial);
+            pw.Write((uint) Math.Max(1, ch.City));
+            Pad(ms, pw, 0x497);
+            var data = ms.ToArray();
+            Send(c, 661, w => w.Write(data, 0, 0x497));
         }
 
         static void Pad(MemoryStream ms, PacketWriter pw, int size)
