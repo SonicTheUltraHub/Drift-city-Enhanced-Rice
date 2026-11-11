@@ -310,6 +310,25 @@ namespace Rice.Server.Packets.Game
             foreach (var v in items) WriteItem(ack.Writer, v);
             packet.Sender.Send(ack);
             foreach (var v in items) if (IsDrink(v)) SendUseAck(packet.Sender, v);   // drinks ja "bebidos": icone no canto
+            SendBonusFlags(packet.Sender);
+        }
+
+        // Cmd_BonusUpdate (1501, DriftCity.exe 0x52aa90): 9 u32 (1 = ligado) -> bytes 0x1d90..0x1d98 do personagem.
+        // O 5o (0x1d94) libera o sticker: com 0 a Drift Shop dizia "Your sticker adhesive spray has expired" mesmo com a
+        // cola valida (0x557598 / 0x6e58e1 / 0x6350b4). Os outros ficam como BonusUpdateFlags no server.json.
+        public static void SendBonusFlags(RiceClient c)
+        {
+            var flags = new int[9];
+            flags[4] = 1;
+            try
+            {
+                var parts = (RiceServer.Config.BonusUpdateFlags ?? "").Split(',');
+                for (int i = 0; i < 9 && i < parts.Length; i++) { int f; if (int.TryParse(parts[i].Trim(), out f)) flags[i] = f; }
+            }
+            catch (Exception) { }
+            var pk = new RicePacket(1501);
+            foreach (var f in flags) pk.Writer.Write(f);
+            c.Send(pk);
         }
 
         // Drinks (EXP 15, MITO 17, Item 28): o jogo so marca o drink como em uso com o Cmd_VisualItemUseAck (1210,
@@ -434,15 +453,26 @@ namespace Rice.Server.Packets.Game
                 var v = items.FirstOrDefault(x => x.Inven == inven);
                 var car = ch.Garage.FirstOrDefault(x => x.CarID == carId);
                 Shop s;
-                if (v == null || car == null || !Table().TryGetValue(v.Uid, out s) || !Fits(s, car) || (v.Car != 0 && v.Car != carId))
+                // drink arrastado para o slot FIELD/BATTLE do inventario (Drift Item): fica "posto" (o jogo mostra no HUD)
+                if (v != null && IsDrink(v))
+                {
+                    Log.WriteLine("Drift shop: drink no slot ({0}).", BitConverter.ToString(buf, 0, Math.Min(buf.Length, 16)));
+                    v.State = OnCar; v.Car = carId;
+                    mods.Add(new KeyValuePair<VsItem, int>(v, Changed));
+                    Save();
+                }
+                else if (v == null || car == null || !Table().TryGetValue(v.Uid, out s) || !Fits(s, car) || (v.Car != 0 && v.Car != carId))
                 {
                     Chat.SendSystemMessage(c, "Esse item nao serve nesse carro.");
                     return;
                 }
-                PutOn(items, v, carId, mods);
-                mods.Add(new KeyValuePair<VsItem, int>(v, Changed));
-                ApplyPaint(ch, v);
-                Save();
+                if (!IsDrink(v))
+                {
+                    PutOn(items, v, carId, mods);
+                    mods.Add(new KeyValuePair<VsItem, int>(v, Changed));
+                    ApplyPaint(ch, v);
+                    Save();
+                }
             }
             var ack = new RicePacket(1206);
             ack.Writer.Write(buf, 0, 12);

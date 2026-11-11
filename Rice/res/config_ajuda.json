@@ -1483,6 +1483,10 @@
 "Bots",
 "Bots andando na cidade: rodas girando (estado do seu carro dirigindo reto, sem drift/fumaca). false = rodas paradas."
 ],
+"BonusUpdateFlags": [
+"Battle Zone",
+"Cmd_BonusUpdate: 9 flags (0/1) separados por virgula. O 5o libera o sticker (cola). Os outros sao bonus do jogo ainda sem nome (teste: ligar um por vez)."
+],
 "PartyChaseTeleportSeconds": [
 "Party",
 "HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)"

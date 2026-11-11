@@ -35,6 +35,15 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 210 — Sticker liberado (BonusUpdate) e drinks no slot:**
+- **"Your sticker adhesive spray has expired" com a cola comprada:** nao era a cola. O jogo so libera o sticker quando
+  o servidor liga o 5o aviso do Cmd_BonusUpdate (1501; byte 0x1d94 do personagem, DriftCity.exe 0x557598 / 0x6e58e1).
+  O servidor nunca mandava esse pacote. Agora manda ao carregar a Drift Shop: `BonusUpdateFlags` = "0,0,0,0,1,0,0,0,0"
+  (os outros 8 avisos sao bonus do jogo ainda sem nome; da para testar ligando um por vez).
+- **Drinks:** ficam na aba Drift Item do inventario e vao para os slots FIELD/BATTLE (que aparecem no HUD como 1 e 2).
+  Arrastar o drink para o slot agora e aceito pelo servidor (antes dizia "Esse item nao serve nesse carro") e o log
+  mostra "Drift shop: drink no slot (...)".
+
 **Atualizacao 209 — Cola de sticker e drinks (de novo):**
 - **Cola de sticker:** o jogo procura a cola so entre os itens que estao FORA do carro (DriftCity.exe 0x6e58a0,
   0x557600, 0x634f80). Desde a 207 o servidor colocava a cola "no carro", entao o jogo nao achava e dizia vencida /
