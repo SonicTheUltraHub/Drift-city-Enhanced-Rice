@@ -1037,6 +1037,25 @@ namespace Rice.Server.Packets.Game
                 if (idx < 0) continue;
                 room.CardsTaken.Add(s); room.CardPicked.Add(ai.Serial);
                 entries.Add(CardEntry(s, ai.Serial, 1, (uint) idx, 1));
+                // seu corredor na sua party: a carta vale de verdade (o item vai para o inventario dele)
+                try
+                {
+                    var ab = Bots.ByName(ai.Name);
+                    var hm = room.Humans.FirstOrDefault(h => h.Char != null && BotSocial.PartyBots(h.Char).Contains(ab));
+                    if (ab != null && ab.IsAlt && hm != null)
+                    {
+                        var ach = BotSocial.AltCharacter(hm.Client.Player, ab);
+                        Rice.Game.Item got;
+                        if (ach != null && ach.GrantItem(ae.ID, 1, out got) && got != null)
+                        {
+                            var hc = hm.Client;
+                            string line = ab.Name + " (seu corredor) ganhou na carta: " + ae.Name + ".";
+                            System.Threading.Tasks.Task.Delay(900).ContinueWith(_ => { try { Chat.SendSystemMessage(hc, line); } catch (Exception) { } });
+                        }
+                        else if (ach != null) Log.WriteLine("Carta de {0}: inventario cheio ({1}).", ab.Name, ae.Name);
+                    }
+                }
+                catch (Exception ex) { Log.WriteError("Carta (seu corredor): " + ex.Message); }
             }
             if (entries.Count > 0) Cast(room, 484, Build(w => { w.Write((uint) entries.Count); foreach (var e in entries) w.Write(e); }));
         }

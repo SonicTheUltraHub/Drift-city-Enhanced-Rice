@@ -42,7 +42,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - **Seus corredores (de todas as contas):** agora tambem andam ate as lojas do Driver Dome (sem comprar nem equipar
   nada) e entram nas salas da Battle Zone para correr. Fora da party nao ganham nada; **na sua party** ganham pela
   colocacao deles (exp e mito como voce: `BattleExpPerPlace`/`BattleMitoPerPlace` x pontos + o bonus de corrida completa),
-  e o chat mostra quanto cada um ganhou. Na sala aparecem com o nome deles; na corrida o jogo mostra o nome da linha
+  e o chat mostra quanto cada um ganhou. A **carta "?" do fim da corrida** que eles pegam tambem vale: o item vai
+  para o inventario deles. Na sala aparecem com o nome deles; na corrida o jogo mostra o nome da linha
   de IA que eles usam. `AltsRace`.
 - **Cola de sticker (Sticker Glue):** era comprada sem carro e o jogo dizia "Your sticker adhesive spray has expired".
   Agora fica no carro em que foi comprada; a que voce ja comprou vai para o carro atual ao abrir a Drift Shop.
