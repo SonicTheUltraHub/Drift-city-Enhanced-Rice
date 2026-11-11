@@ -183,7 +183,8 @@ namespace Rice.Server.Packets.Game
                 w.Write(1); w.Write((uint) r.Id); w.Write((uint) r.Id);
                 w.Write(r.Map); w.Write((ushort) (r.MapFlag & 0xffff)); w.Write(r.Type);
                 w.Write((ushort) r.State); w.Write((short) (r.State != Wait ? r.Area : -1));
-                w.Write(r.Capacity); w.Write((ushort) 0); w.Write((ushort) 0);
+                // @0x1e do pacote (DriftCity.exe 0x5431e9): quantos estao assistindo ("Spectators: N")
+                w.Write(r.Capacity); w.Write((ushort) 0); w.Write((ushort) Math.Min(r.Spectators.Count, 999));
                 w.Write(WStr(r.Name, 80));
                 w.Write(SeatBytes(r));
                 w.Write((uint) r.Members.Count);
@@ -638,6 +639,13 @@ namespace Rice.Server.Packets.Game
         static void SendSpecCount(Room room)
         {
             Cast(room, 823, BitConverter.GetBytes((ushort) Math.Min(room.Spectators.Count, ushort.MaxValue)));
+            // o contador da sala vem do estado da sala (446): manda de novo com o numero novo
+            if (room.State == Wait)
+            {
+                Cast(room, 622, MasterFrame(room));
+                Cast(room, 446, StateFrame(room));
+                foreach (var m in room.Members) Cast(room, 485, ReadyFrame(m));
+            }
         }
 
         static void BotLeaves(Room room, Member host, Member ai, string line, List<Tuple<RiceClient, string, string>> says)
@@ -1130,6 +1138,7 @@ namespace Rice.Server.Packets.Game
             ai.BaseSerial = (uint) (ai.Key << 16);
             // cor e visual: o bot com o carro dele (pintura, vidro, neon, rodas...); IA comum: uma cor da paleta
             var bp = forcedName != null ? Bots.ByName(forcedName) : null;
+            if (bp != null && bp.Level > 0) ai.Level = bp.Level;    // nivel de verdade do bot / do seu corredor (nao o da linha de IA)
             ai.Color = bp != null ? bp.Color : Bots.PaintColor(Rng.Next(0, 29));
             if (bp != null && bp.Look != null && bp.Look.Tint != 0) ai.Tint = bp.Look.Tint;
             ai.UserInfo = Build(w => { w.Write((ushort) 0); w.Write((ushort) ai.Level); w.Write((ushort) 0); w.Write((ushort) 0); w.Write(0); });
@@ -1231,7 +1240,7 @@ namespace Rice.Server.Packets.Game
             Cast(room, 446, StateFrame(room));
             Cast(room, 621, ModifyFrame(room));
             foreach (var m in room.Members) Cast(room, 485, ReadyFrame(m));
-            SendSpecCount(room);
+            Cast(room, 823, BitConverter.GetBytes((ushort) Math.Min(room.Spectators.Count, ushort.MaxValue)));
         }
 
         static void SetAiCarAttr(Member ai)

@@ -42,6 +42,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - Quantos stickers cada cola deixa colar e fixo no jogo: Sticker Glue 6, L1 1, L3 3, L6 6. O `DriftCity.exe` do
   instalador agora da **10 com a L1** (byte em 0x6e59df). **Instale de novo** para trocar o DriftCity.exe.
 - A lista de stickers da comunidade (os que voce registra) ainda nao aparece: em estudo.
+- **Battle Zone:** o contador "Spectators" da sala vem do estado da sala (446, campo @0x1e do pacote; DriftCity.exe
+  0x5431e9) e nao so do 823: agora vai com o numero de espectadores e a sala e mandada de novo quando muda.
+- **Nivel na sala:** bots e seus corredores apareciam com o nivel da linha de IA (ex.: SonicBR nivel 12 aparecia 19).
+  Agora aparece o nivel de verdade.
 
 **Atualizacao 204 — Bots nao imitam mais o seu carro, seus corredores correm e vao as lojas, cola de sticker:**
 - **Bots imitando o seu carro:** os bots (parados ou andando) copiavam o estado do SEU carro: volante virado, fumaca
