@@ -2442,5 +2442,18 @@
 " (seu corredor) ganhou na carta: ": " (your racer) won from the card: ",
 "Perfil do corredor ": "Profile of racer ",
 "Perfil de ": "Profile of ",
-"Perfil: ": "Profile: "
+"Perfil: ": "Profile: ",
+"Vim so assistir, boa sorte a todos!": "Just here to watch, good luck everyone!",
+"Arquibancada garantida. Quero ver essa corrida!": "Got my seat in the stands. I want to see this race!",
+"To de olho, hein! Bora ver quem e o mais rapido.": "I'm watching, huh! Let's see who's the fastest.",
+"Pipoca na mao, so assistindo hoje.": "Popcorn in hand, just watching today.",
+" esta assistindo": " is watching",
+" (sala cheia)": " (room full)",
+"Tabela de IA: nome e nivel de ": "AI table: name and level of ",
+" corredor(es) gravados no Init_us.agt.": " racer(s) written to Init_us.agt.",
+"Tabela de IA: nao achei o Data_US\\Init_us.agt (o Rice tem que ficar na pasta do jogo).": "AI table: Data_US\\Init_us.agt not found (the Rice folder must be inside the game folder).",
+"Tabela de IA do Init_us.agt: tamanho diferente, nao mexi.": "Init_us.agt AI table: different size, left untouched.",
+"Tabela de IA (corredores): ": "AI table (racers): ",
+" da tabela de IA (o nome aparece na corrida depois de abrir o jogo de novo).": " of the AI table (the name shows in the race after opening the game again).",
+": linha ": ": row "
 }

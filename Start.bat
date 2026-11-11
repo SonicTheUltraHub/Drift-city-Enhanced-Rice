@@ -36,6 +36,8 @@ set TELACHEIA=0
 findstr /I /R /C:"^Fullscreen *= *true" "%INI%" >nul && set WIN=
 if "%TELACHEIA%"=="1" set WIN=
 cd Rice
+rem your racers' names and levels in the Battle Zone race (AI table of Init_us.agt) / nome e nivel dos seus corredores na corrida
+Rice.exe ia
 start Rice.exe
 cd ..
 start DriftCity.exe %WIN%

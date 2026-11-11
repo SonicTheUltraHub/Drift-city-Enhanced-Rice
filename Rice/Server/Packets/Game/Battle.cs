@@ -90,6 +90,8 @@ namespace Rice.Server.Packets.Game
             public HashSet<string> Kicked = new HashSet<string>(StringComparer.OrdinalIgnoreCase);   // tirados por voce: nao voltam
             public List<long> Spectators = new List<long>();          // bots assistindo (sala cheia): entram quando abrir vaga
             public int SpecMax = -1;
+            public HashSet<long> JustWatch = new HashSet<long>();     // espectadores que so vieram assistir (nao pegam vaga)
+            public DateTime NextWatcher = DateTime.UtcNow.AddSeconds(5 + Rng.Next(20));
             public bool SpecPending;                                  // um espectador ja vai entrar (2 a 10 s depois da vaga abrir)                                  // quantos espectadores essa sala aceita (sorteado: 1 ate BattleSpectatorsMax)
             public bool AfterRace;                                    // corrida acabou: alguns bots saem quando voce volta
             public Dictionary<uint, int> Gates = new Dictionary<uint, int>();   // portoes de cada carro na corrida (narracao)
@@ -509,9 +511,17 @@ namespace Rice.Server.Packets.Game
                             RedressAll(room);
                 foreach (var room in Rooms.Values.ToList())
                 {
-                    if (room.State != Wait || room.ChallengeHost != null || room.DuelBot != 0 || !room.Humans.Any()) continue;
+                    if (room.State != Wait || !room.Humans.Any()) continue;
                     var host0 = room.Humans.FirstOrDefault(m => m.Serial == room.Master) ?? room.Humans.First();
+                    // salas de desafio (as que voce entra) e mano a mano: paciencia, saida depois da corrida e espectadores
+                    // tambem; so nao entra bot novo no mano a mano
                     if (room.BackInRoom) PatienceAndSeats(room, host0, says);
+                    if (DateTime.UtcNow >= room.NextWatcher)
+                    {
+                        room.NextWatcher = DateTime.UtcNow.AddSeconds(8 + Rng.Next(25));
+                        AddSpectator(room, host0, says, true);   // alguns so vem assistir (Spectators: N no topo da sala)
+                    }
+                    if (room.DuelBot != 0 || room.DuelMate != 0) continue;
                     if (DateTime.UtcNow < room.NextBotJoin) continue;
                     double gap = Math.Max(2, cfg.BattleBotJoinSeconds);
                     room.NextBotJoin = DateTime.UtcNow.AddSeconds(2 + Rng.NextDouble() * (gap - 2));   // ate BattleBotJoinSeconds
@@ -527,7 +537,7 @@ namespace Rice.Server.Packets.Game
                     // sala cheia: alguns ficam assistindo (espectadores) e entram quando abrir uma vaga
                     if (seat < 0) { AddSpectator(room, host, says); break; }
                     // vaga aberta: quem estava assistindo entra primeiro
-                    if (room.Spectators.Count > 0) { ScheduleSpectator(room); break; }
+                    if (room.Spectators.Any(x => !room.JustWatch.Contains(x))) { ScheduleSpectator(room); break; }
                     var pool = Bots.All().Concat(RiceServer.Config.AltsRace ? Bots.AltsOf(host.Char) : new List<Bots.BotProfile>())
                                          .Where(b => b.AiIdx > 0 && !inRoom.Contains(b.Name) && !room.Kicked.Contains(b.Name) && !(b.IsAlt && b.InTutorial)
                                                      && !party.Contains(b.Cid) && !IsRacing(b.Cid) && BotSocial.Online(b) && BotFits(arena, b)).ToList();
@@ -566,7 +576,7 @@ namespace Rice.Server.Packets.Game
             return true;
         }
 
-        static void AddSpectator(Room room, Member host, List<Tuple<RiceClient, string, string>> says)
+        static void AddSpectator(Room room, Member host, List<Tuple<RiceClient, string, string>> says, bool watchOnly = false)
         {
             var cfg = RiceServer.Config;
             if (room.SpecMax < 0) room.SpecMax = cfg.BattleSpectatorsMax <= 0 ? 0 : 1 + Rng.Next(cfg.BattleSpectatorsMax);
@@ -579,9 +589,17 @@ namespace Rice.Server.Packets.Game
             if (pool.Count == 0) return;
             var sp = pool[Rng.Next(pool.Count)];
             room.Spectators.Add(sp.Cid);
+            if (watchOnly) room.JustWatch.Add(sp.Cid);
             MarkRacing(sp, 1800);
-            Log.WriteLine("Sala {0}: {1} esta assistindo (sala cheia).", room.Id, sp.Name);
+            Log.WriteLine("Sala {0}: {1} esta assistindo{2}.", room.Id, sp.Name, watchOnly ? "" : " (sala cheia)");
             SendSpecCount(room);
+            if (watchOnly)
+            {
+                if (Rng.NextDouble() < 0.5)
+                    says.Add(Tuple.Create(host.Client, sp.Name, Pick("Vim so assistir, boa sorte a todos!", "Arquibancada garantida. Quero ver essa corrida!",
+                        "To de olho, hein! Bora ver quem e o mais rapido.", "Pipoca na mao, so assistindo hoje.")));
+                return;
+            }
             says.Add(Tuple.Create(host.Client, sp.Name, Pick("Sala cheia... vou ficar assistindo. Abriu vaga, eu entro!",
                 "To de espectador por enquanto. Alguem sai ai!", "Vou assistir essa, mas quero a proxima vaga!",
                 "Lotou! Fico aqui na arquibancada esperando.")));
@@ -590,7 +608,7 @@ namespace Rice.Server.Packets.Game
         // vaga aberta: o primeiro espectador entra de 2 a 10 s depois (o tempo de sair da arquibancada)
         static void ScheduleSpectator(Room room)
         {
-            if (room.SpecPending || room.Spectators.Count == 0) return;
+            if (room.SpecPending || !room.Spectators.Any(x => !room.JustWatch.Contains(x))) return;
             room.SpecPending = true;
             int ms = 2000 + Rng.Next(8001);
             int rid = room.Id;
@@ -609,7 +627,7 @@ namespace Rice.Server.Packets.Game
                         int seat = -1;
                         for (int i = 0; i < r.Capacity && i < Seats; i++) if (r.SeatList[i] == Open) { seat = i; break; }
                         if (seat >= 0) SpectatorTakesSeat(r, host, seat, says);
-                        if (r.Spectators.Count > 0 && seat >= 0) ScheduleSpectator(r);   // mais vagas: o proximo vem depois
+                        if (seat >= 0) ScheduleSpectator(r);   // mais vagas: o proximo vem depois
                     }
                 }
                 catch (Exception ex) { Log.WriteError("Espectador entrando: " + ex.Message); room.SpecPending = false; }
@@ -619,10 +637,10 @@ namespace Rice.Server.Packets.Game
 
         static bool SpectatorTakesSeat(Room room, Member host, int seat, List<Tuple<RiceClient, string, string>> says)
         {
-            while (room.Spectators.Count > 0)
+            while (room.Spectators.Any(x => !room.JustWatch.Contains(x)))
             {
-                long cid = room.Spectators[0];
-                room.Spectators.RemoveAt(0);
+                long cid = room.Spectators.First(x => !room.JustWatch.Contains(x));
+                room.Spectators.Remove(cid);
                 var sp = Bots.ByCid(cid);
                 if (sp == null) continue;
                 if (!SeatBot(room, host, sp, seat)) { EndRacing(sp, null); continue; }
@@ -668,7 +686,9 @@ namespace Rice.Server.Packets.Game
         {
             var cfg = RiceServer.Config;
             var party = new HashSet<string>(BotSocial.PartyBots(host.Char).Select(x => x.Name), StringComparer.OrdinalIgnoreCase);
-            var mine = room.Ais.Where(a => a.Name != null && !party.Contains(a.Name) && Bots.ByName(a.Name) != null).ToList();
+            // o dono do desafio (sala que voce entrou) nao sai da propria sala
+            var mine = room.Ais.Where(a => a.Name != null && !party.Contains(a.Name) && Bots.ByName(a.Name) != null
+                                           && !string.Equals(a.Name, room.ChallengeHost, StringComparison.OrdinalIgnoreCase)).ToList();
             var now = DateTime.UtcNow;
             if (room.AfterRace)
             {
@@ -854,6 +874,7 @@ namespace Rice.Server.Packets.Game
                     var ai = NewAi(room, b.Level, b.Name, b.Car, b.AiIdx);
                     if (ai == null) break;
                     ai.Driver = (int) (me.Serial & 0xffff);
+                    if (!chal.Duel) ai.PatienceUntil = PatienceFrom(DateTime.UtcNow);   // tambem perde a paciencia se demorar
                     room.Members.Add(ai);
                     CityBots.Errand(b, "battle zone", null, Math.Max(60, RiceServer.Config.BattleBotWaitSeconds));   // vai para a Battle Zone e espera la
                     MarkRacing(b, 1800);                       // na sala: ate a corrida acabar (ou a sala fechar)
@@ -911,6 +932,220 @@ namespace Rice.Server.Packets.Game
             var d = drivers.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase)
                                              && x.Cars.Any(c => playerCars.Contains(c) && !excluded.Contains(c)));
             return d != null ? d.Idx : 0;
+        }
+
+        // ---- seus corredores na corrida com o nome e o nivel deles ---------------------------------------------------
+        // Na corrida o jogo mostra o nome e o nivel da LINHA da tabela de IA do cliente (Data_US\Init_us.agt), nao o
+        // que o servidor manda. Cada corredor (de todas as contas) ganha uma linha so dele (alt_ai_rows.json) e o
+        // servidor escreve o nome e o nivel dele nessa linha do Init_us.agt (AltsAiTableSync): no Start.bat antes de abrir
+        // o jogo (Rice.exe ia) e quando o jogo fecha. Corredor novo: aparece certo na proxima vez que abrir o jogo.
+        static Dictionary<long, int> altRows;
+        static readonly HashSet<string> SpecialRows = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            { "Taxi Driver", "Patrol Car", "Road Prowler", "Deliverer", "Fogel Bakery", "Instructor Duffy", "Elio" };
+        static readonly Dictionary<int, string> rowOrigName = new Dictionary<int, string>();
+
+        static Dictionary<long, int> AltRows()
+        {
+            if (altRows != null) return altRows;
+            altRows = new Dictionary<long, int>();
+            try
+            {
+                string p = Paths.SaveFile("alt_ai_rows.json");
+                if (File.Exists(p))
+                    altRows = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<long, int>>(File.ReadAllText(p)) ?? new Dictionary<long, int>();
+            }
+            catch (Exception ex) { Log.WriteError("alt_ai_rows.json: " + ex.Message); }
+            return altRows;
+        }
+
+        static void SaveAltRows()
+        {
+            try { File.WriteAllText(Paths.SaveFile("alt_ai_rows.json"), Newtonsoft.Json.JsonConvert.SerializeObject(altRows)); }
+            catch (Exception ex) { Log.WriteError("alt_ai_rows.json: " + ex.Message); }
+        }
+
+        static bool IsAltRow(int idx)
+        {
+            lock (rowOrigName) return AltRows().ContainsValue(idx);
+        }
+
+        // linha so do corredor (a mesma sempre); a 1a vez pega a livre de nivel mais perto
+        public static int AltRowFor(long cid, string name, int level)
+        {
+            LoadAi();
+            if (drivers == null || drivers.Count == 0) return 0;
+            var botNames = new HashSet<string>(Bots.All().Where(b => !b.IsAlt && b.Name != null).Select(b => b.Name), StringComparer.OrdinalIgnoreCase);
+            lock (rowOrigName)
+            {
+                var map = AltRows();
+                int row;
+                if (!map.TryGetValue(cid, out row) || !drivers.Any(d => d.Idx == row))
+                {
+                    var excluded = new HashSet<int>(RiceServer.Config.BattleAiExcludedCars ?? new int[0]);
+                    var used = new HashSet<int>(map.Values);
+                    var free = drivers.Where(d => !used.Contains(d.Idx) && !SpecialRows.Contains(OrigName(d))
+                                                  && !botNames.Contains(OrigName(d))
+                                                  && d.Cars.Any(c => playerCars.Contains(c) && !excluded.Contains(c))).ToList();
+                    if (free.Count == 0) return 0;
+                    row = free.OrderBy(d => Math.Abs(d.Level - level)).ThenBy(d => d.Idx).First().Idx;
+                    map[cid] = row;
+                    SaveAltRows();
+                    Log.WriteLine("Corredor {0}: linha {1} da tabela de IA (o nome aparece na corrida depois de abrir o jogo de novo).", name, row);
+                }
+                var dr = drivers.First(d => d.Idx == row);
+                OrigName(dr);
+                if (!string.IsNullOrEmpty(name)) dr.Name = name;
+                if (level > 0) dr.Level = Math.Max(1, Math.Min(99, level));
+                return row;
+            }
+        }
+
+        static string OrigName(AiDriver d)
+        {
+            string n;
+            if (!rowOrigName.TryGetValue(d.Idx, out n)) rowOrigName[d.Idx] = n = d.Name;
+            return n;
+        }
+
+        static readonly byte[] AgtKey = Convert.FromBase64String("ND0w6Gc2NjI+MzQ7ERUWFhQTHRgRAwYMBAMGCC5VJiMqIy4oISEmJy4ALS3PpQYCBA8HGOEVNhhgExoZERUWEBITFzjxJQEFBgIEAwcIAQUGDwQDBwwxhXY5");
+
+        static void AgtXor(byte[] b, int start, int len, int pos)
+        {
+            for (int i = 0; i < len; i++) b[start + i] ^= AgtKey[(((pos + i - 20) % 90) + 90) % 90];
+        }
+
+        static byte[] AgtPlain(byte[] d, int at, int len) { var b = new byte[len]; Array.Copy(d, at, b, 0, len); AgtXor(b, 0, len, at); return b; }
+
+        static byte[] ZlibCompress(byte[] data, int at, int len)
+        {
+            using (var ms = new MemoryStream())
+            {
+                ms.WriteByte(0x78); ms.WriteByte(0xDA);
+                using (var ds = new System.IO.Compression.DeflateStream(ms, System.IO.Compression.CompressionLevel.Optimal, true)) ds.Write(data, at, len);
+                uint a = 1, b = 0;
+                for (int i = 0; i < len; i++) { a = (a + data[at + i]) % 65521; b = (b + a) % 65521; }
+                uint ad = (b << 16) | a;
+                ms.WriteByte((byte) (ad >> 24)); ms.WriteByte((byte) (ad >> 16)); ms.WriteByte((byte) (ad >> 8)); ms.WriteByte((byte) ad);
+                return ms.ToArray();
+            }
+        }
+
+        static byte[] ZlibDecompress(byte[] data)
+        {
+            using (var ms = new MemoryStream(data, 2, data.Length - 2))
+            using (var ds = new System.IO.Compression.DeflateStream(ms, System.IO.Compression.CompressionMode.Decompress))
+            using (var o = new MemoryStream()) { ds.CopyTo(o); return o.ToArray(); }
+        }
+
+        public static string ClientInitPath()
+        {
+            foreach (var p in new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Data_US", "Init_us.agt"),
+                                      Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "Data_US", "Init_us.agt") })
+                if (File.Exists(p)) return Path.GetFullPath(p);
+            return null;
+        }
+
+        // escreve o nome e o nivel de todos os corredores nas linhas deles no Init_us.agt do cliente
+        public static void SyncClientAiTable(bool gameClosed)
+        {
+            if (!RiceServer.Config.AltsAiTableSync) return;
+            try
+            {
+                LoadAi();
+                if (!gameClosed && System.Diagnostics.Process.GetProcessesByName("DriftCity").Length > 0) return;   // o jogo ja leu o arquivo
+                string path = ClientInitPath();
+                if (path == null) { Log.WriteLine("Tabela de IA: nao achei o Data_US\\Init_us.agt (o Rice tem que ficar na pasta do jogo)."); return; }
+                var want = new Dictionary<int, Tuple<string, int>>();
+                using (var rc = Rice.Database.GetContext())
+                    foreach (var c in rc.Characters.ToList())
+                    {
+                        if (string.IsNullOrEmpty(c.Name)) continue;
+                        int row = AltRowFor(c.ID, c.Name, c.Level);
+                        if (row > 0) want[row] = Tuple.Create(c.Name, Math.Max(1, Math.Min(99, c.Level)));
+                    }
+                if (want.Count == 0) return;
+
+                byte[] d = File.ReadAllBytes(path);
+                if (d.Length < 64 || Encoding.ASCII.GetString(d, 0, 8) != "NayaPack") return;
+                var h = AgtPlain(d, 32, 12);
+                int off = BitConverter.ToInt32(h, 0), nch = BitConverter.ToInt32(h, 4), usize = BitConverter.ToInt32(h, 8);
+                // as outras entradas (para saber onde a tabela cabe)
+                int count = BitConverter.ToInt32(d, 16), p = 44, nextOff = int.MaxValue, endOthers = 0;
+                for (int e = 0; e < count && p + 4 <= d.Length; e++)
+                {
+                    int L = BitConverter.ToInt32(AgtPlain(d, p, 4), 0);
+                    if (L <= 0 || L > 260 || p + 16 + L > d.Length) break;
+                    var meta = AgtPlain(d, p + 4 + L, 12);
+                    int eo = BitConverter.ToInt32(meta, 0), en = BitConverter.ToInt32(meta, 4);
+                    if (eo < 0 || en < 0 || eo + 2 * en > d.Length) break;
+                    var et = AgtPlain(d, eo, 2 * en);
+                    int end = eo + 2 * en;
+                    for (int k = 0; k < en; k++) end += BitConverter.ToUInt16(et, 2 * k);
+                    if (eo > off) nextOff = Math.Min(nextOff, eo);
+                    endOthers = Math.Max(endOthers, end);
+                    p += 16 + L;
+                }
+                var tab = AgtPlain(d, off, 2 * nch);
+                var raw = new MemoryStream();
+                int q = off + 2 * nch;
+                for (int k = 0; k < nch; k++)
+                {
+                    int n = BitConverter.ToUInt16(tab, 2 * k);
+                    var part = ZlibDecompress(AgtPlain(d, q, n));
+                    raw.Write(part, 0, part.Length); q += n;
+                }
+                var bytes = raw.ToArray();
+                if (bytes.Length != usize) { Log.WriteError("Tabela de IA do Init_us.agt: tamanho diferente, nao mexi."); return; }
+                string text = Encoding.Unicode.GetString(bytes);
+                bool bom = text.Length > 0 && text[0] == '﻿';
+                if (bom) text = text.Substring(1);
+                var lines = text.Split(new[] { "\r\n" }, StringSplitOptions.None);
+                bool changed = false;
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    var c = lines[i].Split('\t');
+                    int row;
+                    if (c.Length < 3 || !int.TryParse(c[0], out row)) continue;
+                    // numero com espaco no fim ("227 "): o jogo le igual; libera lugar no arquivo
+                    for (int k = 3; k < c.Length; k++)
+                    {
+                        string t = c[k].TrimEnd(' ');
+                        double dv;
+                        if (t.Length != c[k].Length && t.Length > 0 && double.TryParse(t, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out dv)) c[k] = t;
+                    }
+                    Tuple<string, int> w;
+                    if (want.TryGetValue(row, out w)) { c[1] = w.Item1; c[2] = w.Item2.ToString(); }
+                    string nl = string.Join("\t", c);
+                    if (nl != lines[i]) { lines[i] = nl; changed = true; }
+                }
+                if (!changed) return;
+                string backup = path + ".antes_corredores";
+                if (!File.Exists(backup)) File.Copy(path, backup);
+                var plain = Encoding.Unicode.GetBytes((bom ? "﻿" : "") + string.Join("\r\n", lines));
+                var chunks = new List<byte[]>();
+                for (int k = 0; k < plain.Length; k += 16384) chunks.Add(ZlibCompress(plain, k, Math.Min(16384, plain.Length - k)));
+                int size = 2 * chunks.Count + chunks.Sum(x => x.Length);
+                // cabe no lugar dela: fica; nao cabe: vai para o fim do arquivo (como o vshop_precos.py)
+                int pos, total;
+                if (off < endOthers && size <= nextOff - off) { pos = off; total = d.Length; }         // no lugar dela
+                else if (off >= endOthers) { pos = off; total = off + size; }                        // ja estava no fim
+                else { pos = d.Length; total = d.Length + size; }                                    // vai para o fim
+                var outb = new byte[total];
+                Array.Copy(d, outb, Math.Min(d.Length, total));
+                int w0 = pos;
+                foreach (var ch in chunks) { Array.Copy(BitConverter.GetBytes((ushort) ch.Length), 0, outb, w0, 2); w0 += 2; }
+                foreach (var ch in chunks) { Array.Copy(ch, 0, outb, w0, ch.Length); w0 += ch.Length; }
+                AgtXor(outb, pos, size, pos);
+                var nh = new byte[12];
+                Array.Copy(BitConverter.GetBytes(pos), 0, nh, 0, 4);
+                Array.Copy(BitConverter.GetBytes(chunks.Count), 0, nh, 4, 4);
+                Array.Copy(BitConverter.GetBytes(plain.Length), 0, nh, 8, 4);
+                AgtXor(nh, 0, 12, 32);
+                Array.Copy(nh, 0, outb, 32, 12);
+                File.WriteAllBytes(path, outb);
+                Log.WriteLine("Tabela de IA: nome e nivel de {0} corredor(es) gravados no Init_us.agt.", want.Count);
+            }
+            catch (Exception ex) { Log.WriteError("Tabela de IA (corredores): " + ex.Message); }
         }
 
         static void LoadAi()
@@ -1093,7 +1328,7 @@ namespace Rice.Server.Packets.Game
             var excluded = new HashSet<int>((cfg.BattleAiExcludedCars ?? new int[0]).Concat(cfg.PoliceCars ?? new int[0]));
             Func<int, bool> usable = c => playerCars.Contains(c) && !excluded.Contains(c);
             var taken = new HashSet<int>(room.Ais.Select(a => a.AiIdx));
-            var pool = drivers.Where(d => !taken.Contains(d.Idx) && d.Cars.Any(usable)).ToList();
+            var pool = drivers.Where(d => !taken.Contains(d.Idx) && d.Cars.Any(usable) && !IsAltRow(d.Idx)).ToList();   // linhas dos seus corredores: so eles
             // so os nossos bots na corrida: linhas da tabela de IA com o nome de um bot (os pilotos originais ficam de fora)
             if (forcedName == null && cfg.BattleAiOnlyBots)
             {
@@ -1508,7 +1743,7 @@ namespace Rice.Server.Packets.Game
                     else EndRacing(bb, "Ok, sai da sala com voce. To indo te encontrar!");
                 }
                 foreach (var sp in room.Spectators.Select(Bots.ByCid).Where(x => x != null)) EndRacing(sp, null);
-                room.Spectators.Clear();
+                room.Spectators.Clear(); room.JustWatch.Clear();
                 if (room.Timer != null) room.Timer.Dispose();
                 Rooms.Remove(room.Id);
                 Log.WriteLine("Sala {0} fechada.", room.Id);
@@ -1779,6 +2014,9 @@ namespace Rice.Server.Packets.Game
             new[] { 1, 2, 1, 3 }, new[] { 1, 4, 4, 7 }, new[] { 1, 6, 8, 11 }, new[] { 1, 8, 12, 15 }, new[] { 1, 10, 16, 16 },
             new[] { 2, 3, 1, 3 }, new[] { 2, 6, 4, 7 }, new[] { 2, 9, 8, 11 }, new[] { 2, 12, 12, 15 }, new[] { 2, 15, 16, 16 },
         };
+        // exp e mito da Battle Zone (colocacao + Complete Bonus) x BattleRewardScale
+        static double BattleScale() { return Math.Max(0, RiceServer.Config.BattleRewardScale); }
+
         static void CompleteBonus(Room room, int x, out uint exp, out uint mito, out int stars)
         {
             exp = 0; mito = 0; stars = 0;
@@ -1852,6 +2090,7 @@ namespace Rice.Server.Packets.Game
                                 CompleteBonus(room, n, out abe, out abm, out ast);
                                 aExp += abe; aMito += abm;
                             }
+                            aExp = (long) Math.Round(aExp * BattleScale()); aMito = (long) Math.Round(aMito * BattleScale());
                             if (ach != null)
                             {
                                 int before = ach.Level;
@@ -1876,13 +2115,14 @@ namespace Rice.Server.Packets.Game
                 }
                 var c = m.Char;
                 int place = n - rank + 1;                 // 1o lugar = n pontos
-                uint exp = (uint) (n > 1 ? cfg.BattleExpPerPlace * place : 0);
-                uint mito = (uint) (n > 1 ? cfg.BattleMitoPerPlace * place : 0);
+                uint exp = (uint) Math.Round(n > 1 ? cfg.BattleExpPerPlace * place * BattleScale() : 0);
+                uint mito = (uint) Math.Round(n > 1 ? cfg.BattleMitoPerPlace * place * BattleScale() : 0);
                 // Complete Bonus Reward (a tabelinha das estrelas): quem termina ganha o bonus do jogo
                 if (endType == Finished && cfg.BattleCompleteBonus)
                 {
                     uint be, bm; int stars;
                     CompleteBonus(room, n, out be, out bm, out stars);
+                    be = (uint) Math.Round(be * BattleScale()); bm = (uint) Math.Round(bm * BattleScale());
                     if (be > 0 || bm > 0)
                     {
                         exp += be; mito += bm;

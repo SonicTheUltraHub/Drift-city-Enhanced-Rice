@@ -324,8 +324,8 @@ namespace Rice
         public double BotSpoilerChance = 0.7;          // chance do bot ter aerofolio
         public int BotNeonLevel = 10;                  // bots acima desse nivel tem neon (abaixo, nao)     // ... nivel 31+: chance por minuto de trocar a terceira licenca
         public bool CrewBotsTell = true;               // bots da sua crew contam no chat da crew o que estao fazendo
-        public double PartyDomeErrandMinutes = 3;
-        public double PartyDomeErrandIdle = 15;        // ... so quando voce esta parado no lobby ha N s      // Driver Dome: a cada ~N min um bot da party vai a uma loja e volta (0 = nunca)
+        public double PartyDomeErrandMinutes = 2;
+        public double PartyDomeErrandIdle = 10;        // ... so quando voce esta parado no lobby ha N s      // Driver Dome: a cada ~N min um bot da party vai a uma loja e volta (0 = nunca)
         public double DomeDriveSpeedMin = 15;          // Driver Dome: velocidade (m/s) dos bots andando
         public double DomeDriveSpeedMax = 35.7;        // Driver Dome: limite 80 mph
         public double UnderCityStageFallbackSeconds = 12; // Undercity: sem a etapa 1 do cliente em N s, o servidor manda (0 = nao)
@@ -528,6 +528,14 @@ namespace Rice
         public bool PartyBotDrift = true;
         // Bots copiam o estado do SEU carro (volante, fumaca de drift/arrancada, freio): false = carro neutro (so andam).
         public bool BotsCopyMyState = false;
+        // Seus corredores na corrida da Battle Zone com o nome e o nivel deles: cada um ganha uma linha so dele na tabela
+        // de IA e o servidor grava o nome/nivel no Data_US\Init_us.agt (Start.bat antes de abrir o jogo e quando o jogo
+        // fecha; copia do original em Init_us.agt.antes_corredores). false = nao mexe no arquivo do jogo.
+        public bool AltsAiTableSync = true;
+        // Bots da party andam com o estado do seu carro (volante, drift, luzes) como antes; os outros nao.
+        public bool PartyBotsCopyMyState = true;
+        // Bots andando na cidade: rodas girando (estado do seu carro dirigindo reto, sem drift/fumaca). false = rodas paradas.
+        public bool BotsDriveAnim = true;
         public double PartyChaseTeleportSeconds = 10; // HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)
         public double CityBotFarSnapSeconds = 8;      // seguindo: longe do lugar dele por N s, pula para o lugar            // party: derrapa e faz fumaca onde voce derrapou
         public float PartyHuvContact = 4f;           // distancia (centro a centro, m) em que o bot "encosta" no HUV e conta o golpe
@@ -614,6 +622,8 @@ namespace Rice
         public double AuctionBotTurnover = 0.01;
         public int BattleExpPerPlace = 120;
         public int BattleMitoPerPlace = 400;
+        // Multiplica a exp e o mito da Battle Zone (colocacao + bonus de corrida completa). 1 = como antes.
+        public double BattleRewardScale = 0.5;
         // Cartas "?" no fim da corrida: cada carta aberta da um item aleatorio (ate o seu nivel).
         public bool BattleRewardCards = true;
         // Modify (peca + Mittron Enhancer): sobe o nivel +1 com +1..3 pontos. Taxa de mito = ModifyFeePerLevel x (nivel+1).

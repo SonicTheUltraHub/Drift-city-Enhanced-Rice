@@ -65,6 +65,7 @@ namespace Rice
                 Log.WriteLine("O jogo fechou: salvando e fechando o servidor.");
                 System.Threading.Interlocked.Exchange(ref gameClosed, 1);
                 try { Rice.Server.Packets.Game.Bots.Save(); } catch (Exception) { }
+                try { Rice.Server.Packets.Game.Battle.SyncClientAiTable(true); } catch (Exception) { }   // corredores novos: certo na proxima vez
                 System.Threading.Thread.Sleep(1000);
                 Environment.Exit(0);
             }
@@ -89,6 +90,22 @@ namespace Rice
                 Database.Start();
                 CharFiles.Migrate();
                 Menu.Run(config);
+                return;
+            }
+
+            // Rice.exe ia  -> (Start.bat, antes de abrir o jogo) grava o nome e o nivel dos seus corredores nas linhas
+            // deles da tabela de IA do Init_us.agt (o jogo mostra esse nome na corrida)
+            if (args.Length > 0 && args[0].Equals("ia", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    Database.Initialize(config);
+                    RiceServer.Config = config;
+                    Database.Start();
+                    CharFiles.Migrate();
+                    Rice.Server.Packets.Game.Battle.SyncClientAiTable(false);
+                }
+                catch (Exception ex) { Console.WriteLine("Tabela de IA: " + ex.Message); }
                 return;
             }
 

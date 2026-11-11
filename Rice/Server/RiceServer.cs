@@ -128,24 +128,27 @@ namespace Rice.Server.Core
 
         public static Player[] GetPlayers()
         {
-            return players.ToArray();
+            lock (players) return players.ToArray();
         }
 
         public static void AddPlayer(Player player)
         {
-            players.Add(player);
+            lock (players) players.Add(player);
         }
 
         public static void RemovePlayer(Player player)
         {
-            players.Remove(player);
+            lock (players) players.Remove(player);
         }
 
         public static Serial CreateSerial(RiceClient client)
         {
-            var serial = new Serial(client) {Identifier = serialCounter++};
-            validSerials.Add(serial);
-            return serial;
+            lock (validSerials)
+            {
+                var serial = new Serial(client) {Identifier = serialCounter++};
+                validSerials.Add(serial);
+                return serial;
+            }
         }
 
         public static Ticket CreateTicket(RiceClient client)
@@ -156,11 +159,14 @@ namespace Rice.Server.Core
             {
                 uint ticketId = (uint)RNG.Next();
 
-                if (validTickets.FirstOrDefault(t => t.Identifier == ticketId) != null) continue;
+                lock (validTickets)
+                {
+                    if (validTickets.FirstOrDefault(t => t.Identifier == ticketId) != null) continue;
 
-                ticket.Identifier = ticketId;
-                validTickets.Add(ticket);
-                return ticket;
+                    ticket.Identifier = ticketId;
+                    validTickets.Add(ticket);
+                    return ticket;
+                }
             }
             while (true);
         }
@@ -179,7 +185,7 @@ namespace Rice.Server.Core
 
         public static Ticket GetTicket(uint ticketId)
         {
-            return validTickets.FirstOrDefault(t => t.Identifier == ticketId);
+            lock (validTickets) return validTickets.FirstOrDefault(t => t.Identifier == ticketId);
         }
 
         public static void InvalidateTicket(uint ticketId)
@@ -187,12 +193,12 @@ namespace Rice.Server.Core
             var ticket = GetTicket(ticketId);
             if (ticket == null) return;
 
-            validTickets.Remove(ticket);
+            lock (validTickets) validTickets.Remove(ticket);
         }
 
         public static Serial GetSerial(ushort serialId)
         {
-            return validSerials.FirstOrDefault(s => s.Identifier == serialId);
+            lock (validSerials) return validSerials.FirstOrDefault(s => s.Identifier == serialId);
         }
 
         public static void InvalidateSerial(ushort serialId)
@@ -200,7 +206,7 @@ namespace Rice.Server.Core
             var serial = GetSerial(serialId);
             if (serial == null) return;
 
-            validSerials.Remove(serial);
+            lock (validSerials) validSerials.Remove(serial);
         }
 
         public static Area GetArea(int id)

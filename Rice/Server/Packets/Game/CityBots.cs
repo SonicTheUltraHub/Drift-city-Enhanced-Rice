@@ -100,6 +100,7 @@ namespace Rice.Server.Packets.Game
             public readonly Dictionary<long, byte[]> FollowLast = new Dictionary<long, byte[]>();
             public readonly HashSet<uint> Shown = new HashSet<uint>();
             public byte[] Idle;                 // estado (XiCarState) do jogador parado
+            public DateTime CruiseSince = DateTime.MinValue;   // dirigindo reto desde
             public DateTime Entered = DateTime.UtcNow;
             public bool SpotsMade;
             public List<long> DomeQueue = new List<long>();
@@ -333,6 +334,23 @@ namespace Rice.Server.Packets.Game
                 {
                     s.Idle = new byte[StateSize];
                     Array.Copy(copy, MoveSize, s.Idle, 0, StateSize);
+                }
+                // dirigindo reto (sem derrapar) ha 1,5 s: o estado de rodas girando que os bots usam andando
+                if (copy.Length >= FullMove)
+                {
+                    float sp = (float) Math.Sqrt(vx * vx + vy * vy);
+                    float sl = sp > 0.1f ? Math.Abs(Wrap(Unheading(F(copy, 0x24)) - (float) Math.Atan2(vy, vx))) : 9f;
+                    if (sp >= 8f && sl < 0.06f)
+                    {
+                        if (s.CruiseSince == DateTime.MinValue) s.CruiseSince = DateTime.UtcNow;
+                        else if ((DateTime.UtcNow - s.CruiseSince).TotalSeconds > 1.5)
+                        {
+                            var cs = new byte[StateHp];
+                            Array.Copy(copy, MoveSize, cs, 0, StateHp);
+                            cruise = cs;
+                        }
+                    }
+                    else s.CruiseSince = DateTime.MinValue;
                 }
 
                 curNeo = IsNeoBase(ch, area);
@@ -903,6 +921,7 @@ namespace Rice.Server.Packets.Game
         // O estado do jogador parado ainda trazia o volante virado e a fumaca de arrancada/burnout (os bots imitavam o
         // seu carro). Agora a parte de comandos/efeitos (@0..@0x27) vai zerada e so a vida (@0x28..) vem do seu estado.
         const int StateHp = 0x28;
+        static byte[] cruise;                  // estado do seu carro dirigindo reto (rodas girando) para os bots andando
         static byte[] WithIdle(PlayerState s, byte[] m)
         {
             Array.Clear(m, MoveSize, StateSize);
@@ -1654,7 +1673,8 @@ namespace Rice.Server.Packets.Game
         // Estado do carro andando: o seu estado naquele ponto do caminho (fumaca do drift, luzes); parado: neutro
         static void ApplyDriveState(PlayerState s, byte[] m, float x, float y, float speed)
         {
-            if (speed < 3f || !RiceServer.Config.PartyBotDrift || !RiceServer.Config.BotsCopyMyState) { WithIdle(s, m); return; }
+            // bots da party: andam com o estado do seu carro naquele ponto (volante, drift, luzes) - PartyBotsCopyMyState
+            if (speed < 3f || !RiceServer.Config.PartyBotDrift || !(RiceServer.Config.BotsCopyMyState || RiceServer.Config.PartyBotsCopyMyState)) { WithIdle(s, m); return; }
             var sm = NearestSample(s.Trail, x, y);
             if (sm == null) { WithIdle(s, m); return; }
             Array.Copy(sm.Move, MoveSize, m, MoveSize, StateSize);
@@ -2196,7 +2216,7 @@ namespace Rice.Server.Packets.Game
         static byte[] PartyErrandMove(PlayerState s, Bots.BotProfile b, uint nowTime, Sample last)
         {
             var cfg = RiceServer.Config;
-            if (cfg.PartyDomeErrandMinutes <= 0 || domePoints == null || domePoints.Count < 20 || b.Special || b.IsAlt) return null;
+            if (cfg.PartyDomeErrandMinutes <= 0 || domePoints == null || domePoints.Count < 20 || b.Special) return null;   // seus corredores tambem vao (so olham: ShopErrand)
             DomeDriver d;
             if (!s.PartyErrands.TryGetValue(b.Cid, out d))
             {
@@ -2912,8 +2932,14 @@ namespace Rice.Server.Packets.Game
             if (b.Look != null && b.Look.Tint != 0) BitConverter.GetBytes(b.Look.Tint).CopyTo(m, 0x0c);   // vidro (XiCarAttr)
             BitConverter.GetBytes(time).CopyTo(m, 0x14);
             if (parked) Array.Clear(m, 0x28, 0x10);
-            // sem o volante/fumaca/freio do seu carro (BotsCopyMyState)
-            if (!RiceServer.Config.BotsCopyMyState && m.Length >= FullMove) Array.Clear(m, MoveSize, StateHp);
+            // sem o volante/fumaca/freio do seu carro (BotsCopyMyState). Andando: o estado de "dirigindo reto" (rodas girando,
+            // sem drift; BotsDriveAnim) para nao andar com as rodas paradas
+            if (!RiceServer.Config.BotsCopyMyState && m.Length >= FullMove)
+            {
+                var cr = cruise;
+                if (!parked && cr != null && RiceServer.Config.BotsDriveAnim) Array.Copy(cr, 0, m, MoveSize, StateHp);
+                else Array.Clear(m, MoveSize, StateHp);
+            }
             return m;
         }
 

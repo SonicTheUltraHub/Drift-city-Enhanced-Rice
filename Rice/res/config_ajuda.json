@@ -1471,6 +1471,18 @@
 "Bots",
 "Bots copiam o estado do SEU carro (volante, fumaca de drift/arrancada, freio): false = carro neutro (so andam)."
 ],
+"AltsAiTableSync": [
+"Battle Zone",
+"Seus corredores na corrida da Battle Zone com o nome e o nivel deles: cada um ganha uma linha so dele na tabela de IA e o servidor grava o nome/nivel no Data_US\\Init_us.agt (Start.bat antes de abrir o jogo e quando o jogo fecha; copia do original em Init_us.agt.antes_corredores). false = nao mexe no arquivo do jogo."
+],
+"PartyBotsCopyMyState": [
+"Party",
+"Bots da party andam com o estado do seu carro (volante, drift, luzes) como antes; os outros nao."
+],
+"BotsDriveAnim": [
+"Bots",
+"Bots andando na cidade: rodas girando (estado do seu carro dirigindo reto, sem drift/fumaca). false = rodas paradas."
+],
 "PartyChaseTeleportSeconds": [
 "Party",
 "HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)"
@@ -1742,6 +1754,10 @@
 "BattleMitoPerPlace": [
 "Battle Zone",
 "Chance (por minuto) de um anuncio de bot sumir (outro bot comprou) e ser trocado por outro."
+],
+"BattleRewardScale": [
+"Battle Zone",
+"Multiplica a exp e o mito da Battle Zone (colocacao + bonus de corrida completa). 1 = como antes."
 ],
 "BattleRewardCards": [
 "Battle Zone",

@@ -19,12 +19,15 @@ namespace Rice.Game
 
         public void AddPlayer(Player player)
         {
-            if (players.Contains(player))
+            // lista usada por varias conexoes ao mesmo tempo (trocar de corredor): sem trava dava "indice fora dos limites"
+            bool had;
+            lock (players) had = players.Contains(player);
+            if (had)
             {
                 Log.WriteLine("Weird: Player already in area.");
                 RemovePlayer(player);
             }
-            players.Add(player);
+            lock (players) players.Add(player);
             var ach = player.ActiveCharacter;
             // base ROAD (lobby da Neo City): o jogo entra numa area de cidade (1) com a cidade 6 (saindo de um capitulo)
             // ou 0 (entrando no jogo). Guardado na entrada: o trafego mudava a cidade para Moon Palace pela posicao.
@@ -39,7 +42,7 @@ namespace Rice.Game
 
         public void RemovePlayer(Player player)
         {
-            players.Remove(player);
+            lock (players) players.Remove(player);
             try { Rice.Server.Packets.Game.Trade.Abort(player.ActiveCharacter); } catch (Exception) { }
             try { Rice.Server.Packets.Game.CityBots.NoteLeave(player.ActiveCharacter); } catch (Exception) { }
             player.ActiveCharacter.LastAreaId = ID;
@@ -49,12 +52,12 @@ namespace Rice.Game
 
         public Player[] GetPlayers()
         {
-            return players.ToArray();
+            lock (players) return players.ToArray();
         }
 
         public int GetPlayerCount()
         {
-            return players.Count;
+            lock (players) return players.Count;
         }
 
         public void BroadcastMovement(Player player, byte[] movement) // byte[] temporarily
@@ -63,7 +66,7 @@ namespace Rice.Game
             move.Writer.Write(player.ActiveCharacter.Serial);
             move.Writer.Write(movement);
 
-            foreach (Player areaPlayer in players)
+            foreach (Player areaPlayer in GetPlayers())
             {
                 if (areaPlayer != player)
                     areaPlayer.AreaClient.Send(move);

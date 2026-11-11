@@ -47,8 +47,11 @@ namespace Rice.Server.Packets.Lobby
             packet.Sender.Send(ack);
 
             var timeAck = new RicePacket(47); // LobbyTimeAck
-            timeAck.Writer.Write(Environment.TickCount);
-            timeAck.Writer.Write(Environment.TickCount);
+            // Base de tempo do jogo (DriftCity.exe 0x53d320 / 0x7856f0): agora = (int)(relogio do jogo - @0) + @4.
+            // @4 tem que ser a hora unix do servidor: os prazos (cola de sticker, drinks) contam dias desde a compra (unix);
+            // com o TickCount o jogo calculava a hora errada e dizia que estava vencido.
+            timeAck.Writer.Write(0f);
+            timeAck.Writer.Write((int) DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             packet.Sender.Send(timeAck);
 
             Log.WriteLine("User {0} entered lobby.", username);

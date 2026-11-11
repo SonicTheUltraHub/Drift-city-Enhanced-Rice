@@ -33,25 +33,29 @@ namespace Rice.Server.Packets.Game
         [RicePacket(784, RiceServer.ServerType.Game)]
         public static void GetDateTime(RicePacket packet)
         {
-            /*
+            // Cmd_GetDateTimeAck (DriftCity.exe 0x529a00): @8 = relogio do jogo (float, devolvido) -> base;
+            // @0xc = hora unix do servidor (agora do jogo = relogio - base + unix); datas em @0x18.. Sem a resposta o jogo
+            // ficava com a hora do lobby e os prazos (cola de sticker, drinks) davam vencido.
+            uint a = 0, b = 0; float clock = 0;
+            try { a = packet.Reader.ReadUInt32(); b = packet.Reader.ReadUInt32(); clock = packet.Reader.ReadSingle(); } catch { }
+            var now = DateTime.Now;
+            int unix = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var ack = new RicePacket(785);
-            var timestamp = (Int32)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            ack.Writer.Write(packet.Reader.ReadUInt32());
-            ack.Writer.Write(packet.Reader.ReadUInt32());
-            ack.Writer.Write(packet.Reader.ReadSingle());
-            ack.Writer.Write(Environment.TickCount);
-            ack.Writer.Write(timestamp);
+            ack.Writer.Write(a);
+            ack.Writer.Write(b);
+            ack.Writer.Write(clock);
+            ack.Writer.Write(unix);
+            ack.Writer.Write(unix);
             ack.Writer.Write(1);
-            ack.Writer.Write((short)DateTime.Now.Year);
-            ack.Writer.Write((short)DateTime.Now.Month);
-            ack.Writer.Write((short)DateTime.Now.Day);
-            ack.Writer.Write((short)DateTime.Now.DayOfWeek);
-            ack.Writer.Write((byte)DateTime.Now.Hour);
-            ack.Writer.Write((byte)DateTime.Now.Minute);
-            ack.Writer.Write((byte)DateTime.Now.Second);
-            ack.Writer.Write((byte)0);
+            ack.Writer.Write((short) now.Year);
+            ack.Writer.Write((short) now.Month);
+            ack.Writer.Write((short) now.Day);
+            ack.Writer.Write((short) now.DayOfWeek);
+            ack.Writer.Write((byte) now.Hour);
+            ack.Writer.Write((byte) now.Minute);
+            ack.Writer.Write((byte) now.Second);
+            ack.Writer.Write((byte) 0);
             packet.Sender.Send(ack);
-            */
         }
         [RicePacket(120, RiceServer.ServerType.Game)]
         public static void CheckInGame(RicePacket packet)

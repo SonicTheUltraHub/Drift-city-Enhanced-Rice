@@ -881,7 +881,9 @@ namespace Rice.Game
             }
             catch (Exception ex)
             {
-                Log.WriteError("Trafego: " + ex.Message);
+                // onde foi (1a linha da pilha), para achar o "estouro" que aparece ao trocar de corredor
+                string at = ex.StackTrace != null ? ex.StackTrace.Split('\n')[0].Trim() : "";
+                Log.WriteError("Trafego: " + ex.Message + " " + at);
             }
         }
     }

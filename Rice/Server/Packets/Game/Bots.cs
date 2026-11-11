@@ -845,7 +845,7 @@ namespace Rice.Server.Packets.Game
                         Cid = (long) c.CID, Name = c.Name, Level = c.Level, Car = v != null ? (int) v.CarType : 1,
                         Color = v != null && v.Color != 0 ? v.Color : 0x01010102, Avatar = c.Avatar, Personality = "amigavel",
                         IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                        InTutorial = Bots.InTutorial(c), AiIdx = AltAiRow(c.Name, (long) c.CID),
+                        InTutorial = Bots.InTutorial(c), AiIdx = AltAiRow(c.Name, (long) c.CID, c.Level),
                         Look = v != null ? AltLook((long) c.CID, v.CarID, v.Color) : null
                     };
                 }
@@ -871,7 +871,7 @@ namespace Rice.Server.Packets.Game
                                     Color = ocar != null && ocar.Color != 0 ? (uint) ocar.Color : 0x01010102, Avatar = oc.Avatar, Personality = "amigavel",
                                     IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                                     InTutorial = cv.Count > 0 && cv.All(g => Rice.Game.Vehicle.IsTrainingType(g.CarType)),
-                                    AiIdx = AltAiRow(oc.Name, oc.ID),
+                                    AiIdx = AltAiRow(oc.Name, oc.ID, oc.Level),
                                     Look = ocar != null ? AltLook(oc.ID, ocar.CarID, (uint) ocar.Color) : null
                                 };
                             }
@@ -889,10 +889,16 @@ namespace Rice.Server.Packets.Game
             catch (Exception ex) { Log.WriteError("Visual do corredor " + cid + ": " + ex.Message); return null; }
         }
 
-        // linha da tabela de IA para o seu corredor correr na Battle Zone (a dele, se tiver; senao uma livre)
-        static int AltAiRow(string name, long cid)
+        // linha da tabela de IA para o seu corredor correr na Battle Zone: uma so dele (alt_ai_rows.json), com o nome e o
+        // nivel dele gravados no Init_us.agt do cliente (Battle.SyncClientAiTable); sem linha livre, a de antes
+        static int AltAiRow(string name, long cid, int level)
         {
-            try { int r = Battle.AiRowFor(name); return r > 0 ? r : Battle.SpareAiRow(cid); }
+            try
+            {
+                int r = RiceServer.Config.AltsAiTableSync ? Battle.AltRowFor(cid, name, level) : 0;
+                if (r > 0) return r;
+                r = Battle.AiRowFor(name); return r > 0 ? r : Battle.SpareAiRow(cid);
+            }
             catch (Exception) { return 0; }
         }
 

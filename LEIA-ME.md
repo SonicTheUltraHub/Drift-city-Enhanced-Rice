@@ -35,6 +35,32 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 208 — Hora do jogo (drinks/cola), espectadores, salas de desafio, seus corredores na corrida:**
+- **Drinks e cola de sticker "vencidos":** o jogo calcula "agora" com a hora que o servidor manda (LobbyTimeAck 47 e
+  GetDateTimeAck 785). O servidor mandava o TickCount (tempo ligado do PC) e nem respondia o 785, entao a conta dos dias
+  dava errado. Agora vai a hora unix de verdade nos dois (o 785 tambem leva a data e a hora certas).
+- **Espectadores:** alem de quem espera vaga (sala cheia), agora alguns bots vem so assistir (de 8 a 33 s um sorteio,
+  ate `BattleSpectatorsMax`), entao o "Spectators: N" sobe tambem com a sala nao cheia. Esses nao pegam vaga.
+- **Salas de desafio (as que voce entra):** antes ficavam de fora da paciencia, da saida depois da corrida e dos
+  espectadores. Agora os bots perdem a paciencia e saem tambem nelas (menos o dono do desafio).
+- **Battle Zone menos generosa:** nova `BattleRewardScale` (0.5) multiplica a exp e o mito da corrida (colocacao +
+  bonus de corrida completa), inclusive dos seus corredores na party.
+- **Seus corredores com o nome e o nivel certos na corrida:** na corrida o jogo mostra o nome/nivel da linha da tabela
+  de IA do cliente. Agora cada corredor (de todas as contas, inclusive os novos) ganha uma linha so dele
+  (`save/alt_ai_rows.json`) e o servidor grava o nome e o nivel dele no `Data_US\Init_us.agt`: o `Start.bat` roda
+  `Rice.exe ia` antes de abrir o jogo e o servidor grava de novo quando o jogo fecha. Copia do original em
+  `Data_US\Init_us.agt.antes_corredores`. Para desligar: `"AltsAiTableSync": false`. **Copie o Start.bat novo para a
+  pasta do jogo.** Corredor criado agora aparece certo na proxima vez que abrir o jogo.
+- **Bots da party** voltam a andar com o estado do seu carro (volante, drift, luzes): `PartyBotsCopyMyState` (true). Os
+  outros bots andando na cidade usam o estado do seu carro "dirigindo reto" (rodas girando, sem drift/fumaca):
+  `BotsDriveAnim` (true).
+- **Bots da party fazendo as coisas deles:** seus corredores na party agora tambem saem para as lojas (so olham).
+  Mais frequente: `PartyDomeErrandMinutes` 2 e `PartyDomeErrandIdle` 10 (se o seu server.json tiver os valores antigos,
+  3 e 15, mude la).
+- **Erro ao trocar de corredor** ("indice fora dos limites" no Area.AddPlayer / UserInfo): as listas de jogadores,
+  tickets e seriais agora tem trava (varias conexoes mexiam ao mesmo tempo). O erro "Trafego: estouro" agora mostra onde foi.
+- Ainda falta: registro de sticker (a lista de stickers registrados) e a compra de decal.
+
 **Atualizacao 207 — Drinks com o icone e o efeito no jogo:**
 - Relato do forum: EXP drink, MITO drink e Item Drink "nao funcionam e nem aparecem no canto inferior direito". Igual a
   cola de sticker, o jogo so considera o item valido com prazo maior que 0; o servidor mandava 0 ("para sempre").
