@@ -2098,6 +2098,7 @@ namespace Rice.Server.Packets.Game
                                 if (aMito > 0) ach.GrantMito((ulong) aMito);
                                 ab.Level = ach.Level;
                                 altPaid.Add(ab.Cid);
+                                Log.WriteLine("Sala {0}: {1} (seu corredor) ganhou +{2} exp e +{3} mito (nivel {4}, mito {5}).", room.Id, ab.Name, aExp, aMito, ach.Level, ach.Mito);
                                 BattleRecord.Add((long) ach.CID, team, endType == Finished && (team ? (isBlue(m) ? blue > red : red > blue) : rank == 1));
                                 altLines.Add(ab.Name + " (seu corredor) " + (endType == Finished ? shown + "o lugar" : "nao terminou") + ": +" + aExp + " exp, +" + aMito + " mito"
                                              + (ach.Level > before ? " (nivel " + ach.Level + "!)" : "") + ".");

@@ -42,6 +42,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - **Drinks:** o jogo so marca o drink como "em uso" quando recebe o Cmd_VisualItemUseAck (1210). O servidor agora
   manda esse aviso sozinho para cada drink (ao abrir a lista e ao comprar) e responde o pedido de usar (1209, aparece
   no log como "Drift shop: usar item").
+- **Seus corredores na party nao recebiam exp/mito da Battle Zone (de verdade):** o servidor usava a copia do corredor
+  carregada no login, que podia estar velha; ao ganhar, gravava o valor velho + o premio (parecia que nao ganhou).
+  Agora atualiza do banco antes de dar o premio, e o log mostra "Sala N: Fernando (seu corredor) ganhou +X exp e +Y
+  mito (nivel, mito)" e "Party: ... ganhou ..." para conferir.
 
 **Atualizacao 208 — Hora do jogo (drinks/cola), espectadores, salas de desafio, seus corredores na corrida:**
 - **Drinks e cola de sticker "vencidos":** o jogo calcula "agora" com a hora que o servidor manda (LobbyTimeAck 47 e

@@ -609,10 +609,25 @@ namespace Rice.Server.Packets.Game
         public static Rice.Game.Character AltCharacter(Rice.Game.Player player, Bots.BotProfile b)
         {
             if (b == null || !b.IsAlt) return null;
-            var own = player != null && player.Characters != null ? player.Characters.FirstOrDefault(x => x != null && (long) x.CID == b.Cid) : null;
-            if (own != null) return own;
+            // jogando com ele agora: o objeto ativo (e o que esta valendo)
             var on = RiceServer.GetPlayers().Where(p => p != null && p.ActiveCharacter != null).Select(p => p.ActiveCharacter).FirstOrDefault(x => (long) x.CID == b.Cid);
             if (on != null) return on;
+            // da sua lista de corredores: a copia carregada no login pode estar velha (exp/mito/nivel ganhos depois por
+            // outra copia). Ganhar em cima dela gravava o valor velho + o premio e parecia que nao ganhava. Atualiza do banco.
+            var own = player != null && player.Characters != null ? player.Characters.FirstOrDefault(x => x != null && (long) x.CID == b.Cid) : null;
+            if (own != null)
+            {
+                try
+                {
+                    using (var rc = Rice.Database.GetContext())
+                    {
+                        var dc = rc.Characters.Find((long) b.Cid);
+                        if (dc != null) { own.Experience = dc.Experience; own.Level = dc.Level; own.Mito = dc.Mito; }
+                    }
+                }
+                catch (Exception ex) { Log.WriteError("Corredor " + b.Name + ": " + ex.Message); }
+                return own;
+            }
             try { return Rice.Game.Character.Retrieve(b.Name); }
             catch (Exception ex) { Log.WriteError("Corredor " + b.Name + ": " + ex.Message); return null; }
         }
@@ -654,6 +669,7 @@ namespace Rice.Server.Packets.Game
                 if (e > 0) alt.GrantExperience(e);
                 if (m > 0) alt.GrantMito((ulong) m);
                 b.Level = alt.Level;
+                Log.WriteLine("Party: {0} (seu corredor) ganhou +{1} exp e +{2} mito (nivel {3}, mito {4}).", alt.Name, e, m, alt.Level, alt.Mito);
                 parts.Add(alt.Name + (e > 0 ? " +" + e + " exp" : "") + (m > 0 ? " +" + m + " mito" : "")
                           + (alt.Level > before ? " (nivel " + alt.Level + "!)" : ""));
             }
