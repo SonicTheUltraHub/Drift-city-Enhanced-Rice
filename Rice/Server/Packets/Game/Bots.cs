@@ -845,7 +845,8 @@ namespace Rice.Server.Packets.Game
                         Cid = (long) c.CID, Name = c.Name, Level = c.Level, Car = v != null ? (int) v.CarType : 1,
                         Color = v != null && v.Color != 0 ? v.Color : 0x01010102, Avatar = c.Avatar, Personality = "amigavel",
                         IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                        InTutorial = Bots.InTutorial(c), AiIdx = AltAiRow(c.Name, (long) c.CID)
+                        InTutorial = Bots.InTutorial(c), AiIdx = AltAiRow(c.Name, (long) c.CID),
+                        Look = v != null ? AltLook((long) c.CID, v.CarID, v.Color) : null
                     };
                 }
                 // corredores das OUTRAS contas (outros logins) tambem viram bots seus: amigos, aparecem no lobby, podem
@@ -870,7 +871,8 @@ namespace Rice.Server.Packets.Game
                                     Color = ocar != null && ocar.Color != 0 ? (uint) ocar.Color : 0x01010102, Avatar = oc.Avatar, Personality = "amigavel",
                                     IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                                     InTutorial = cv.Count > 0 && cv.All(g => Rice.Game.Vehicle.IsTrainingType(g.CarType)),
-                                    AiIdx = AltAiRow(oc.Name, oc.ID)
+                                    AiIdx = AltAiRow(oc.Name, oc.ID),
+                                    Look = ocar != null ? AltLook(oc.ID, ocar.CarID, (uint) ocar.Color) : null
                                 };
                             }
                         }
@@ -878,6 +880,13 @@ namespace Rice.Server.Packets.Game
                     catch (Exception ex) { Log.WriteError("Corredores das outras contas: " + ex.Message); }
                 }
             }
+        }
+
+        // visual do carro (Drift Shop) do seu corredor: pintura, vidro, neon, aero, rodas, aerofolio, placa...
+        static BotLook AltLook(long cid, int carId, uint color)
+        {
+            try { return VisualShop.LookOf(cid, carId, color); }
+            catch (Exception ex) { Log.WriteError("Visual do corredor " + cid + ": " + ex.Message); return null; }
         }
 
         // linha da tabela de IA para o seu corredor correr na Battle Zone (a dele, se tiver; senao uma livre)

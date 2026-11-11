@@ -43,6 +43,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   vitorias). Agora o perfil dele (e o seu) vem do corredor de verdade: nivel, carro atual, atributos, crew e o recorde salvo.
 - **F2 (My Information):** o servidor nao respondia o pedido do perfil quando o nome era de um jogador (so de bot), por
   isso nao abria. Agora responde com os seus dados. Se ainda nao abrir, mande o log logo depois de apertar F2.
+- **Visual dos seus corredores-bot:** apareciam so com o carro (sem pintura, vidro, neon, aero, rodas...). Agora vem com
+  o visual da Drift Shop do carro atual deles (de qualquer conta).
 
 **Atualizacao 205 — Cola de sticker funcionando e L1 com 10 stickers:**
 - Achado no DriftCity.exe (0x6e58a0): a cola (Sticker Glue) so vale se tiver prazo maior que 0 (dias que faltam =

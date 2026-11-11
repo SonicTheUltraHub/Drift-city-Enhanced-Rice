@@ -129,7 +129,9 @@ namespace Rice.Server.Packets.Game
             foreach (int car in cars) AfterChange(client, ch, car);
         }
 
-        static List<VsItem> ItemsOf(Rice.Game.Character ch)
+        static List<VsItem> ItemsOf(Rice.Game.Character ch) { return ItemsOfCid((long) ch.CID); }
+
+        static List<VsItem> ItemsOfCid(long cid)
         {
             if (store == null)
             {
@@ -138,7 +140,7 @@ namespace Rice.Server.Packets.Game
                 if (store == null) store = new Dictionary<string, List<VsItem>>();
             }
             List<VsItem> l;
-            if (!store.TryGetValue(ch.CID.ToString(), out l)) { l = new List<VsItem>(); store[ch.CID.ToString()] = l; }
+            if (!store.TryGetValue(cid.ToString(), out l)) { l = new List<VsItem>(); store[cid.ToString()] = l; }
             return l;
         }
 
@@ -515,9 +517,15 @@ namespace Rice.Server.Packets.Game
 
         public static Bots.BotLook LookOf(Rice.Game.Character ch, Rice.Game.Vehicle car)
         {
+            return LookOf((long) ch.CID, car.CarID, car.Color);
+        }
+
+        // visual do carro de qualquer corredor (pelo CID; usado nos seus corredores que viram bot)
+        public static Bots.BotLook LookOf(long cid, int carId, uint carColor)
+        {
             var look = new Bots.BotLook();
             List<VsItem> items;
-            lock (Sync) items = ItemsOf(ch).Where(x => x.State == OnCar && x.Car == car.CarID).ToList();
+            lock (Sync) items = ItemsOfCid(cid).Where(x => x.State == OnCar && x.Car == carId).ToList();
             foreach (var v in items)
             {
                 Shop sh;
@@ -541,7 +549,7 @@ namespace Rice.Server.Packets.Game
                 if (sh.cat == 2) { uint c = Rgb(text); if (c != 0) look.NeonColor = c; }
                 if (sh.cat == 9) look.Plate = text.Length > 8 ? text.Substring(0, 8) : text;
             }
-            if ((car.Color >> 24) == 0x83) look.Paint = Bots.Bgr(car.Color);
+            if ((carColor >> 24) == 0x83) look.Paint = Bots.Bgr(carColor);
             return look;
         }
 
