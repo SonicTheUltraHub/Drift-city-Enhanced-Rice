@@ -348,9 +348,32 @@ namespace Rice.Server.Packets.Game
             return prog;
         }
 
+        // seu corredor (de qualquer conta) que virou bot: as licencas de verdade dele (as que tem e as montadas)
+        static readonly Dictionary<long, Tuple<DateTime, int[], List<int>>> altLic = new Dictionary<long, Tuple<DateTime, int[], List<int>>>();
+        static void AltLicenses(Bots.BotProfile b, out int[] mounted, out List<int> held)
+        {
+            Tuple<DateTime, int[], List<int>> c;
+            lock (altLic)
+                if (altLic.TryGetValue(b.Cid, out c) && (DateTime.UtcNow - c.Item1).TotalSeconds < 30) { mounted = c.Item2; held = c.Item3; return; }
+            mounted = new[] { 7000, 0, 0 }; held = new List<int> { 7000 };
+            var ch = BotSocial.AltCharacter(null, b);
+            if (ch != null)
+            {
+                lock (Sync)
+                {
+                    var r = RecOf(ch);
+                    mounted = WithRookie((int[]) r.Mounted.Clone());
+                    held = Held(ch, r).Select(l => l.id).ToList();
+                }
+                if (!held.Contains(7000)) held.Insert(0, 7000);
+            }
+            lock (altLic) altLic[b.Cid] = Tuple.Create(DateTime.UtcNow, mounted, held);
+        }
+
         public static int[] BotMounted(Bots.BotProfile b)
         {
             if (b == null) return new int[3];
+            if (b.IsAlt) { int[] am; List<int> ah; AltLicenses(b, out am, out ah); return (int[]) am.Clone(); }
             if (RiceServer.Config.BotLicenses && Evolves(b)) lock (Sync) return (int[]) LicOf(b).Mount.Clone();
             lock (Sync)
             {
@@ -446,6 +469,7 @@ namespace Rice.Server.Packets.Game
             if (b == null) { Log.WriteLine("LicenseStatus: serial {0} (nao e bot).", serial); return; }
             var mounted = BotMounted(b);
             var held = new List<int> { 7000 };
+            if (b.IsAlt) { int[] am; List<int> ah; AltLicenses(b, out am, out ah); foreach (var id in ah) if (!held.Contains(id)) held.Add(id); }
             if (RiceServer.Config.BotLicenses && Evolves(b)) lock (Sync) foreach (var id in LicOf(b).Held) if (!held.Contains(id)) held.Add(id);
             foreach (var id in mounted) if (id != 0 && !held.Contains(id)) held.Add(id);
             var pk = new RicePacket(667);
