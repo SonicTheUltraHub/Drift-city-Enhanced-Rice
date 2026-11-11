@@ -319,7 +319,6 @@ namespace Rice.Server.Packets.Game
         public static void SendBonusFlags(RiceClient c)
         {
             var flags = new int[9];
-            flags[4] = 1;
             try
             {
                 var parts = (RiceServer.Config.BonusUpdateFlags ?? "").Split(',');
