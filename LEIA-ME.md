@@ -35,6 +35,17 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 204 — Bots nao imitam mais o seu carro, seus corredores correm e vao as lojas, cola de sticker:**
+- **Bots imitando o seu carro:** os bots (parados ou andando) copiavam o estado do SEU carro: volante virado, fumaca
+  de drift/arrancada, freio. Agora o carro deles vai neutro (so a vida vem do estado). `BotsCopyMyState: true` volta
+  ao jeito antigo.
+- **Seus corredores (de todas as contas):** agora tambem andam ate as lojas do Driver Dome (sem comprar nem equipar
+  nada) e entram nas salas da Battle Zone para correr (sem ganhar nada). Na sala aparecem com o nome deles; na
+  corrida o jogo mostra o nome da linha de IA que eles usam. `AltsRace`.
+- **Cola de sticker (Sticker Glue):** era comprada sem carro e o jogo dizia "Your sticker adhesive spray has expired".
+  Agora fica no carro em que foi comprada; a que voce ja comprou vai para o carro atual ao abrir a Drift Shop.
+- Stickers da comunidade e salvar o sticker no carro: ainda em estudo (o log desta versao ja mostra o que o jogo manda).
+
 **Atualizacao 203 — Precos da Drift Shop, corredores de todas as contas viram bots e dados dos stickers:**
 - **Precos da Drift Shop** (tabela `VShopCoolStuff` do `Init_us.agt` e `Rice/res/VisualShop.json`, todos para sempre):
   Paint S15/C15 15.000 mito; Window Tint S15/C15 5.000; Neon S15/C15 16.000; Sticker Glue L1 1.000;

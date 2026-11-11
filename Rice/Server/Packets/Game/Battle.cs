@@ -357,7 +357,7 @@ namespace Rice.Server.Packets.Game
         // premio de uma corrida que o bot terminou sem voce (os 3 primeiros ganham 3x, 2x, 1x)
         static void SoloRaceReward(Bots.BotProfile b, int place, int count)
         {
-            if (b == null) return;
+            if (b == null || b.IsAlt) return;
             var cfg = RiceServer.Config;
             int pts = place >= 1 && place <= 3 ? 4 - place : 0;
             int grow = BotSocial.GrowthOf(b);
@@ -527,7 +527,8 @@ namespace Rice.Server.Packets.Game
                     if (seat < 0) { AddSpectator(room, host, says); break; }
                     // vaga aberta: quem estava assistindo entra primeiro
                     if (room.Spectators.Count > 0) { ScheduleSpectator(room); break; }
-                    var pool = Bots.All().Where(b => !b.IsAlt && b.AiIdx > 0 && !inRoom.Contains(b.Name) && !room.Kicked.Contains(b.Name)
+                    var pool = Bots.All().Concat(RiceServer.Config.AltsRace ? Bots.AltsOf(host.Char) : new List<Bots.BotProfile>())
+                                         .Where(b => b.AiIdx > 0 && !inRoom.Contains(b.Name) && !room.Kicked.Contains(b.Name) && !(b.IsAlt && b.InTutorial)
                                                      && !party.Contains(b.Cid) && !IsRacing(b.Cid) && BotSocial.Online(b) && BotFits(arena, b)).ToList();
                     if (pool.Count == 0) break;
                     var bb = pool[Rng.Next(pool.Count)];
@@ -880,6 +881,18 @@ namespace Rice.Server.Packets.Game
         class AiDriver { public int Idx, Level; public string Name; public List<int> Cars; }
         static List<AiDriver> drivers;
         static HashSet<int> aiTracks, playerCars;
+
+        // seus corredores (alts) nao tem linha propria na tabela de IA: usam uma linha que nao e de nenhum bot (na sala
+        // aparecem com o nome deles; na corrida o jogo mostra o nome da linha)
+        public static int SpareAiRow(long cid)
+        {
+            LoadAi();
+            if (drivers == null) return 0;
+            var excluded = new HashSet<int>(RiceServer.Config.BattleAiExcludedCars ?? new int[0]);
+            var spare = drivers.Where(d => Bots.ByName(d.Name) == null && d.Cars.Any(c => playerCars.Contains(c) && !excluded.Contains(c)))
+                               .Select(d => d.Idx).OrderBy(i => i).ToList();
+            return spare.Count == 0 ? 0 : spare[(int) (Math.Abs(cid) % spare.Count)];
+        }
 
         // linha da tabela de IA com o nome do bot (cada bot tem a sua; ver Cliente/ferramentas/nomes_ia.py); 0 = nenhuma
         public static int AiRowFor(string name)
@@ -1447,7 +1460,7 @@ namespace Rice.Server.Packets.Game
                 foreach (var ai in room.Ais)
                 {
                     var bb = Bots.ByName(ai.Name);
-                    if (bb == null) continue;
+                    if (bb == null || bb.IsAlt) continue;      // seus corredores: correm, mas nao ganham nada
                     string note;
                     lock (racingUntil) racingNote.TryGetValue(bb.Cid, out note);
                     if (note != null) EndRacing(bb, note);

@@ -1467,6 +1467,10 @@
 "Party",
 "Bots na rua: os da party seguem voce (atraso em segundos entre cada um); Marsteh e Brunizin.X estacionados."
 ],
+"BotsCopyMyState": [
+"Bots",
+"Bots copiam o estado do SEU carro (volante, fumaca de drift/arrancada, freio): false = carro neutro (so andam)."
+],
 "PartyChaseTeleportSeconds": [
 "Party",
 "HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)"
@@ -1642,6 +1646,10 @@
 "AltsInLobby": [
 "Battle Zone",
 "Seus outros corredores (de todas as contas) ficam sempre no lobby do Driver Dome (parados ou andando)."
+],
+"AltsRace": [
+"Battle Zone",
+"Seus outros corredores tambem entram nas salas da Battle Zone e correm (sem ganhar nada)."
 ],
 "PartyBotExpShare": [
 "Party",

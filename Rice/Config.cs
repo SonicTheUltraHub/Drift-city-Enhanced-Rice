@@ -526,6 +526,8 @@ namespace Rice
         public double VShopPermanentMultiplier = 2.0; // drift shop: item sem preco "para sempre" = maior periodo x N
         public int VShopCcToMito = 1000;              // drift shop: sem CC suficiente, cada CC vale N mito
         public bool PartyBotDrift = true;
+        // Bots copiam o estado do SEU carro (volante, fumaca de drift/arrancada, freio): false = carro neutro (so andam).
+        public bool BotsCopyMyState = false;
         public double PartyChaseTeleportSeconds = 10; // HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)
         public double CityBotFarSnapSeconds = 8;      // seguindo: longe do lugar dele por N s, pula para o lugar            // party: derrapa e faz fumaca onde voce derrapou
         public float PartyHuvContact = 4f;           // distancia (centro a centro, m) em que o bot "encosta" no HUV e conta o golpe
@@ -577,6 +579,8 @@ namespace Rice
         public bool AltsAllAccounts = true;
         // Seus outros corredores (de todas as contas) ficam sempre no lobby do Driver Dome (parados ou andando).
         public bool AltsInLobby = true;
+        // Seus outros corredores tambem entram nas salas da Battle Zone e correm (sem ganhar nada).
+        public bool AltsRace = true;
         public double PartyBotExpShare = 0.5;          // bots da party (nao os seus corredores) ganham essa parte da sua exp/mito
         public bool PartyBotExpTable = true;           // ... e mostram no chat da party: exp p/ o proximo nivel e progresso das licencas
         public double BotLicenseActivity = 2.0;        // ... pontos de licenca por atividade feita com voce

@@ -900,10 +900,14 @@ namespace Rice.Server.Packets.Game
         }
 
         // Estado neutro (jogador parado: sem volante, nitro, freio ou fumaca).
+        // O estado do jogador parado ainda trazia o volante virado e a fumaca de arrancada/burnout (os bots imitavam o
+        // seu carro). Agora a parte de comandos/efeitos (@0..@0x27) vai zerada e so a vida (@0x28..) vem do seu estado.
+        const int StateHp = 0x28;
         static byte[] WithIdle(PlayerState s, byte[] m)
         {
-            if (s.Idle != null) Array.Copy(s.Idle, 0, m, MoveSize, StateSize);
-            else Array.Clear(m, MoveSize, StateSize);
+            Array.Clear(m, MoveSize, StateSize);
+            if (s.Idle != null && RiceServer.Config.BotsCopyMyState) Array.Copy(s.Idle, 0, m, MoveSize, StateSize);
+            else if (s.Idle != null) Array.Copy(s.Idle, StateHp, m, MoveSize + StateHp, StateSize - StateHp);
             return m;
         }
 
@@ -1650,7 +1654,7 @@ namespace Rice.Server.Packets.Game
         // Estado do carro andando: o seu estado naquele ponto do caminho (fumaca do drift, luzes); parado: neutro
         static void ApplyDriveState(PlayerState s, byte[] m, float x, float y, float speed)
         {
-            if (speed < 3f || !RiceServer.Config.PartyBotDrift) { WithIdle(s, m); return; }
+            if (speed < 3f || !RiceServer.Config.PartyBotDrift || !RiceServer.Config.BotsCopyMyState) { WithIdle(s, m); return; }
             var sm = NearestSample(s.Trail, x, y);
             if (sm == null) { WithIdle(s, m); return; }
             Array.Copy(sm.Move, MoveSize, m, MoveSize, StateSize);
@@ -2088,6 +2092,7 @@ namespace Rice.Server.Packets.Game
         // o que o bot faz quando entra numa loja sozinho
         static Action ShopErrand(Bots.BotProfile b, string place)
         {
+            if (b == null || b.IsAlt) return null;          // seus corredores so vao ate a loja: nao compram nem equipam
             string p = (place ?? "").ToLowerInvariant();
             if (p.Contains("part")) return () => BotChatter.ShopParts(b);
             if (p.Contains("garag")) return () => BotChatter.ShopGarage(b, false);
@@ -2907,6 +2912,8 @@ namespace Rice.Server.Packets.Game
             if (b.Look != null && b.Look.Tint != 0) BitConverter.GetBytes(b.Look.Tint).CopyTo(m, 0x0c);   // vidro (XiCarAttr)
             BitConverter.GetBytes(time).CopyTo(m, 0x14);
             if (parked) Array.Clear(m, 0x28, 0x10);
+            // sem o volante/fumaca/freio do seu carro (BotsCopyMyState)
+            if (!RiceServer.Config.BotsCopyMyState && m.Length >= FullMove) Array.Clear(m, MoveSize, StateHp);
             return m;
         }
 

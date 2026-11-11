@@ -845,7 +845,7 @@ namespace Rice.Server.Packets.Game
                         Cid = (long) c.CID, Name = c.Name, Level = c.Level, Car = v != null ? (int) v.CarType : 1,
                         Color = v != null && v.Color != 0 ? v.Color : 0x01010102, Avatar = c.Avatar, Personality = "amigavel",
                         IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                        InTutorial = Bots.InTutorial(c)
+                        InTutorial = Bots.InTutorial(c), AiIdx = AltAiRow(c.Name, (long) c.CID)
                     };
                 }
                 // corredores das OUTRAS contas (outros logins) tambem viram bots seus: amigos, aparecem no lobby, podem
@@ -869,7 +869,8 @@ namespace Rice.Server.Packets.Game
                                     Cid = oc.ID, Name = oc.Name, Level = oc.Level, Car = ocar != null ? ocar.CarType : 1,
                                     Color = ocar != null && ocar.Color != 0 ? (uint) ocar.Color : 0x01010102, Avatar = oc.Avatar, Personality = "amigavel",
                                     IsAlt = true, AltOwner = (long) me.CID, Joined = (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                                    InTutorial = cv.Count > 0 && cv.All(g => Rice.Game.Vehicle.IsTrainingType(g.CarType))
+                                    InTutorial = cv.Count > 0 && cv.All(g => Rice.Game.Vehicle.IsTrainingType(g.CarType)),
+                                    AiIdx = AltAiRow(oc.Name, oc.ID)
                                 };
                             }
                         }
@@ -877,6 +878,13 @@ namespace Rice.Server.Packets.Game
                     catch (Exception ex) { Log.WriteError("Corredores das outras contas: " + ex.Message); }
                 }
             }
+        }
+
+        // linha da tabela de IA para o seu corredor correr na Battle Zone (a dele, se tiver; senao uma livre)
+        static int AltAiRow(string name, long cid)
+        {
+            try { int r = Battle.AiRowFor(name); return r > 0 ? r : Battle.SpareAiRow(cid); }
+            catch (Exception) { return 0; }
         }
 
         // corredor que ainda nao terminou o tutorial (so tem o carro de treino ou esta usando ele)

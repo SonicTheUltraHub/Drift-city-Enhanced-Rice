@@ -41,7 +41,8 @@ namespace Rice.Server.Packets.Game
 
         const string FileName = "vsitems.json";
         const int New = 1, Changed = 3, Removed = 2, OnCar = 1;
-        static readonly HashSet<int> Equippable = new HashSet<int>(Enumerable.Range(1, 13).Concat(new[] { 32, 38, 47, 48, 52, 58 }));
+        // 20 = Sticker Glue (cola do sticker): vale no carro em que foi comprada (sem carro o jogo dizia "expirada")
+        static readonly HashSet<int> Equippable = new HashSet<int>(Enumerable.Range(1, 13).Concat(new[] { 20, 32, 38, 47, 48, 52, 58 }));
         static readonly Dictionary<int, string> FixedSlots = new Dictionary<int, string> { { 1, "paint" }, { 32, "paint" }, { 2, "neon" }, { 3, "tint" } };
         static readonly object Sync = new object();
         static Dictionary<int, Shop> table;
@@ -283,7 +284,17 @@ namespace Rice.Server.Packets.Game
         {
             var ch = packet.Sender.Player.ActiveCharacter;
             List<VsItem> items;
-            lock (Sync) items = ItemsOf(ch).ToList();
+            lock (Sync)
+            {
+                // cola de sticker comprada antes sem carro: vai para o carro atual
+                var all = ItemsOf(ch);
+                bool fixedGlue = false;
+                foreach (var g in all.Where(x => CatOf(x) == 20 && x.Car == 0).ToList())
+                    if (ch.Vehicle != null && !all.Any(x => x != g && CatOf(x) == 20 && x.Car == ch.Vehicle.CarID && x.State == OnCar))
+                    { g.Car = ch.Vehicle.CarID; g.State = OnCar; fixedGlue = true; }
+                if (fixedGlue) Save();
+                items = all.ToList();
+            }
             var ack = new RicePacket(1201);
             ack.Writer.Write(0x40000);
             ack.Writer.Write(items.Count);
