@@ -299,7 +299,7 @@ namespace Rice.Server.Packets.Game
                 // itens FORA do carro (estado 0). Posta no carro ela "sumia" e o jogo dizia vencida / sem cola.
                 var all = ItemsOf(ch);
                 bool fixedGlue = false;
-                foreach (var g in all.Where(x => CatOf(x) == 20 && (x.State != 0 || x.Car != 0)).ToList())
+                foreach (var g in all.Where(x => (CatOf(x) == 20 || IsDrink(x)) && (x.State != 0 || x.Car != 0)).ToList())
                 { g.Car = 0; g.State = 0; fixedGlue = true; }
                 if (fixedGlue) Save();
                 items = all.ToList();
@@ -453,26 +453,15 @@ namespace Rice.Server.Packets.Game
                 var v = items.FirstOrDefault(x => x.Inven == inven);
                 var car = ch.Garage.FirstOrDefault(x => x.CarID == carId);
                 Shop s;
-                // drink arrastado para o slot FIELD/BATTLE do inventario (Drift Item): fica "posto" (o jogo mostra no HUD)
-                if (v != null && IsDrink(v))
-                {
-                    Log.WriteLine("Drift shop: drink no slot ({0}).", BitConverter.ToString(buf, 0, Math.Min(buf.Length, 16)));
-                    v.State = OnCar; v.Car = carId;
-                    mods.Add(new KeyValuePair<VsItem, int>(v, Changed));
-                    Save();
-                }
-                else if (v == null || car == null || !Table().TryGetValue(v.Uid, out s) || !Fits(s, car) || (v.Car != 0 && v.Car != carId))
+                if (v == null || car == null || !Table().TryGetValue(v.Uid, out s) || !Fits(s, car) || (v.Car != 0 && v.Car != carId))
                 {
                     Chat.SendSystemMessage(c, "Esse item nao serve nesse carro.");
                     return;
                 }
-                if (!IsDrink(v))
-                {
-                    PutOn(items, v, carId, mods);
-                    mods.Add(new KeyValuePair<VsItem, int>(v, Changed));
-                    ApplyPaint(ch, v);
-                    Save();
-                }
+                PutOn(items, v, carId, mods);
+                mods.Add(new KeyValuePair<VsItem, int>(v, Changed));
+                ApplyPaint(ch, v);
+                Save();
             }
             var ack = new RicePacket(1206);
             ack.Writer.Write(buf, 0, 12);

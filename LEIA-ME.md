@@ -40,9 +40,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   o servidor liga o 5o aviso do Cmd_BonusUpdate (1501; byte 0x1d94 do personagem, DriftCity.exe 0x557598 / 0x6e58e1).
   O servidor nunca mandava esse pacote. Agora manda ao carregar a Drift Shop: `BonusUpdateFlags` = "0,0,0,0,1,0,0,0,0"
   (os outros 8 avisos sao bonus do jogo ainda sem nome; da para testar ligando um por vez).
-- **Drinks:** ficam na aba Drift Item do inventario e vao para os slots FIELD/BATTLE (que aparecem no HUD como 1 e 2).
-  Arrastar o drink para o slot agora e aceito pelo servidor (antes dizia "Esse item nao serve nesse carro") e o log
-  mostra "Drift shop: drink no slot (...)".
+- **Drinks:** valem so por estar no inventario (aba Drift Item), nao nos slots FIELD/BATTLE. O efeito e do servidor
+  (+30% exp, +50% mito, itens em dobro) e ja vale com o drink no inventario. O icone no canto ainda nao aparece.
 
 **Atualizacao 209 — Cola de sticker e drinks (de novo):**
 - **Cola de sticker:** o jogo procura a cola so entre os itens que estao FORA do carro (DriftCity.exe 0x6e58a0,

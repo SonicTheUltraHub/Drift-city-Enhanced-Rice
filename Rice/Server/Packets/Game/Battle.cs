@@ -2187,7 +2187,9 @@ namespace Rice.Server.Packets.Game
                     });
                 }
                 var ei = c.GetExpInfo();
-                Log.WriteLine("Resultado sala {0}: {1} posicao {2}/{3}, +{4} exp, +{5} mito.", room.Id, c.Name, rank, n, exp, mito);
+                Log.WriteLine("Resultado sala {0}: {1} posicao {2}/{3}, +{4} exp, +{5} mito{6}.", room.Id, c.Name, rank, n, exp, mito,
+                              VisualShop.ExpMult(c) > 1 || VisualShop.MitoMult(c) > 1
+                                  ? string.Format(" (com drinks: exp x{0}, mito x{1})", VisualShop.ExpMult(c), VisualShop.MitoMult(c)) : "");
                 if (endType == Finished && n > 1 && rank <= 3) PartyTalk.Praise(c, "corrida");
                 entries.Add(Build(w =>
                 {
