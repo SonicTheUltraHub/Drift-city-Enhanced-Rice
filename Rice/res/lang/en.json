@@ -2461,5 +2461,11 @@
 "Drift shop: drink no slot": "Drift shop: drink in slot",
 " (com drinks: exp x": " (with drinks: exp x",
 "Drift shop: voce ja tem ": "Drift shop: you already have ",
-". Ele vale enquanto estiver no inventario.": ". It works while it is in your inventory."
+". Ele vale enquanto estiver no inventario.": ". It works while it is in your inventory.",
+"Sticker: lista tipo ": "Sticker: list type ",
+" sticker(s).": " sticker(s).",
+"registrado (id ": "registered (id ",
+" imagem(ns)).": " image(s)).",
+"Sticker: imagem ": "Sticker: image ",
+" nao encontrada.": " not found."
 }

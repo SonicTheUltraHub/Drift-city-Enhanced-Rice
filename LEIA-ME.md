@@ -35,6 +35,15 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 212 — Stickers registrados (1a parte):**
+- Registrar sticker agora salva: as 3 imagens (32, 64 e 128 px, DDS) vao para `save/stickers/<id>_<n>.dds` e o nome,
+  autor, categoria e data para `save/stickers.json`.
+- A lista de stickers (Cmd_StickerListAck 74) agora vem com os registrados: "meus" (tipo 2, pelo nome do corredor) e
+  os da comunidade (todos), com paginas. Quando o jogo pede a imagem (GetImage 64), o servidor manda em pedacos
+  (Cmd_GetImageAck 65).
+- Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
+  confirmacao; o log mostra "Sticker: lista ..." e os pedidos "GetImage 64" para ajustar.
+
 **Atualizacao 211 — Icones dos drinks no HUD:**
 - Os icones do canto inferior direito (EXP +30%, MITO +50%, ITEM x2) vem do Cmd_BonusUpdate (1501). Testado no jogo:
   1o aviso = EXP, 2o = MITO, 8o = ITEM. O servidor agora liga sozinho os dos drinks que o personagem tem (ao carregar
