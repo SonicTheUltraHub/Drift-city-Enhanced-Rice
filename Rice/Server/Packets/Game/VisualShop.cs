@@ -312,19 +312,27 @@ namespace Rice.Server.Packets.Game
             foreach (var v in items) WriteItem(ack.Writer, v);
             packet.Sender.Send(ack);
             foreach (var v in items) if (IsDrink(v)) SendUseAck(packet.Sender, v);   // drinks ja "bebidos": icone no canto
-            SendBonusFlags(packet.Sender);
+            SendBonusFlags(packet.Sender, ch);
         }
 
         // Cmd_BonusUpdate (1501, DriftCity.exe 0x52aa90): 9 u32 (1 = ligado) -> bytes 0x1d90..0x1d98 do personagem.
         // O 5o (0x1d94) libera o sticker: com 0 a Drift Shop dizia "Your sticker adhesive spray has expired" mesmo com a
         // cola valida (0x557598 / 0x6e58e1 / 0x6350b4). Os outros ficam como BonusUpdateFlags no server.json.
-        public static void SendBonusFlags(RiceClient c)
+        // Testado no jogo: 1o = icone EXP +30%, 2o = MITO +50%, 8o = ITEM x2 (canto inferior direito). O servidor liga
+        // sozinho os dos drinks que o personagem tem.
+        public static void SendBonusFlags(RiceClient c, Rice.Game.Character ch)
         {
             var flags = new int[9];
+            if (ch != null)
+            {
+                if (Owns(ch, ExpDrink)) flags[0] = 1;
+                if (Owns(ch, MitoDrink)) flags[1] = 1;
+                if (Owns(ch, ItemDrink)) flags[7] = 1;
+            }
             try
             {
                 var parts = (RiceServer.Config.BonusUpdateFlags ?? "").Split(',');
-                for (int i = 0; i < 9 && i < parts.Length; i++) { int f; if (int.TryParse(parts[i].Trim(), out f)) flags[i] = f; }
+                for (int i = 0; i < 9 && i < parts.Length; i++) { int f; if (int.TryParse(parts[i].Trim(), out f) && f != 0) flags[i] = f; }
             }
             catch (Exception) { }
             var pk = new RicePacket(1501);
@@ -419,7 +427,7 @@ namespace Rice.Server.Packets.Game
             ack.Writer.Write(0);
             ack.Writer.Write(0);
             c.Send(ack);
-            if (IsDrink(v)) SendUseAck(c, v);
+            if (IsDrink(v)) { SendUseAck(c, v); SendBonusFlags(c, ch); }
             if (ccPaid > 0) GetMyHancoinTo(c);
             AfterChange(c, ch, v.Car);
             Log.WriteLine("Drift shop: {0} comprou {1} ({2}) para sempre por {3} mito e {4} CC{5}.", ch.Name, s.market, uid,
