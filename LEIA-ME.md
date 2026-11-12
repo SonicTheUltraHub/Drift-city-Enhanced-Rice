@@ -43,7 +43,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   (Cmd_GetImageAck 65).
 - Testado: o sticker registrado aparece na lista (aba All, pagina 1/1). Corrigido: a imagem nao carregava porque o
   jogo pede a imagem pela chave em @8/@0xc da entrada (agora o id do sticker). Tipo 2 = todos, 3 = so os do corredor.
-- A imagem vai sempre na maior (128 px); com a de 32 px o sticker ficava borrado no carro.
+- A imagem vai no tamanho que o jogo pede (0 = 32 px, 1 = 64, 2 = 128). Mandar sempre a de 128 fechava o jogo na aba
+  Sticker (a miniatura da lista e de 32 px).
 - `StickerSystem` (true): liga o 5o aviso do BonusUpdate. Sem ele o jogo sempre dizia que a cola estava vencida e
   recusava a compra do sticker ("You must have the Sticker Adhesive Coating Spray"), mesmo com a cola valida.
 - Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
