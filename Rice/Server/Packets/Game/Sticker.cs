@@ -110,7 +110,8 @@ namespace Rice.Server.Packets.Game
             {
                 // @4 = tamanho pedido (0 = 32 px da lista, 1 = 64, 2 = 128). Mandar a de 128 quando o jogo pede a de 32 fechava
                 // o jogo na aba Sticker (a imagem nao cabe no espaco da miniatura).
-                int idx = a4 >= 0 && a4 <= 2 ? a4 : 0;
+                // A crash da aba Sticker era a L1 com 10 camadas, nao o tamanho: vai sempre a maior (128 px), mais nitida no carro.
+                int idx = 2;
                 for (int i = idx; i >= 0 && img == null; i--) img = ReadImage(r.Id, i);
                 if (img == null) for (int i = 0; i < 3 && img == null; i++) img = ReadImage(r.Id, i);
                 if (img != null) r.Downloads++;
@@ -123,6 +124,7 @@ namespace Rice.Server.Packets.Game
                 if (logs++ < 20) Log.WriteLine("Sticker: imagem {0} nao encontrada.", a2);
                 return;
             }
+            if (logs++ < 30) Log.WriteLine("Sticker: imagem {0} ({1} bytes, md5 {2}).", r.Id, img.Length, Md5(img));
             const int chunk = 2048;
             for (int off = 0; off < img.Length; off += chunk)
             {
@@ -178,13 +180,58 @@ namespace Rice.Server.Packets.Game
             Dump(packet, "MyStickerList 1350");
             // Cmd_MyStickerListAck (1351, DriftCity.exe 0x532550 / 0x779ff0): u32 quantidade, u32 0x40000 (= lista nova),
             // 64 bytes por sticker. Vazia por enquanto; antes nao tinha resposta.
+            var ch = packet.Sender.Player != null ? packet.Sender.Player.ActiveCharacter : null;
+            List<byte[]> list;
+            lock (Sync) list = ch != null ? AttachedOf((long) ch.CID).ToList() : new List<byte[]>();
             var ack = new RicePacket(1351);
-            ack.Writer.Write(0);
+            ack.Writer.Write(list.Count);
             ack.Writer.Write(0x40000);
+            foreach (var e in list) ack.Writer.Write(e);
             packet.Sender.Send(ack);
         }
         [RicePacket(1352, RiceServer.ServerType.Game)]
-        public static void Attach(RicePacket packet) { Dump(packet, "AttachSticker 1352"); }
+        public static void Attach(RicePacket packet)
+        {
+            var b = packet.Buffer ?? new byte[0];
+            Log.WriteLine("Sticker: colar no carro 1352 ({0} bytes): {1}", b.Length, Hex(b, 182));
+            var ch = packet.Sender.Player != null ? packet.Sender.Player.ActiveCharacter : null;
+            if (ch == null || b.Length < 0x24) return;
+            // 1352 (montado pelo jogo com o 79): @0, @4 24 bytes de posicao (lugar/giro/tamanho), @0x1c, @0x20, @0x24 wchar[32],
+            // @0x64, @0x68, @0x6c wchar[32], @0xac, @0xb0. O id do sticker e o valor que bate com um registrado.
+            int[] cand = { BitConverter.ToInt32(b, 0), BitConverter.ToInt32(b, 0x1c), BitConverter.ToInt32(b, 0x20) };
+            int sid;
+            lock (Sync) sid = cand.FirstOrDefault(v => Recs().Any(rr => rr.Id == v));
+            if (sid == 0) sid = cand[0];
+            int car = ch.Vehicle != null ? ch.Vehicle.CarID : 0;
+            // entrada da "meus stickers" (64 bytes, DriftCity.exe 0x77c3e0 / 0x5577f0): @0 carro, @4 id, @0x28 posicao (24)
+            var e = new byte[64];
+            Array.Copy(BitConverter.GetBytes(car), 0, e, 0, 4);
+            Array.Copy(BitConverter.GetBytes(sid), 0, e, 4, 4);
+            Array.Copy(b, 4, e, 0x28, 24);
+            long price = Math.Max(0, RiceServer.Config.StickerPrice);
+            bool paid = price == 0 || ch.SpendMito((ulong) price);
+            if (paid)
+            {
+                lock (Sync)
+                {
+                    var list = AttachedOf((long) ch.CID);
+                    list.RemoveAll(x => BitConverter.ToInt32(x, 0) == car && BitConverter.ToInt32(x, 4) == sid);
+                    list.Add(e);
+                    SaveAttached();
+                }
+                StickerRec r;
+                lock (Sync) { r = Recs().FirstOrDefault(x => x.Id == sid); if (r != null) { r.Downloads++; SaveRecs(); } }
+                Log.WriteLine("Sticker: {0} colou o sticker {1} no carro {2} (-{3} mito).", ch.Name, sid, car, price);
+            }
+            // Cmd_AttachStickerAck (1353, 0x532260, 0x5e bytes): u32, u16, entrada de 64 bytes, i64 mito (soma no seu mito), 16 bytes
+            var ack = new RicePacket(1353);
+            ack.Writer.Write(paid ? 1 : 0);
+            ack.Writer.Write((ushort) 1);
+            ack.Writer.Write(e);
+            ack.Writer.Write(paid ? -price : 0L);
+            ack.Writer.Write(new byte[16]);
+            packet.Sender.Send(ack);
+        }
         [RicePacket(1354, RiceServer.ServerType.Game)]
         public static void Detach(RicePacket packet) { Dump(packet, "DetachSticker 1354"); }
 
@@ -214,7 +261,11 @@ namespace Rice.Server.Packets.Game
                     try
                     {
                         Directory.CreateDirectory(ImgDir());
-                        for (int i = 0; i < pend.Images.Count; i++) File.WriteAllBytes(ImgPath(r.Id, i), pend.Images[i]);
+                        for (int i = 0; i < pend.Images.Count; i++)
+                        {
+                            File.WriteAllBytes(ImgPath(r.Id, i), pend.Images[i]);
+                            Log.WriteLine("Sticker: imagem {0}_{1} salva ({2} bytes, md5 {3}).", r.Id, i, pend.Images[i].Length, Md5(pend.Images[i]));
+                        }
                         list.Add(r);
                         SaveRecs();
                         Log.WriteLine("Sticker: \"{0}\" de {1} registrado (id {2}, {3} imagem(ns)).", r.Name, r.Owner, r.Id, r.Images);
@@ -226,6 +277,54 @@ namespace Rice.Server.Packets.Game
             var ack = new RicePacket(72);
             ack.Writer.Write(new byte[0x4c]);
             packet.Sender.Send(ack);
+        }
+
+        // 76 StickerReportAttach (lobby): o "Purchase" de um sticker. A resposta 79 (Cmd_StickerReportAttachAck, 0x53d350,
+        // 0xbe bytes) faz o jogo mandar o 1352 (colar no carro) para o servidor do jogo com os campos dela.
+        [RicePacket(76, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
+        public static void ReportAttach(RicePacket packet)
+        {
+            var b = packet.Buffer ?? new byte[0];
+            Log.WriteLine("Sticker: comprar 76 ({0} bytes): {1}", b.Length, Hex(b, 200));
+            var o = new byte[188];
+            Array.Copy(b, o, Math.Min(b.Length, o.Length));
+            var ack = new RicePacket(79);
+            ack.Writer.Write(o);
+            packet.Sender.Send(ack);
+        }
+
+        // 95 DeleteStickerCatalog: apagar um sticker registrado (so registra no log por enquanto)
+        [RicePacket(95, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
+        public static void DeleteCatalog(RicePacket packet) { Dump(packet, "DeleteStickerCatalog 95"); }
+
+        // ---- stickers colados nos carros (save/stickers_carros.json: cid -> entradas de 64 bytes em base64) ----------
+        static Dictionary<long, List<byte[]>> attached;
+        static List<byte[]> AttachedOf(long cid)
+        {
+            if (attached == null)
+            {
+                attached = new Dictionary<long, List<byte[]>>();
+                try
+                {
+                    var p = Paths.SaveFile("stickers_carros.json");
+                    if (File.Exists(p))
+                        foreach (var kv in JsonConvert.DeserializeObject<Dictionary<long, List<string>>>(File.ReadAllText(p)))
+                            attached[kv.Key] = kv.Value.Select(Convert.FromBase64String).ToList();
+                }
+                catch (Exception ex) { Log.WriteError("stickers_carros.json: " + ex.Message); }
+            }
+            List<byte[]> l;
+            if (!attached.TryGetValue(cid, out l)) attached[cid] = l = new List<byte[]>();
+            return l;
+        }
+        static void SaveAttached()
+        {
+            try
+            {
+                File.WriteAllText(Paths.SaveFile("stickers_carros.json"),
+                    JsonConvert.SerializeObject(attached.ToDictionary(k => k.Key, k => k.Value.Select(Convert.ToBase64String).ToList()), Formatting.Indented));
+            }
+            catch (Exception ex) { Log.WriteError("stickers_carros.json: " + ex.Message); }
         }
 
         // ---- stickers registrados (save/stickers.json + save/stickers/<id>_<n>.dds) ---------------------------------
@@ -276,6 +375,11 @@ namespace Rice.Server.Packets.Game
         {
             try { File.WriteAllText(Paths.SaveFile("stickers.json"), JsonConvert.SerializeObject(recs, Formatting.Indented)); }
             catch (Exception ex) { Log.WriteError("stickers.json: " + ex.Message); }
+        }
+
+        static string Md5(byte[] d)
+        {
+            using (var m = System.Security.Cryptography.MD5.Create()) return BitConverter.ToString(m.ComputeHash(d), 0, 4).Replace("-", "");
         }
 
         static byte[] W(string text, int size)
