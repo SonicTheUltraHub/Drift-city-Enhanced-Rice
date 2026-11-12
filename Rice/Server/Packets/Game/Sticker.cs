@@ -108,7 +108,7 @@ namespace Rice.Server.Packets.Game
             byte[] img = null;
             if (r != null)
             {
-                int idx = a4 >= 0 && a4 <= 2 ? a4 : a5 >= 0 && a5 <= 2 ? a5 : 2;
+                int idx = 2;   // a maior (128 px): com a de 32 o sticker ficava borrado no carro
                 for (int i = idx; i >= 0 && img == null; i--) img = ReadImage(r.Id, i);
                 if (img == null) for (int i = 0; i < 3 && img == null; i++) img = ReadImage(r.Id, i);
                 if (img != null) r.Downloads++;

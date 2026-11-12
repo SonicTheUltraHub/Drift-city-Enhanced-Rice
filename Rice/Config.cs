@@ -540,6 +540,8 @@ namespace Rice
         // jogo ainda sem nome (teste: ligar um por vez).
         // Prazo (dias) que o servidor informa ao jogo para drinks e cola de sticker (renovado a cada login, nunca vence).
         public int VsTimedDays = 90;
+        // Liga o sistema de sticker no jogo (5o aviso do BonusUpdate): sem ele a cola sempre aparece vencida.
+        public bool StickerSystem = true;
         public string BonusUpdateFlags = "0,0,0,0,0,0,0,0,0";
         public double PartyChaseTeleportSeconds = 10; // HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)
         public double CityBotFarSnapSeconds = 8;      // seguindo: longe do lugar dele por N s, pula para o lugar            // party: derrapa e faz fumaca onde voce derrapou

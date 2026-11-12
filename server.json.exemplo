@@ -422,6 +422,7 @@
   "PartyBotsCopyMyState": true,
   "BotsDriveAnim": true,
   "VsTimedDays": 90,
+  "StickerSystem": true,
   "BonusUpdateFlags": "0,0,0,0,0,0,0,0,0",
   "PartyHuvContact": 4,
   "CityHuvHits": true,

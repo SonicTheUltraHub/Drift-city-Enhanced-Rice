@@ -332,6 +332,10 @@ namespace Rice.Server.Packets.Game
                 if (Owns(ch, MitoDrink)) flags[1] = 1;
                 if (Owns(ch, ItemDrink)) flags[7] = 1;
             }
+            // 5o: liga o sistema de sticker. Desligado o jogo SEMPRE diz "adhesive spray has expired" (0x557598) e nao deixa
+            // comprar sticker; ligado ele confere a cola de verdade. Fechava o jogo so enquanto as listas de sticker (74/1351)
+            // ficavam sem resposta (Atualizacao 212 responde).
+            if (RiceServer.Config.StickerSystem) flags[4] = 1;
             try
             {
                 var parts = (RiceServer.Config.BonusUpdateFlags ?? "").Split(',');
