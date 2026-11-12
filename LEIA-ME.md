@@ -41,6 +41,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - A lista de stickers (Cmd_StickerListAck 74) agora vem com os registrados: "meus" (tipo 2, pelo nome do corredor) e
   os da comunidade (todos), com paginas. Quando o jogo pede a imagem (GetImage 64), o servidor manda em pedacos
   (Cmd_GetImageAck 65).
+- Testado: o sticker registrado aparece na lista (aba All, pagina 1/1). Corrigido: a imagem nao carregava porque o
+  jogo pede a imagem pela chave em @8/@0xc da entrada (agora o id do sticker). Tipo 2 = todos, 3 = so os do corredor.
 - Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
   confirmacao; o log mostra "Sticker: lista ..." e os pedidos "GetImage 64" para ajustar.
 

@@ -54,7 +54,7 @@ namespace Rice.Server.Packets.Game
         {
             Dump(packet, "StickerList 73");
             var b = packet.Buffer ?? new byte[0];
-            // 73: u32 tipo (2 = de um corredor), u32, wchar nome (@8), ..., u32 pagina (@0x4c), u32 por pagina (@0x58)
+            // 73: u32 tipo (2 = todos, 3 = so os do corredor), u32, wchar nome (@8), ..., u32 pagina (@0x4c), u32 por pagina (@0x58)
             int type = b.Length >= 4 ? BitConverter.ToInt32(b, 0) : 0;
             string who = b.Length >= 0x28 ? Encoding.Unicode.GetString(b, 8, 0x20).Split('\0')[0] : "";
             int page = b.Length >= 0x50 ? BitConverter.ToInt32(b, 0x4c) : 1;
@@ -62,14 +62,15 @@ namespace Rice.Server.Packets.Game
             if (page < 1) page = 1;
             if (per < 1 || per > 50) per = 6;
             List<StickerRec> all;
-            lock (Sync) all = Recs().Where(r => type != 2 || string.IsNullOrEmpty(who) || string.Equals(r.Owner, who, StringComparison.OrdinalIgnoreCase))
+            lock (Sync) all = Recs().Where(r => type != 3 || string.IsNullOrEmpty(who) || string.Equals(r.Owner, who, StringComparison.OrdinalIgnoreCase))
                                     .OrderByDescending(r => r.Id).ToList();
             int pages = Math.Max(1, (all.Count + per - 1) / per);
             if (page > pages) page = pages;
             var shown = all.Skip((page - 1) * per).Take(per).ToList();
             // Cmd_StickerListAck (74, DriftCity.exe 0x53d270 / 0x6c9d60 / 0x6c68b0): 16 bytes de cabecalho (@4 e @8 vao para
             // a tela), u32 quantidade, 160 bytes por sticker:
-            //   @0 id, @4 0, @8 downloads, @0xc data, @0x10 wchar[32] nome, @0x50 categoria, @0x54/@0x58/@0x5c, @0x60 wchar[32] autor
+            //   @0 id, @4 0, @8/@0xc chave da imagem (o jogo pede a imagem com ela: GetImage @0xc/@0x10), @0x10 wchar[32] nome,
+            //   @0x50 categoria, @0x54, @0x58 downloads, @0x5c data, @0x60 wchar[32] autor
             var ack = new RicePacket(74);
             ack.Writer.Write(type);
             ack.Writer.Write(page);
@@ -80,13 +81,13 @@ namespace Rice.Server.Packets.Game
             {
                 ack.Writer.Write(r.Id);
                 ack.Writer.Write(0);
-                ack.Writer.Write(r.Downloads);
-                ack.Writer.Write((int) r.Date);
+                ack.Writer.Write(r.Id);
+                ack.Writer.Write(0);
                 ack.Writer.Write(W(r.Name, 0x40));
                 ack.Writer.Write(r.Cat);
                 ack.Writer.Write(0);
-                ack.Writer.Write(0);
-                ack.Writer.Write(0);
+                ack.Writer.Write(r.Downloads);
+                ack.Writer.Write((int) r.Date);
                 ack.Writer.Write(W(r.Owner, 0x40));
             }
             packet.Sender.Send(ack);
