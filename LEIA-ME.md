@@ -47,6 +47,9 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   Sticker (a miniatura da lista e de 32 px).
 - `StickerSystem` (true): liga o 5o aviso do BonusUpdate. Sem ele o jogo sempre dizia que a cola estava vencida e
   recusava a compra do sticker ("You must have the Sticker Adhesive Coating Spray"), mesmo com a cola valida.
+- **Crash na aba Sticker da Drift Shop:** era a L1 com 10 stickers (Atualizacao 205). A tela so tem 6 camadas; com o
+  sistema de sticker ligado o jogo montava 10 e fechava. O `DriftCity.exe` agora da **6 com a L1** (byte em 0x6e59df).
+  **Instale de novo** para trocar o DriftCity.exe.
 - Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
   confirmacao; o log mostra "Sticker: lista ..." e os pedidos "GetImage 64" para ajustar.
 
