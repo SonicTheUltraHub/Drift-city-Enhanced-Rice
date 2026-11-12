@@ -62,6 +62,7 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - Testado: as miniaturas agora aparecem certas.
 - **Tirar o sticker do carro** (Delete Mode do inventario, 1354): o servidor tira e responde o 1355. A resposta do
   colar (1353) agora leva quantos stickers ficam no carro (ia sempre 1; pode ser o que bagunçava a edicao).
+- Nome do sticker no inventario: o jogo le 1 byte por letra (ia em wchar e so aparecia a 1a letra).
 - A imagem vai sempre na maior (128 px). O log mostra o md5 de cada imagem salva e enviada (para achar a miniatura trocada).
 - Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
   confirmacao; o log mostra "Sticker: lista ..." e os pedidos "GetImage 64" para ajustar.

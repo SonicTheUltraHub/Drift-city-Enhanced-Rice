@@ -455,13 +455,17 @@ namespace Rice.Server.Packets.Game
             catch (Exception ex) { Log.WriteError("stickers.json: " + ex.Message); }
         }
 
-        // nome do sticker na entrada de 64 bytes (@8, wchar[16]): sem ele o item aparecia sem nome no inventario
+        // nome do sticker na entrada de 64 bytes (@8, 32 bytes): o jogo le como texto de 1 byte por letra (com wchar so
+        // aparecia a 1a letra: "b", "g")
         static void NameInto(byte[] e, int sid)
         {
             StickerRec r;
             lock (Sync) r = Recs().FirstOrDefault(x => x.Id == sid);
             if (r == null) return;
-            Array.Copy(W(r.Name, 0x20), 0, e, 8, 0x20);
+            var n = new byte[0x20];
+            var t = Encoding.Default.GetBytes(r.Name ?? "");
+            Array.Copy(t, n, Math.Min(t.Length, 0x1f));
+            Array.Copy(n, 0, e, 8, 0x20);
         }
 
         static string Md5(byte[] d)
