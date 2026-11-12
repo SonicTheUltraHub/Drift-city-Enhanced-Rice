@@ -303,6 +303,9 @@ namespace Rice.Server.Packets.Game
                 bool fixedGlue = false;
                 foreach (var g in all.Where(x => (CatOf(x) == 20 || IsDrink(x)) && (x.State != 0 || x.Car != 0)).ToList())
                 { g.Car = 0; g.State = 0; fixedGlue = true; }
+                // drinks e cola repetidos (comprados mais de uma vez): fica so um de cada
+                foreach (var grp in all.Where(x => CatOf(x) == 20 || IsDrink(x)).GroupBy(x => x.Uid).Where(gr => gr.Count() > 1).ToList())
+                    foreach (var extra in grp.Skip(1).ToList()) { all.Remove(extra); fixedGlue = true; }
                 if (fixedGlue) Save();
                 items = all.ToList();
             }
@@ -378,6 +381,12 @@ namespace Rice.Server.Packets.Game
             Shop s;
             if (!Table().TryGetValue(uid, out s)) { Chat.SendSystemMessage(c, "Drift shop: item " + uid + " nao existe."); return; }
             var car = ch.Garage.FirstOrDefault(x => x.CarID == carId) ?? ch.Vehicle;
+            // drink e cola nao acumulam (o efeito e o mesmo com 1 ou 3): nao deixa comprar repetido
+            if ((s.cat == 15 || s.cat == 17 || s.cat == 28 || s.cat == 20) && Owns(ch, uid))
+            {
+                Chat.SendSystemMessage(c, string.Format("Drift shop: voce ja tem {0}. Ele vale enquanto estiver no inventario.", s.market));
+                return;
+            }
 
             long mito, cc;
             Price(s, out mito, out cc);

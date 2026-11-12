@@ -2459,5 +2459,7 @@
 "Drift shop: usar item": "Drift shop: use item",
 " (seu corredor) ganhou +": " (your racer) earned +",
 "Drift shop: drink no slot": "Drift shop: drink in slot",
-" (com drinks: exp x": " (with drinks: exp x"
+" (com drinks: exp x": " (with drinks: exp x",
+"Drift shop: voce ja tem ": "Drift shop: you already have ",
+". Ele vale enquanto estiver no inventario.": ". It works while it is in your inventory."
 }

@@ -39,6 +39,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - Os icones do canto inferior direito (EXP +30%, MITO +50%, ITEM x2) vem do Cmd_BonusUpdate (1501). Testado no jogo:
   1o aviso = EXP, 2o = MITO, 8o = ITEM. O servidor agora liga sozinho os dos drinks que o personagem tem (ao carregar
   a Drift Shop e ao comprar um drink). Nao precisa mais do `BonusUpdateFlags` no server.json (ele so liga avisos a mais).
+- Drinks e cola nao acumulam: comprar de novo um que ja tem e recusado ("voce ja tem ..."), e os repetidos comprados
+  antes somem ao abrir a Drift Shop (fica 1 de cada).
 - O 5o aviso continua desligado: libera o sticker, mas fecha o jogo na aba Sticker ate a lista de stickers ficar pronta.
 
 **Atualizacao 210 — Sticker liberado (BonusUpdate) e drinks no slot:**
