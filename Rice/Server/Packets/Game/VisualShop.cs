@@ -170,7 +170,9 @@ namespace Rice.Server.Packets.Game
             // O mesmo vale para os drinks (EXP 15, MITO 17, Item 28): sem prazo o jogo nao mostra o icone do efeito no canto
             // inferior direito e trata como vencido.
             bool glue = TimedCats.Contains(CatOf(v));
-            w.Write(glue ? 12000 : 0);   // periodo 0 = para sempre
+            // Prazo como o da loja original (7/30/90 dias), nao 12000: o jogo tambem conta em HORAS num numero de 16 bits
+            // (0x785750: dias x 24), e 12000 dias estourava. A data de compra vai sempre como "agora", entao nunca vence.
+            w.Write(glue ? Math.Max(1, Math.Min(1300, RiceServer.Config.VsTimedDays)) : 0);   // periodo 0 = para sempre
             w.Write(0);
             w.Write(glue ? (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds() : v.Ctime);
             w.Write(new byte[48]);   // assists / pontos do Aero

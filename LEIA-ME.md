@@ -44,6 +44,9 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   stickers registrados, que o servidor ainda nao responde). Por isso o padrao voltou para tudo 0 ("0,0,0,0,0,0,0,0,0").
 - **Listas de sticker:** o servidor agora responde a lista de stickers (74) e a "meus stickers" (1351), vazias por
   enquanto (antes nao respondia nada; provavel causa do crash com o 5o aviso ligado).
+- **Prazo dos drinks e da cola:** ia como 12000 dias; o jogo conta em horas num numero de 16 bits e estourava. Agora vai
+  90 dias (`VsTimedDays`), como na loja original, renovado a cada login (nunca vence). Pode ser o que faltava para o
+  icone do drink aparecer no HUD.
 - **Drinks:** valem so por estar no inventario (aba Drift Item), nao nos slots FIELD/BATTLE. O efeito e do servidor
   (+30% exp, +50% mito, itens em dobro) e ja vale com o drink no inventario. O icone no canto ainda nao aparece.
 
