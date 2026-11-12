@@ -42,6 +42,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   (os outros 8 avisos sao bonus do jogo ainda sem nome; da para testar ligando um por vez).
 - **Atencao:** ligar o 5o aviso fez o jogo fechar (crash) ao abrir a aba Sticker (o jogo passa a esperar a lista de
   stickers registrados, que o servidor ainda nao responde). Por isso o padrao voltou para tudo 0 ("0,0,0,0,0,0,0,0,0").
+- **Listas de sticker:** o servidor agora responde a lista de stickers (74) e a "meus stickers" (1351), vazias por
+  enquanto (antes nao respondia nada; provavel causa do crash com o 5o aviso ligado).
 - **Drinks:** valem so por estar no inventario (aba Drift Item), nao nos slots FIELD/BATTLE. O efeito e do servidor
   (+30% exp, +50% mito, itens em dobro) e ja vale com o drink no inventario. O icone no canto ainda nao aparece.
 

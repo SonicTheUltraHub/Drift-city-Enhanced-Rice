@@ -41,7 +41,17 @@ namespace Rice.Server.Packets.Game
             Log.WriteLine("Sticker: {0} ({1} bytes): {2}", name, b.Length, Hex(b, 128));
         }
         [RicePacket(73, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
-        public static void List(RicePacket packet) { Dump(packet, "StickerList 73"); }
+        public static void List(RicePacket packet)
+        {
+            Dump(packet, "StickerList 73");
+            // Cmd_StickerListAck (74, DriftCity.exe 0x53d270 / 0x6c9d60): 16 bytes de cabecalho, u32 quantidade, 160 bytes
+            // por sticker. Por enquanto a lista vai vazia (o formato das entradas ainda nao foi decifrado); antes o jogo
+            // ficava sem resposta nenhuma.
+            var ack = new RicePacket(74);
+            ack.Writer.Write(new byte[16]);
+            ack.Writer.Write(0);
+            packet.Sender.Send(ack);
+        }
         [RicePacket(64, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
         public static void GetImage(RicePacket packet) { Dump(packet, "GetImage 64"); }
         [RicePacket(67, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
@@ -51,7 +61,16 @@ namespace Rice.Server.Packets.Game
         [RicePacket(77, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
         public static void Search(RicePacket packet) { Dump(packet, "StickerSearch 77"); }
         [RicePacket(1350, RiceServer.ServerType.Game)]
-        public static void MyList(RicePacket packet) { Dump(packet, "MyStickerList 1350"); }
+        public static void MyList(RicePacket packet)
+        {
+            Dump(packet, "MyStickerList 1350");
+            // Cmd_MyStickerListAck (1351, DriftCity.exe 0x532550 / 0x779ff0): u32 quantidade, u32 0x40000 (= lista nova),
+            // 64 bytes por sticker. Vazia por enquanto; antes nao tinha resposta.
+            var ack = new RicePacket(1351);
+            ack.Writer.Write(0);
+            ack.Writer.Write(0x40000);
+            packet.Sender.Send(ack);
+        }
         [RicePacket(1352, RiceServer.ServerType.Game)]
         public static void Attach(RicePacket packet) { Dump(packet, "AttachSticker 1352"); }
         [RicePacket(1354, RiceServer.ServerType.Game)]
