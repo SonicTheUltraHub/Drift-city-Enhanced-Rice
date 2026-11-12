@@ -226,15 +226,42 @@ namespace Rice.Server.Packets.Game
             }
             // Cmd_AttachStickerAck (1353, 0x532260, 0x5e bytes): u32, u16, entrada de 64 bytes, i64 mito (soma no seu mito), 16 bytes
             var ack = new RicePacket(1353);
+            int onCar;
+            lock (Sync) onCar = AttachedOf((long) ch.CID).Count(x => BitConverter.ToInt32(x, 0) == car);
             ack.Writer.Write(paid ? 1 : 0);
-            ack.Writer.Write((ushort) 1);
+            ack.Writer.Write((ushort) onCar);   // quantos stickers ficam no carro
             ack.Writer.Write(e);
             ack.Writer.Write(paid ? -price : 0L);
             ack.Writer.Write(new byte[16]);
             packet.Sender.Send(ack);
         }
         [RicePacket(1354, RiceServer.ServerType.Game)]
-        public static void Detach(RicePacket packet) { Dump(packet, "DetachSticker 1354"); }
+        public static void Detach(RicePacket packet)
+        {
+            var b = packet.Buffer ?? new byte[0];
+            Dump(packet, "DetachSticker 1354");
+            var ch = packet.Sender.Player != null ? packet.Sender.Player.ActiveCharacter : null;
+            if (ch == null || b.Length < 4) return;
+            // 1354: u32 id do sticker (Delete Mode do inventario / tirar do carro)
+            int sid = BitConverter.ToInt32(b, 0);
+            int car = ch.Vehicle != null ? ch.Vehicle.CarID : 0;
+            int left;
+            lock (Sync)
+            {
+                var list = AttachedOf((long) ch.CID);
+                int n = list.RemoveAll(x => BitConverter.ToInt32(x, 4) == sid && BitConverter.ToInt32(x, 0) == car);
+                if (n == 0) list.RemoveAll(x => BitConverter.ToInt32(x, 4) == sid);
+                left = list.Count(x => BitConverter.ToInt32(x, 0) == car);
+                SaveAttached();
+            }
+            Log.WriteLine("Sticker: {0} tirou o sticker {1} do carro {2}.", ch.Name, sid, car);
+            // Cmd_DetachStickerAck (1355, 0x532440, 0xc bytes): u32 id, u16 quantos ficaram no carro, u32
+            var ack = new RicePacket(1355);
+            ack.Writer.Write(sid);
+            ack.Writer.Write((ushort) left);
+            ack.Writer.Write(0);
+            packet.Sender.Send(ack);
+        }
 
         [RicePacket(71, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
         public static void Upload(RicePacket packet)

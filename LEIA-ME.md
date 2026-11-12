@@ -59,6 +59,9 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   (DriftCity.exe 0x6e84a3: id & ~3 | 1), entao 100001, 100002 e 100003 viravam o mesmo. Os ids agora sao 4n+1
   (100001, 100005, 100009...); os que ja existiam sao renumerados sozinhos (imagens e stickers colados junto).
 - **Delete** na lista apaga o sticker registrado (95). Os que ja estao colados nos carros continuam.
+- Testado: as miniaturas agora aparecem certas.
+- **Tirar o sticker do carro** (Delete Mode do inventario, 1354): o servidor tira e responde o 1355. A resposta do
+  colar (1353) agora leva quantos stickers ficam no carro (ia sempre 1; pode ser o que bagunçava a edicao).
 - A imagem vai sempre na maior (128 px). O log mostra o md5 de cada imagem salva e enviada (para achar a miniatura trocada).
 - Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
   confirmacao; o log mostra "Sticker: lista ..." e os pedidos "GetImage 64" para ajustar.
