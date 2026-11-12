@@ -55,6 +55,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
   (vai na lista "meus stickers" 1351 no login). Em teste: o formato do 76 ainda nao foi visto (o log mostra tudo).
 - Testado: comprar e colar funciona (cobra 100 mito, fica no carro e no inventario). Corrigido: o item ia sem nome
   (o nome do sticker vai em @8 da entrada de 64 bytes).
+- **Miniaturas todas iguais:** o jogo guarda a imagem pelo id com os 2 bits de baixo trocados pelo tamanho
+  (DriftCity.exe 0x6e84a3: id & ~3 | 1), entao 100001, 100002 e 100003 viravam o mesmo. Os ids agora sao 4n+1
+  (100001, 100005, 100009...); os que ja existiam sao renumerados sozinhos (imagens e stickers colados junto).
+- **Delete** na lista apaga o sticker registrado (95). Os que ja estao colados nos carros continuam.
 - A imagem vai sempre na maior (128 px). O log mostra o md5 de cada imagem salva e enviada (para achar a miniatura trocada).
 - Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
   confirmacao; o log mostra "Sticker: lista ..." e os pedidos "GetImage 64" para ajustar.

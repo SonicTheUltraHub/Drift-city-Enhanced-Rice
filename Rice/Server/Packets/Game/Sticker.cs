@@ -251,7 +251,7 @@ namespace Rice.Server.Packets.Game
                     var list = Recs();
                     var r = new StickerRec
                     {
-                        Id = list.Count == 0 ? 100001 : list.Max(x => x.Id) + 1,
+                        Id = NextId(list),
                         OwnerCid = ch != null ? (long) ch.CID : 0,
                         Owner = ch != null ? ch.Name : "",
                         Name = string.IsNullOrEmpty(pend.Name) ? "sticker" : pend.Name,
@@ -294,9 +294,24 @@ namespace Rice.Server.Packets.Game
             packet.Sender.Send(ack);
         }
 
-        // 95 DeleteStickerCatalog: apagar um sticker registrado (so registra no log por enquanto)
+        // 95 DeleteStickerCatalog: u32 tipo, u32, u32 id, u32 - apaga o sticker registrado (os ja colados nos carros ficam)
         [RicePacket(95, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
-        public static void DeleteCatalog(RicePacket packet) { Dump(packet, "DeleteStickerCatalog 95"); }
+        public static void DeleteCatalog(RicePacket packet)
+        {
+            var b = packet.Buffer ?? new byte[0];
+            Dump(packet, "DeleteStickerCatalog 95");
+            if (b.Length < 12) return;
+            int id = BitConverter.ToInt32(b, 8);
+            lock (Sync)
+            {
+                var list = Recs();
+                var r = list.FirstOrDefault(x => x.Id == id);
+                if (r == null) return;
+                list.Remove(r);
+                SaveRecs();
+                Log.WriteLine("Sticker: \"{0}\" (id {1}) apagado da lista.", r.Name, r.Id);
+            }
+        }
 
         // ---- stickers colados nos carros (save/stickers_carros.json: cid -> entradas de 64 bytes em base64) ----------
         static Dictionary<long, List<byte[]>> attached;
@@ -369,7 +384,42 @@ namespace Rice.Server.Packets.Game
             }
             catch (Exception ex) { Log.WriteError("stickers.json: " + ex.Message); }
             if (recs == null) recs = new List<StickerRec>();
+            FixIds();
             return recs;
+        }
+
+        // O jogo guarda a imagem pelo id com os 2 bits de baixo trocados pelo tamanho (DriftCity.exe 0x6e84a3: id & ~3 | 1).
+        // Com ids seguidos (100001, 100002, 100003) todos viravam 100001 e todas as miniaturas mostravam a mesma imagem.
+        // Os ids agora sao 4n+1 (100001, 100005, 100009...).
+        static int NextId(List<StickerRec> list)
+        {
+            int max = list.Count == 0 ? 99997 : list.Max(x => x.Id);
+            return ((max + 3) / 4) * 4 + 1 > max ? ((max + 3) / 4) * 4 + 1 : ((max + 3) / 4) * 4 + 5;
+        }
+
+        static void FixIds()
+        {
+            var bad = recs.Where(r => (r.Id & 3) != 1).ToList();
+            if (bad.Count == 0) return;
+            foreach (var r in bad)
+            {
+                int old = r.Id;
+                r.Id = NextId(recs);
+                for (int i = 0; i < 3; i++)
+                    try { if (File.Exists(ImgPath(old, i))) { if (File.Exists(ImgPath(r.Id, i))) File.Delete(ImgPath(r.Id, i)); File.Move(ImgPath(old, i), ImgPath(r.Id, i)); } }
+                    catch (Exception ex) { Log.WriteError("Sticker: " + ex.Message); }
+                AttachedOf(0);
+                if (attached.ContainsKey(0) && attached[0].Count == 0) attached.Remove(0);
+                foreach (var l in attached.Values)
+                    foreach (var e in l)
+                    {
+                        if (BitConverter.ToInt32(e, 4) == old) Array.Copy(BitConverter.GetBytes(r.Id), 0, e, 4, 4);
+                        if (BitConverter.ToInt32(e, 0x28) == old) Array.Copy(BitConverter.GetBytes(r.Id), 0, e, 0x28, 4);
+                    }
+                Log.WriteLine("Sticker: id {0} -> {1} (miniatura certa).", old, r.Id);
+            }
+            SaveRecs();
+            SaveAttached();
         }
 
         static void SaveRecs()
