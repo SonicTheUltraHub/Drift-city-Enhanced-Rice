@@ -186,7 +186,7 @@ namespace Rice.Server.Packets.Game
             var ack = new RicePacket(1351);
             ack.Writer.Write(list.Count);
             ack.Writer.Write(0x40000);
-            foreach (var e in list) ack.Writer.Write(e);
+            foreach (var e in list) { NameInto(e, BitConverter.ToInt32(e, 4)); ack.Writer.Write(e); }
             packet.Sender.Send(ack);
         }
         [RicePacket(1352, RiceServer.ServerType.Game)]
@@ -208,6 +208,7 @@ namespace Rice.Server.Packets.Game
             Array.Copy(BitConverter.GetBytes(car), 0, e, 0, 4);
             Array.Copy(BitConverter.GetBytes(sid), 0, e, 4, 4);
             Array.Copy(b, 4, e, 0x28, 24);
+            NameInto(e, sid);
             long price = Math.Max(0, RiceServer.Config.StickerPrice);
             bool paid = price == 0 || ch.SpendMito((ulong) price);
             if (paid)
@@ -375,6 +376,15 @@ namespace Rice.Server.Packets.Game
         {
             try { File.WriteAllText(Paths.SaveFile("stickers.json"), JsonConvert.SerializeObject(recs, Formatting.Indented)); }
             catch (Exception ex) { Log.WriteError("stickers.json: " + ex.Message); }
+        }
+
+        // nome do sticker na entrada de 64 bytes (@8, wchar[16]): sem ele o item aparecia sem nome no inventario
+        static void NameInto(byte[] e, int sid)
+        {
+            StickerRec r;
+            lock (Sync) r = Recs().FirstOrDefault(x => x.Id == sid);
+            if (r == null) return;
+            Array.Copy(W(r.Name, 0x20), 0, e, 8, 0x20);
         }
 
         static string Md5(byte[] d)

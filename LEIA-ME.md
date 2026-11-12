@@ -53,6 +53,8 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 - **Comprar e colar:** o "Purchase" manda o 76 (lobby); o servidor responde o 79 e o jogo manda o 1352 (colar no carro).
   O servidor cobra `StickerPrice` (100 mito), responde o 1353 e guarda o sticker colado em `save/stickers_carros.json`
   (vai na lista "meus stickers" 1351 no login). Em teste: o formato do 76 ainda nao foi visto (o log mostra tudo).
+- Testado: comprar e colar funciona (cobra 100 mito, fica no carro e no inventario). Corrigido: o item ia sem nome
+  (o nome do sticker vai em @8 da entrada de 64 bytes).
 - A imagem vai sempre na maior (128 px). O log mostra o md5 de cada imagem salva e enviada (para achar a miniatura trocada).
 - Em teste: o formato do cabecalho da lista e do pedido de imagem foi tirado do codigo do jogo, mas ainda sem
   confirmacao; o log mostra "Sticker: lista ..." e os pedidos "GetImage 64" para ajustar.
