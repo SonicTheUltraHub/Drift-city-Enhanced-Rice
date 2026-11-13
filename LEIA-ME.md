@@ -35,6 +35,11 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 213 — Sticker Glue L1 mostra os 6 stickers no carro:**
+- Com a L1 (a de mito) o editor ja deixava montar 6 camadas, mas o carro so desenhava a primeira (o segundo sticker
+  sumia, mesmo o servidor guardando os dois). O jogo tinha um segundo lugar com "L1 = 1 camada" (o que monta o carro);
+  agora tambem e 6 (byte em 0x557684 do `DriftCity.exe`). **Instale de novo** para trocar o DriftCity.exe.
+
 **Atualizacao 212 — Stickers registrados (1a parte):**
 - Registrar sticker agora salva: as 3 imagens (32, 64 e 128 px, DDS) vao para `save/stickers/<id>_<n>.dds` e o nome,
   autor, categoria e data para `save/stickers.json`.
