@@ -1383,6 +1383,13 @@ namespace Rice.Server.Packets.Game
                     {
                         var dc = rc.Characters.Find(bp.Cid);
                         if (dc != null && dc.Level > 0) bp.Level = dc.Level;
+                        // e o visual de agora (pintura, vidro, pecas compradas depois do login)
+                        var dv = dc != null ? rc.Vehicles.FirstOrDefault(x => x.CID == bp.Cid && x.CarID == dc.CurrentCarID) : null;
+                        if (dv != null && !bp.CustomLook)
+                        {
+                            var lk = VisualShop.LookOf(bp.Cid, dv.CarID, (uint) dv.Color);
+                            if (lk != null) { bp.Look = lk; if (lk.Paint != 0) bp.Color = lk.Paint; }
+                        }
                     }
                 }
                 catch (Exception) { }

@@ -35,6 +35,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 217 — Seu corredor na Battle Zone com o visual de agora:**
+- Seu corredor que corre como IA na Battle Zone pega a pintura, o vidro e as pecas que estao no carro dele agora (antes
+  ficava o visual de quando voce logou).
+
 **Atualizacao 216 — Cor do vidro (Tint) no seu carro e no seu corredor da party:**
 - O vidro comprado na Drift Shop > Tint nao mudava no carro: o servidor mandava a cor do vidro sempre 0. Agora vai a cor
   do vidro que esta no carro (na hora da compra e ao entrar no jogo).
