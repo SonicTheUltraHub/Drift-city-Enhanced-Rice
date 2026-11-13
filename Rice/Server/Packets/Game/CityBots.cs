@@ -2929,7 +2929,9 @@ namespace Rice.Server.Packets.Game
             BitConverter.GetBytes((ushort) 0).CopyTo(m, 4);     // 0 = carro de jogador (num. de objeto/HUV fica aqui)
             BitConverter.GetBytes((ushort) b.Car).CopyTo(m, 6);
             BitConverter.GetBytes(b.Color).CopyTo(m, 8);
-            if (b.Look != null && b.Look.Tint != 0) BitConverter.GetBytes(b.Look.Tint).CopyTo(m, 0x0c);   // vidro (XiCarAttr)
+            // vidro (XiCarAttr): o do bot; sem vidro proprio, o de fabrica (antes ficava o do movimento copiado, ou seja,
+            // o vidro do SEU carro aparecia em todos os bots)
+            BitConverter.GetBytes(b.Look != null && b.Look.Tint != 0 ? b.Look.Tint : VisualShop.DefaultTint).CopyTo(m, 0x0c);
             BitConverter.GetBytes(time).CopyTo(m, 0x14);
             if (parked) Array.Clear(m, 0x28, 0x10);
             // sem o volante/fumaca/freio do seu carro (BotsCopyMyState). Andando: o estado de "dirigindo reto" (rodas girando,

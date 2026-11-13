@@ -35,6 +35,14 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 218 — Vidro: bots com o vidro deles e cor certa no seu corredor-bot:**
+- Os bots da rua sem vidro proprio copiavam o vidro do SEU carro (trocar o vidro mudava o de todos). Agora usam o vidro
+  de fabrica.
+- Sem Tint no carro, o servidor manda o vidro de fabrica (antes mandava 0 e o jogo continuava com o vidro do corredor
+  anterior ao trocar de corredor).
+- Seu corredor como bot (rua, party, Battle Zone) aparecia com a cor do vidro trocada (vermelho virava azul): o valor da
+  cor ja vem no formato que o jogo usa e o servidor trocava vermelho com azul. Agora vai igual ao do seu carro.
+
 **Atualizacao 217 — Seu corredor na Battle Zone com o visual de agora:**
 - Seu corredor que corre como IA na Battle Zone pega a pintura, o vidro e as pecas que estao no carro dele agora (antes
   ficava o visual de quando voce logou).

@@ -587,7 +587,11 @@ namespace Rice.Server.Packets.Game
             return long.TryParse(t, out v) ? (uint) (v & 0xffffff) : 0u;
         }
 
-        // cor do vidro (Tint) no carro: 0x82RRGGBB como a pintura (0x83RRGGBB) no CarInfo; 0 = vidro normal
+        // vidro sem Tint comprado (o que o jogo usa de fabrica). Mandar 0 deixava o jogo com o vidro do corredor anterior.
+        public const uint DefaultTint = 0x82ccccccu;
+
+        // cor do vidro (Tint) no carro: 0x82RRGGBB como a pintura (0x83RRGGBB) no CarInfo. O jogo repete esse valor
+        // igualzinho no movimento do carro, entao os bots usam o mesmo (sem trocar R e B).
         public static uint TintOf(long cid, int carId)
         {
             List<VsItem> items;
@@ -599,7 +603,7 @@ namespace Rice.Server.Packets.Game
                 uint t = Rgb((v.Text ?? "").Trim());
                 if (t != 0) return 0x82000000u | t;
             }
-            return 0;
+            return DefaultTint;
         }
 
         public static Bots.BotLook LookOf(Rice.Game.Character ch, Rice.Game.Vehicle car)
@@ -618,7 +622,7 @@ namespace Rice.Server.Packets.Game
                 Shop sh;
                 if (!Table().TryGetValue(v.Uid, out sh)) continue;
                 string text = (v.Text ?? "").Trim();
-                if (sh.cat == 3) { uint t = Rgb(text); if (t != 0) look.Tint = Bots.Bgr(0x82000000u | t); continue; }
+                if (sh.cat == 3) { uint t = Rgb(text); if (t != 0) look.Tint = 0x82000000u | t; continue; }
                 int at;
                 if (!LookOffsets.TryGetValue(sh.cat, out at)) continue;
                 int n = sh.index;
