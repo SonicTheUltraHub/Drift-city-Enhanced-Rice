@@ -112,6 +112,7 @@ namespace Rice.Server.Core
             Ranking.Start();
 
             Log.WriteLine("RiceServer started.");
+            Rice.Game.Vehicle.TintFor = Rice.Server.Packets.Game.VisualShop.TintOf;
             Rice.Game.CityTraffic.Start();
             try
             {

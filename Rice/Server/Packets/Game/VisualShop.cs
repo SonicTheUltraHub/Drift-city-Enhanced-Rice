@@ -587,6 +587,21 @@ namespace Rice.Server.Packets.Game
             return long.TryParse(t, out v) ? (uint) (v & 0xffffff) : 0u;
         }
 
+        // cor do vidro (Tint) no carro: 0x82RRGGBB como a pintura (0x83RRGGBB) no CarInfo; 0 = vidro normal
+        public static uint TintOf(long cid, int carId)
+        {
+            List<VsItem> items;
+            lock (Sync) items = ItemsOfCid(cid).Where(x => x.State == OnCar && x.Car == carId).ToList();
+            foreach (var v in items)
+            {
+                Shop sh;
+                if (!Table().TryGetValue(v.Uid, out sh) || sh.cat != 3) continue;
+                uint t = Rgb((v.Text ?? "").Trim());
+                if (t != 0) return 0x82000000u | t;
+            }
+            return 0;
+        }
+
         public static Bots.BotLook LookOf(Rice.Game.Character ch, Rice.Game.Vehicle car)
         {
             return LookOf((long) ch.CID, car.CarID, car.Color);

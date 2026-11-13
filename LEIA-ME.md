@@ -35,6 +35,13 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 216 — Cor do vidro (Tint) no seu carro e no seu corredor da party:**
+- O vidro comprado na Drift Shop > Tint nao mudava no carro: o servidor mandava a cor do vidro sempre 0. Agora vai a cor
+  do vidro que esta no carro (na hora da compra e ao entrar no jogo).
+- Seu corredor que entra na party (ex.: SonicBR na party do Fernando) pega o visual de agora (pintura, vidro, pecas),
+  nao o de quando voce logou. Os stickers dele ainda nao aparecem (o jogo nao tem um jeito conhecido de receber os
+  stickers do carro de outro jogador; em estudo).
+
 **Atualizacao 215 — O mesmo sticker mais de uma vez no carro e pasta lida ao ligar o servidor:**
 - Colar o mesmo sticker de novo no mesmo carro (ex.: o gonhan nos dois lados) tirava o anterior. Agora cada colagem tem
   o seu proprio id: os dois ficam, e cada um sai sozinho no Delete Mode. Cada colagem cobra o `StickerPrice`.

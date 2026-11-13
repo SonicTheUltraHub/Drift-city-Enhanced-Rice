@@ -433,6 +433,21 @@ namespace Rice.Server.Packets.Game
                 p.Bots.Add(b.Cid);
             }
             Log.WriteLine("Party: {0} entrou na party de {1}.", b.Name, ch.Name);
+            if (b.IsAlt && !b.CustomLook)
+            {
+                // seu corredor: o visual de agora (pintura/vidro/pecas compradas depois do login)
+                try
+                {
+                    var altCh = AltCharacter(c.Player, b);
+                    var altCar = altCh != null ? altCh.Vehicle : null;
+                    if (altCar != null)
+                    {
+                        b.Look = VisualShop.LookOf((long) altCh.CID, altCar.CarID, altCar.Color);
+                        if (b.Look != null && b.Look.Paint != 0) b.Color = b.Look.Paint;
+                    }
+                }
+                catch (Exception ex) { Log.WriteError("Party: visual de " + b.Name + ": " + ex.Message); }
+            }
             SendPartyState(c);
             Bots.SayLater(c, 1200, "party", b.Name, b.Personality == "competitivo" ? "Partiu! Cria a sala que eu corro com voce."
                                                    : "Opa, to junto! Cria uma sala no Battle Zone que eu entro na corrida.");

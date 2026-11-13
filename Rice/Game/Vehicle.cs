@@ -21,6 +21,9 @@ namespace Rice.Game
         public float Mitron;
         public float Kms;
         public uint SlotType;
+        public long OwnerCid;
+        // cor do vidro (Drift Shop > Tint) do carro: 0x82RRGGBB (VisualShop.TintOf, ligado no RiceServer.Start)
+        public static Func<long, int, uint> TintFor;
 
         public VehicleUpgradeEntry VehicleUpgradeEntry;
         public VehicleListEntry VehicleListEntry;
@@ -34,6 +37,7 @@ namespace Rice.Game
             {
                 AuctionCount = (uint)dbVehicle.AuctionCount;
                 Color = (uint)dbVehicle.Color;
+                OwnerCid = dbVehicle.CID;
                 CarID = dbVehicle.CarID;
                 CarType = (uint)dbVehicle.CarType;
                 Grade = (uint)dbVehicle.Grade;
@@ -105,6 +109,12 @@ namespace Rice.Game
             return scaled < min ? min : scaled;
         }
 
+        uint TintOf()
+        {
+            try { return TintFor != null && OwnerCid != 0 ? TintFor(OwnerCid, CarID) : 0u; }
+            catch (Exception) { return 0u; }
+        }
+
         public CarInfo GetInfo()
         {
             return new CarInfo
@@ -122,6 +132,7 @@ namespace Rice.Game
                     SlotType = SlotType
                 },
                 Color = Color,
+                Color2 = TintOf(),
                 MitronCapacity = ScaledCapacity(VehicleUpgradeEntry),
                 MitronEfficiency = VehicleUpgradeEntry.MitronEfficiency * RiceServer.Config.FuelEfficiencyMultiplier
             };
