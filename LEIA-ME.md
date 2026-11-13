@@ -35,6 +35,18 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 214 — Pasta de stickers, stickers para todos os corredores e descricao da L1:**
+- **Pasta `stickers`** (ao lado do Rice.exe): cada sticker e uma pasta com `sticker.json` (nome, autor, id, downloads) e
+  as 3 imagens `32.dds`, `64.dds`, `128.dds`. Para passar stickers para alguem e so mandar a pasta; quem receber cola na
+  pasta `stickers` e ele aparece no jogo (sem reiniciar o servidor). Uma imagem solta (`.png`, `.jpg`, `.bmp`, `.gif`)
+  colada la vira sticker sozinha (nome = nome do arquivo). Apagar no jogo move a pasta para `stickers/_apagados`.
+  Os stickers que voce ja tinha (`save/stickers`) vao sozinhos para a pasta nova, com o mesmo id (os colados nos carros
+  continuam). Explicacao tambem em `stickers/_COMO USAR.txt`. `StickerFolder`.
+- **Todos veem todos os stickers:** qualquer corredor de qualquer conta ve a lista inteira, tambem na lista "do corredor"
+  que o jogo abre (antes o Fernando via 0). `StickerShareAll` (false = a lista do corredor so mostra os dele).
+- **Sticker Glue L1:** a descricao agora diz "(6 Sticker Glue)". 10 nao da: com 10 camadas o jogo fecha na aba Sticker
+  (o painel de camadas do jogo tem 6 lugares; foi o crash que ja tivemos). **Instale de novo** (Init_us.agt).
+
 **Atualizacao 213 — Sticker Glue L1 mostra os 6 stickers no carro:**
 - Com a L1 (a de mito) o editor ja deixava montar 6 camadas, mas o carro so desenhava a primeira (o segundo sticker
   sumia, mesmo o servidor guardando os dois). O jogo tinha um segundo lugar com "L1 = 1 camada" (o que monta o carro);

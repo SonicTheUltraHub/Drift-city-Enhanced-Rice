@@ -26,7 +26,7 @@
  {
   "path": "Data_US/Init_us.agt",
   "base": "Data_US/Init_us.agt",
-  "md5": "38fcf52e916318320b42439d6e28c547",
+  "md5": "98714812689744a9a780970e3a7ddf72",
   "size": 879917,
   "from": [
    {
@@ -36,6 +36,10 @@
    {
     "md5": "db91e8e5fd53c5adc6b2b302485e7d4c",
     "patch": "Data_US_Init_us.agt.db91e8e5.dcp"
+   },
+   {
+    "md5": "38fcf52e916318320b42439d6e28c547",
+    "patch": "Data_US_Init_us.agt.38fcf52e.dcp"
    }
   ]
  },

@@ -1483,9 +1483,29 @@
 "Bots",
 "Bots andando na cidade: rodas girando (estado do seu carro dirigindo reto, sem drift/fumaca). false = rodas paradas."
 ],
+"VsTimedDays": [
+"Battle Zone",
+"Cmd_BonusUpdate: 9 flags (0/1) separados por virgula. O 5o libera o sticker (cola). Os outros sao bonus do jogo ainda sem nome (teste: ligar um por vez). Prazo (dias) que o servidor informa ao jogo para drinks e cola de sticker (renovado a cada login, nunca vence)."
+],
+"StickerSystem": [
+"Battle Zone",
+"Liga o sistema de sticker no jogo (5o aviso do BonusUpdate): sem ele a cola sempre aparece vencida."
+],
+"StickerPrice": [
+"Battle Zone",
+"Mito cobrado ao colar (comprar) um sticker da lista no carro."
+],
+"StickerFolder": [
+"Battle Zone",
+"Pasta dos stickers (ao lado do Rice.exe): uma pasta por sticker (sticker.json + 32.dds, 64.dds, 128.dds). Copie a pasta de um sticker para ca e ele aparece no jogo; uma imagem solta (.png .jpg .bmp .gif) vira sticker."
+],
+"StickerShareAll": [
+"Battle Zone",
+"Todos os corredores de todas as contas veem todos os stickers (tambem na lista \"do corredor\")."
+],
 "BonusUpdateFlags": [
 "Battle Zone",
-"Cmd_BonusUpdate: 9 flags (0/1) separados por virgula. O 5o libera o sticker (cola). Os outros sao bonus do jogo ainda sem nome (teste: ligar um por vez)."
+"Todos os corredores de todas as contas veem todos os stickers (tambem na lista \"do corredor\")."
 ],
 "PartyChaseTeleportSeconds": [
 "Party",

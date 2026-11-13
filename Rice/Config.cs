@@ -544,6 +544,11 @@ namespace Rice
         public bool StickerSystem = true;
         // Mito cobrado ao colar (comprar) um sticker da lista no carro.
         public int StickerPrice = 100;
+        // Pasta dos stickers (ao lado do Rice.exe): uma pasta por sticker (sticker.json + 32.dds, 64.dds, 128.dds).
+        // Copie a pasta de um sticker para ca e ele aparece no jogo; uma imagem solta (.png .jpg .bmp .gif) vira sticker.
+        public string StickerFolder = "stickers";
+        // Todos os corredores de todas as contas veem todos os stickers (tambem na lista "do corredor").
+        public bool StickerShareAll = true;
         public string BonusUpdateFlags = "0,0,0,0,0,0,0,0,0";
         public double PartyChaseTeleportSeconds = 10; // HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)
         public double CityBotFarSnapSeconds = 8;      // seguindo: longe do lugar dele por N s, pula para o lugar            // party: derrapa e faz fumaca onde voce derrapou

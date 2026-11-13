@@ -424,6 +424,8 @@
   "VsTimedDays": 90,
   "StickerSystem": true,
   "StickerPrice": 100,
+  "StickerFolder": "stickers",
+  "StickerShareAll": true,
   "BonusUpdateFlags": "0,0,0,0,0,0,0,0,0",
   "PartyHuvContact": 4,
   "CityHuvHits": true,

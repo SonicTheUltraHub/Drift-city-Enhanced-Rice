@@ -32,6 +32,7 @@ B|Init\UpgradeCondList.xlt|691fa5865bcd56b05b386ab5d890d50d
 B|Init\VShopCategory.xlt|9e2a03036795612473cca339eaad36db
 B|Init\VShopCoolStuff.xlt|30accae929dcafe5a4d2ee3fe5285be9
 B|Init\VShopCoolStuff.xlt|5a6715f6271aed079455f370ee4c6e96
+B|Init\VShopCoolStuff.xlt|7b975919c422d09962555ad3ce3cb413
 B|Init\VShopCoolStuff.xlt|855205eb526d93648e7bc29464e2d09c
 B|Init\VShopItem.xlt|b9be06ed7c1054c6157db040e115aa7a
 B|Init\VShopRentCarSaleOrder.xlt|d610c9d605e224f0cee6804e5b7818c7
@@ -83,7 +84,7 @@ T|Init\TireList.xlt|a316c8e7f74016cf98cc1bfd18cf006a
 T|Init\TokenBook.xlt|2b953fef635172e8e92452ba6b7f95de
 T|Init\UpgradeCondList.xlt|691fa5865bcd56b05b386ab5d890d50d
 T|Init\VShopCategory.xlt|9e2a03036795612473cca339eaad36db
-T|Init\VShopCoolStuff.xlt|7b975919c422d09962555ad3ce3cb413
+T|Init\VShopCoolStuff.xlt|66d3452881323551a2c784b67986b908
 T|Init\VShopItem.xlt|b9be06ed7c1054c6157db040e115aa7a
 T|Init\VShopRentCarSaleOrder.xlt|d610c9d605e224f0cee6804e5b7818c7
 T|Init\ValentainReward.xlt|2c8a1fb02469965cc6454876754fd2a3

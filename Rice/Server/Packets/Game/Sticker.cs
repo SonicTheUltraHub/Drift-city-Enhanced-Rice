@@ -62,7 +62,8 @@ namespace Rice.Server.Packets.Game
             if (page < 1) page = 1;
             if (per < 1 || per > 50) per = 6;
             List<StickerRec> all;
-            lock (Sync) all = Recs().Where(r => type != 3 || string.IsNullOrEmpty(who) || string.Equals(r.Owner, who, StringComparison.OrdinalIgnoreCase))
+            bool shareAll = RiceServer.Config.StickerShareAll;
+            lock (Sync) all = Recs().Where(r => type != 3 || shareAll || string.IsNullOrEmpty(who) || string.Equals(r.Owner, who, StringComparison.OrdinalIgnoreCase))
                                     .OrderByDescending(r => r.Id).ToList();
             int pages = Math.Max(1, (all.Count + per - 1) / per);
             if (page > pages) page = pages;
@@ -112,8 +113,8 @@ namespace Rice.Server.Packets.Game
                 // o jogo na aba Sticker (a imagem nao cabe no espaco da miniatura).
                 // A crash da aba Sticker era a L1 com 10 camadas, nao o tamanho: vai sempre a maior (128 px), mais nitida no carro.
                 int idx = 2;
-                for (int i = idx; i >= 0 && img == null; i--) img = ReadImage(r.Id, i);
-                if (img == null) for (int i = 0; i < 3 && img == null; i++) img = ReadImage(r.Id, i);
+                for (int i = idx; i >= 0 && img == null; i--) img = ReadImage(r, i);
+                if (img == null) for (int i = 0; i < 3 && img == null; i++) img = ReadImage(r, i);
                 if (img != null) r.Downloads++;
             }
             // Cmd_GetImageAck (65, 0x53de70): @0 tipo, @4 estado (0 = nao tem), @8/@0xc id, @0x10/@0x14, @0x18,
@@ -221,7 +222,7 @@ namespace Rice.Server.Packets.Game
                     SaveAttached();
                 }
                 StickerRec r;
-                lock (Sync) { r = Recs().FirstOrDefault(x => x.Id == sid); if (r != null) { r.Downloads++; SaveRecs(); } }
+                lock (Sync) { r = Recs().FirstOrDefault(x => x.Id == sid); if (r != null) { r.Downloads++; SaveRec(r); } }
                 Log.WriteLine("Sticker: {0} colou o sticker {1} no carro {2} (-{3} mito).", ch.Name, sid, car, price);
             }
             // Cmd_AttachStickerAck (1353, 0x532260, 0x5e bytes): u32, u16, entrada de 64 bytes, i64 mito (soma no seu mito), 16 bytes
@@ -283,20 +284,23 @@ namespace Rice.Server.Packets.Game
                         Owner = ch != null ? ch.Name : "",
                         Name = string.IsNullOrEmpty(pend.Name) ? "sticker" : pend.Name,
                         Cat = b.Length >= 4 ? BitConverter.ToInt32(b, 0) : pend.Cat,
-                        Date = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                        Images = pend.Images.Count
+                        Date = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     };
                     try
                     {
-                        Directory.CreateDirectory(ImgDir());
-                        for (int i = 0; i < pend.Images.Count; i++)
+                        r.Dir = NewDir(r.Name);
+                        Directory.CreateDirectory(r.Dir);
+                        // as 3 imagens (32, 64, 128 px); faltando alguma, repete a maior que veio
+                        for (int i = 0; i < 3; i++)
                         {
-                            File.WriteAllBytes(ImgPath(r.Id, i), pend.Images[i]);
-                            Log.WriteLine("Sticker: imagem {0}_{1} salva ({2} bytes, md5 {3}).", r.Id, i, pend.Images[i].Length, Md5(pend.Images[i]));
+                            var img = pend.Images[Math.Min(i, pend.Images.Count - 1)];
+                            File.WriteAllBytes(Path.Combine(r.Dir, SizeFiles[i]), img);
+                            Log.WriteLine("Sticker: imagem {0} de {1} salva ({2} bytes, md5 {3}).", SizeFiles[i], r.Name, img.Length, Md5(img));
                         }
+                        SaveRec(r);
                         list.Add(r);
-                        SaveRecs();
-                        Log.WriteLine("Sticker: \"{0}\" de {1} registrado (id {2}, {3} imagem(ns)).", r.Name, r.Owner, r.Id, r.Images);
+                        scanSig = Signature();
+                        Log.WriteLine("Sticker: \"{0}\" de {1} registrado (id {2}) em {3}.", r.Name, r.Owner, r.Id, r.Dir);
                     }
                     catch (Exception ex) { Log.WriteError("Sticker: " + ex.Message); }
                 }
@@ -321,7 +325,8 @@ namespace Rice.Server.Packets.Game
             packet.Sender.Send(ack);
         }
 
-        // 95 DeleteStickerCatalog: u32 tipo, u32, u32 id, u32 - apaga o sticker registrado (os ja colados nos carros ficam)
+        // 95 DeleteStickerCatalog: u32 tipo, u32, u32 id, u32 - apaga o sticker registrado (os ja colados nos carros ficam;
+        // a pasta vai para stickers/_apagados)
         [RicePacket(95, RiceServer.ServerType.Lobby | RiceServer.ServerType.Game)]
         public static void DeleteCatalog(RicePacket packet)
         {
@@ -335,8 +340,16 @@ namespace Rice.Server.Packets.Game
                 var r = list.FirstOrDefault(x => x.Id == id);
                 if (r == null) return;
                 list.Remove(r);
-                SaveRecs();
-                Log.WriteLine("Sticker: \"{0}\" (id {1}) apagado da lista.", r.Name, r.Id);
+                try
+                {
+                    string del = Path.Combine(Root(), DeletedDir), to = Path.Combine(del, Path.GetFileName(r.Dir));
+                    Directory.CreateDirectory(del);
+                    for (int n = 2; Directory.Exists(to); n++) to = Path.Combine(del, Path.GetFileName(r.Dir) + " (" + n + ")");
+                    Directory.Move(r.Dir, to);
+                }
+                catch (Exception ex) { Log.WriteError("Sticker: " + ex.Message); }
+                scanSig = Signature();
+                Log.WriteLine("Sticker: \"{0}\" (id {1}) apagado da lista (pasta em {2}/{3}).", r.Name, r.Id, Root(), DeletedDir);
             }
         }
 
@@ -370,18 +383,29 @@ namespace Rice.Server.Packets.Game
             catch (Exception ex) { Log.WriteError("stickers_carros.json: " + ex.Message); }
         }
 
-        // ---- stickers registrados (save/stickers.json + save/stickers/<id>_<n>.dds) ---------------------------------
+        // ---- stickers registrados: pasta stickers/ (ao lado do Rice.exe), uma pasta por sticker ---------------------
+        //   stickers/<nome>/sticker.json   id, nome, autor, categoria, data, downloads
+        //   stickers/<nome>/32.dds 64.dds 128.dds   as 3 imagens (DXT5 com mipmaps, como o jogo manda)
+        // Para passar stickers para outra pessoa: copie a pasta. Uma imagem solta (.png .jpg .bmp .gif) na pasta stickers
+        // vira sticker sozinha (nome = nome do arquivo). Apagar no jogo move a pasta para stickers/_apagados.
+        // A pasta e lida de novo quando muda (nao precisa reiniciar o servidor). Todos os corredores veem todos.
         public class StickerRec
         {
-            public int Id, Cat, Downloads, Images;
+            public int Id, Cat, Downloads;
             public long OwnerCid, Date;
             public string Owner, Name;
+            [JsonIgnore] public string Dir;
         }
         class Pending { public int Cat; public string Name; public MemoryStream Cur; public List<byte[]> Images = new List<byte[]>(); }
 
         static readonly object Sync = new object();
         static List<StickerRec> recs;
+        static string scanSig;
         static readonly Dictionary<RiceClient, Pending> pending = new Dictionary<RiceClient, Pending>();
+        static readonly string[] SizeFiles = { "32.dds", "64.dds", "128.dds" };
+        static readonly int[] SizePx = { 32, 64, 128 };
+        static readonly string[] ImageExts = { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
+        const string InfoFile = "sticker.json", DeletedDir = "_apagados";
 
         static Pending PendingOf(RiceClient c)
         {
@@ -393,66 +417,194 @@ namespace Rice.Server.Packets.Game
             }
         }
 
-        static string ImgDir() { return Paths.SaveFile("stickers"); }
-        static string ImgPath(int id, int i) { return Path.Combine(ImgDir(), id + "_" + i + ".dds"); }
-        static byte[] ReadImage(int id, int i)
+        static string Root()
         {
-            try { var p = ImgPath(id, i); return File.Exists(p) ? File.ReadAllBytes(p) : null; }
+            var f = RiceServer.Config != null ? RiceServer.Config.StickerFolder : null;
+            return string.IsNullOrWhiteSpace(f) ? "stickers" : f;
+        }
+
+        static byte[] ReadImage(StickerRec r, int i)
+        {
+            try { var p = Path.Combine(r.Dir, SizeFiles[i]); return File.Exists(p) ? File.ReadAllBytes(p) : null; }
             catch (Exception) { return null; }
+        }
+
+        // o que tem na pasta (muda quando alguem cola/apaga uma pasta ou imagem)
+        static string Signature()
+        {
+            try
+            {
+                if (!Directory.Exists(Root())) return "";
+                return string.Join("|", Directory.GetFileSystemEntries(Root()).OrderBy(x => x, StringComparer.OrdinalIgnoreCase));
+            }
+            catch (Exception) { return ""; }
         }
 
         static List<StickerRec> Recs()
         {
-            if (recs != null) return recs;
-            try
-            {
-                var p = Paths.SaveFile("stickers.json");
-                recs = File.Exists(p) ? JsonConvert.DeserializeObject<List<StickerRec>>(File.ReadAllText(p)) : null;
-            }
-            catch (Exception ex) { Log.WriteError("stickers.json: " + ex.Message); }
-            if (recs == null) recs = new List<StickerRec>();
-            FixIds();
+            string sig = Signature();
+            if (recs != null && sig == scanSig) return recs;
+            Scan();
+            scanSig = Signature();
             return recs;
         }
 
-        // O jogo guarda a imagem pelo id com os 2 bits de baixo trocados pelo tamanho (DriftCity.exe 0x6e84a3: id & ~3 | 1).
-        // Com ids seguidos (100001, 100002, 100003) todos viravam 100001 e todas as miniaturas mostravam a mesma imagem.
-        // Os ids agora sao 4n+1 (100001, 100005, 100009...).
+        static void Scan()
+        {
+            var old = recs ?? new List<StickerRec>();
+            var list = new List<StickerRec>();
+            try
+            {
+                Directory.CreateDirectory(Root());
+                MigrateOld(list);
+                WriteHelp();
+                // imagens soltas viram sticker
+                foreach (var f in Directory.GetFiles(Root()))
+                {
+                    if (!ImageExts.Contains(Path.GetExtension(f).ToLowerInvariant())) continue;
+                    try
+                    {
+                        string name = Path.GetFileNameWithoutExtension(f);
+                        string nd = NewDir(name);
+                        Directory.CreateDirectory(nd);
+                        File.Move(f, Path.Combine(nd, "original" + Path.GetExtension(f).ToLowerInvariant()));
+                        Log.WriteLine("Sticker: imagem \"{0}\" virou sticker.", Path.GetFileName(f));
+                    }
+                    catch (Exception ex) { Log.WriteError("Sticker: " + Path.GetFileName(f) + ": " + ex.Message); }
+                }
+                // pastas: as que o servidor ja conhecia primeiro (mantem o id), depois as mais antigas
+                var dirs = Directory.GetDirectories(Root()).Where(d => !Path.GetFileName(d).StartsWith("_"))
+                    .OrderBy(d => old.Any(o => SamePath(o.Dir, d)) ? 0 : 1).ThenBy(d => Directory.GetCreationTimeUtc(d)).ToList();
+                var used = new HashSet<int>(list.Select(x => x.Id));
+                var fresh = new List<StickerRec>();
+                foreach (var dir in dirs)
+                {
+                    if (list.Any(x => SamePath(x.Dir, dir))) continue;
+                    var r = LoadDir(dir);
+                    if (r == null) continue;
+                    if (r.Id <= 0 || (r.Id & 3) != 1 || used.Contains(r.Id)) { r.Id = 0; fresh.Add(r); }
+                    else used.Add(r.Id);
+                    list.Add(r);
+                }
+                foreach (var r in fresh)
+                {
+                    r.Id = NextId(list);
+                    SaveRec(r);
+                    Log.WriteLine("Sticker: \"{0}\" entrou na lista (id {1}).", r.Name, r.Id);
+                }
+            }
+            catch (Exception ex) { Log.WriteError("Sticker: pasta " + Root() + ": " + ex.Message); }
+            recs = list;
+        }
+
+        static bool SamePath(string a, string b)
+        {
+            return a != null && b != null && string.Equals(Path.GetFullPath(a).TrimEnd('\\', '/'), Path.GetFullPath(b).TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase);
+        }
+
+        // le uma pasta de sticker; sem as .dds mas com uma imagem, gera as 3
+        static StickerRec LoadDir(string d)
+        {
+            StickerRec r = null;
+            var info = Path.Combine(d, InfoFile);
+            try { if (File.Exists(info)) r = JsonConvert.DeserializeObject<StickerRec>(File.ReadAllText(info)); }
+            catch (Exception ex) { Log.WriteError("Sticker: " + info + ": " + ex.Message); }
+            bool write = r == null;
+            if (r == null) r = new StickerRec { Date = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
+            r.Dir = d;
+            if (string.IsNullOrWhiteSpace(r.Name)) { r.Name = Path.GetFileName(d); write = true; }
+            if (r.Name.Length > 31) r.Name = r.Name.Substring(0, 31);
+            if (r.Owner == null) { r.Owner = ""; write = true; }
+            if (!SizeFiles.All(s => File.Exists(Path.Combine(d, s))))
+            {
+                var img = Directory.GetFiles(d).FirstOrDefault(f => ImageExts.Contains(Path.GetExtension(f).ToLowerInvariant()));
+                if (img == null)
+                {
+                    // so algumas .dds: usa a maior para as que faltam
+                    var have = SizeFiles.Select(s => Path.Combine(d, s)).Where(File.Exists).ToList();
+                    if (have.Count == 0) return null;
+                    foreach (var sf in SizeFiles) if (!File.Exists(Path.Combine(d, sf))) File.Copy(have.Last(), Path.Combine(d, sf));
+                }
+                else
+                {
+                    try
+                    {
+                        using (var bmp = new System.Drawing.Bitmap(img))
+                            for (int i = 0; i < 3; i++) File.WriteAllBytes(Path.Combine(d, SizeFiles[i]), StickerDds.Encode(bmp, SizePx[i]));
+                        Log.WriteLine("Sticker: \"{0}\": imagens 32/64/128 feitas de {1}.", r.Name, Path.GetFileName(img));
+                    }
+                    catch (Exception ex) { Log.WriteError("Sticker: " + img + ": " + ex.Message); return null; }
+                }
+            }
+            if (write && r.Id > 0) SaveRec(r);
+            return r;
+        }
+
+        static string NewDir(string name)
+        {
+            string b = Paths.Safe(string.IsNullOrWhiteSpace(name) ? "sticker" : name), d = Path.Combine(Root(), b);
+            for (int n = 2; Directory.Exists(d) || File.Exists(d); n++) d = Path.Combine(Root(), b + " (" + n + ")");
+            return d;
+        }
+
+        static void WriteHelp()
+        {
+            var p = Path.Combine(Root(), "_COMO USAR.txt");
+            if (File.Exists(p)) return;
+            File.WriteAllText(p,
+                "Stickers do Enhanced Rice\r\n\r\n" +
+                "Cada pasta aqui e um sticker (sticker.json + 32.dds, 64.dds, 128.dds). Todos os corredores de todas as contas\r\n" +
+                "veem todos os stickers na Drift Shop > Sticker.\r\n\r\n" +
+                "- Para passar um sticker para alguem: mande a pasta dele. Quem receber cola a pasta aqui e ele aparece no jogo.\r\n" +
+                "- Para criar um sticker sem o jogo: cole uma imagem (.png, .jpg, .bmp ou .gif) aqui; o nome do arquivo vira o\r\n" +
+                "  nome do sticker (ate 31 letras). Imagem quadrada fica melhor (as outras sao esticadas).\r\n" +
+                "- Apagar no jogo move a pasta para _apagados (para recuperar, mova de volta para ca).\r\n" +
+                "- Nao precisa reiniciar o servidor: a lista e lida de novo quando a pasta muda.\r\n");
+        }
+
+        // stickers antigos (save/stickers.json + save/stickers/<id>_<n>.dds) vao para a pasta nova com o mesmo id
+        static void MigrateOld(List<StickerRec> list)
+        {
+            var p = Paths.SaveFile("stickers.json");
+            if (!File.Exists(p)) return;
+            try
+            {
+                var olds = JsonConvert.DeserializeObject<List<StickerRec>>(File.ReadAllText(p)) ?? new List<StickerRec>();
+                foreach (var r in olds)
+                {
+                    var src = Enumerable.Range(0, 3).Select(i => Path.Combine(Paths.SaveFile("stickers"), r.Id + "_" + i + ".dds")).ToList();
+                    if (!src.Any(File.Exists)) continue;
+                    r.Dir = NewDir(r.Name);
+                    Directory.CreateDirectory(r.Dir);
+                    for (int i = 0; i < 3; i++) if (File.Exists(src[i])) File.Move(src[i], Path.Combine(r.Dir, SizeFiles[i]));
+                    SaveRec(r);
+                }
+                File.Move(p, p + ".migrado");
+                Log.WriteLine("Sticker: {0} sticker(s) antigos foram para a pasta {1}.", olds.Count, Root());
+            }
+            catch (Exception ex) { Log.WriteError("Sticker: stickers antigos: " + ex.Message); }
+        }
+
+        // O jogo guarda a imagem pelo id com os 2 bits de baixo trocados pelo tamanho (DriftCity.exe 0x6e84a3: id & ~3 | 1):
+        // os ids sao 4n+1 (100001, 100005...). Nao repete id que ainda esta colado em algum carro.
         static int NextId(List<StickerRec> list)
         {
-            int max = list.Count == 0 ? 99997 : list.Max(x => x.Id);
-            return ((max + 3) / 4) * 4 + 1 > max ? ((max + 3) / 4) * 4 + 1 : ((max + 3) / 4) * 4 + 5;
+            int max = 99997;
+            foreach (var r in list) if (r.Id > max) max = r.Id;
+            AttachedOf(0);
+            foreach (var l in attached.Values) foreach (var e in l) max = Math.Max(max, BitConverter.ToInt32(e, 4));
+            if (attached.ContainsKey(0) && attached[0].Count == 0) attached.Remove(0);
+            return (max & ~3) + 5;
         }
 
-        static void FixIds()
+        static void SaveRec(StickerRec r)
         {
-            var bad = recs.Where(r => (r.Id & 3) != 1).ToList();
-            if (bad.Count == 0) return;
-            foreach (var r in bad)
+            try
             {
-                int old = r.Id;
-                r.Id = NextId(recs);
-                for (int i = 0; i < 3; i++)
-                    try { if (File.Exists(ImgPath(old, i))) { if (File.Exists(ImgPath(r.Id, i))) File.Delete(ImgPath(r.Id, i)); File.Move(ImgPath(old, i), ImgPath(r.Id, i)); } }
-                    catch (Exception ex) { Log.WriteError("Sticker: " + ex.Message); }
-                AttachedOf(0);
-                if (attached.ContainsKey(0) && attached[0].Count == 0) attached.Remove(0);
-                foreach (var l in attached.Values)
-                    foreach (var e in l)
-                    {
-                        if (BitConverter.ToInt32(e, 4) == old) Array.Copy(BitConverter.GetBytes(r.Id), 0, e, 4, 4);
-                        if (BitConverter.ToInt32(e, 0x28) == old) Array.Copy(BitConverter.GetBytes(r.Id), 0, e, 0x28, 4);
-                    }
-                Log.WriteLine("Sticker: id {0} -> {1} (miniatura certa).", old, r.Id);
+                Directory.CreateDirectory(r.Dir);
+                File.WriteAllText(Path.Combine(r.Dir, InfoFile), JsonConvert.SerializeObject(r, Formatting.Indented));
             }
-            SaveRecs();
-            SaveAttached();
-        }
-
-        static void SaveRecs()
-        {
-            try { File.WriteAllText(Paths.SaveFile("stickers.json"), JsonConvert.SerializeObject(recs, Formatting.Indented)); }
-            catch (Exception ex) { Log.WriteError("stickers.json: " + ex.Message); }
+            catch (Exception ex) { Log.WriteError("Sticker: " + r.Dir + ": " + ex.Message); }
         }
 
         // nome do sticker na entrada de 64 bytes (@8, 32 bytes): o jogo le como texto de 1 byte por letra (com wchar so
@@ -479,6 +631,135 @@ namespace Rice.Server.Packets.Game
             var e = Encoding.Unicode.GetBytes(text ?? "");
             Array.Copy(e, o, Math.Min(e.Length, size - 2));
             return o;
+        }
+    }
+
+    // Imagem comum (.png .jpg ...) -> DDS DXT5 com mipmaps, igual ao que o jogo manda no registro do sticker
+    // (cabecalho flags 0x21007, caps 0x401008; 32 px = 1520 bytes, 64 = 5616, 128 = 22000).
+    public static class StickerDds
+    {
+        public static byte[] Encode(System.Drawing.Image src, int size)
+        {
+            int mips = 1;
+            for (int s = size; s > 1; s /= 2) mips++;
+            var ms = new MemoryStream();
+            var w = new BinaryWriter(ms);
+            w.Write(0x20534444);            // "DDS "
+            w.Write(124); w.Write(0x21007); w.Write(size); w.Write(size); w.Write(0); w.Write(0); w.Write(mips);
+            for (int k = 0; k < 11; k++) w.Write(0);
+            w.Write(32); w.Write(4); w.Write(0x35545844);   // pixel format: FourCC DXT5
+            for (int k = 0; k < 5; k++) w.Write(0);
+            w.Write(0x401008); w.Write(0); w.Write(0); w.Write(0); w.Write(0);
+            for (int m = 0, s = size; m < mips; m++, s = Math.Max(1, s / 2))
+                EncodeLevel(Pixels(src, s), s, w);
+            w.Flush();
+            return ms.ToArray();
+        }
+
+        // imagem esticada para s x s (ARGB)
+        static int[] Pixels(System.Drawing.Image src, int s)
+        {
+            using (var bmp = new System.Drawing.Bitmap(s, s, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            {
+                using (var g = System.Drawing.Graphics.FromImage(bmp))
+                using (var at = new System.Drawing.Imaging.ImageAttributes())
+                {
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    at.SetWrapMode(System.Drawing.Drawing2D.WrapMode.TileFlipXY);
+                    g.DrawImage(src, new System.Drawing.Rectangle(0, 0, s, s), 0, 0, src.Width, src.Height, System.Drawing.GraphicsUnit.Pixel, at);
+                }
+                var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, s, s), System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                                        System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                var px = new int[s * s];
+                for (int y = 0; y < s; y++)
+                    System.Runtime.InteropServices.Marshal.Copy(data.Scan0 + y * data.Stride, px, y * s, s);
+                bmp.UnlockBits(data);
+                return px;
+            }
+        }
+
+        static void EncodeLevel(int[] px, int s, BinaryWriter w)
+        {
+            int blocks = Math.Max(1, (s + 3) / 4);
+            var a = new int[16]; var r = new int[16]; var g = new int[16]; var b = new int[16];
+            for (int by = 0; by < blocks; by++)
+                for (int bx = 0; bx < blocks; bx++)
+                {
+                    for (int k = 0; k < 16; k++)
+                    {
+                        int x = Math.Min(s - 1, bx * 4 + (k & 3)), y = Math.Min(s - 1, by * 4 + (k >> 2));
+                        int c = px[y * s + x];
+                        a[k] = (c >> 24) & 255; r[k] = (c >> 16) & 255; g[k] = (c >> 8) & 255; b[k] = c & 255;
+                    }
+                    WriteAlpha(a, w);
+                    WriteColor(r, g, b, w);
+                }
+        }
+
+        static void WriteAlpha(int[] a, BinaryWriter w)
+        {
+            int lo = a.Min(), hi = a.Max();
+            w.Write((byte) hi); w.Write((byte) lo);
+            ulong bits = 0;
+            if (hi > lo)
+            {
+                // a0 > a1: 8 valores (a0, a1 e 6 entre eles)
+                var pal = new int[8];
+                pal[0] = hi; pal[1] = lo;
+                for (int k = 1; k <= 6; k++) pal[k + 1] = ((7 - k) * hi + k * lo) / 7;
+                for (int k = 0; k < 16; k++)
+                {
+                    int best = 0, bd = int.MaxValue;
+                    for (int p = 0; p < 8; p++) { int dd = Math.Abs(pal[p] - a[k]); if (dd < bd) { bd = dd; best = p; } }
+                    bits |= (ulong) best << (3 * k);
+                }
+            }
+            for (int k = 0; k < 6; k++) w.Write((byte) (bits >> (8 * k)));
+        }
+
+        static void WriteColor(int[] r, int[] g, int[] b, BinaryWriter w)
+        {
+            int r0 = r.Max(), g0 = g.Max(), b0 = b.Max(), r1 = r.Min(), g1 = g.Min(), b1 = b.Min();
+            // a diagonal do "caixote" de cores vai no sentido em que as cores realmente variam
+            double mr = r.Average(), mg = g.Average(), mb = b.Average();
+            double crg = 0, cgb = 0;
+            for (int k = 0; k < 16; k++) { crg += (r[k] - mr) * (g[k] - mg); cgb += (g[k] - mg) * (b[k] - mb); }
+            if (crg < 0) { int t = g0; g0 = g1; g1 = t; }
+            if ((crg < 0 ? -cgb : cgb) < 0) { int t = b0; b0 = b1; b1 = t; }
+            int c0 = To565(r0, g0, b0), c1 = To565(r1, g1, b1);
+            if (c0 < c1) { int t = c0; c0 = c1; c1 = t; }
+            uint bits = 0;
+            if (c0 != c1)
+            {
+                var pal = new int[4, 3];
+                From565(c0, out pal[0, 0], out pal[0, 1], out pal[0, 2]);
+                From565(c1, out pal[1, 0], out pal[1, 1], out pal[1, 2]);
+                for (int ch = 0; ch < 3; ch++)
+                {
+                    pal[2, ch] = (2 * pal[0, ch] + pal[1, ch]) / 3;
+                    pal[3, ch] = (pal[0, ch] + 2 * pal[1, ch]) / 3;
+                }
+                for (int k = 0; k < 16; k++)
+                {
+                    int best = 0, bd = int.MaxValue;
+                    for (int p = 0; p < 4; p++)
+                    {
+                        int dr = pal[p, 0] - r[k], dg = pal[p, 1] - g[k], db = pal[p, 2] - b[k];
+                        int dd = dr * dr + dg * dg + db * db;
+                        if (dd < bd) { bd = dd; best = p; }
+                    }
+                    bits |= (uint) best << (2 * k);
+                }
+            }
+            w.Write((ushort) c0); w.Write((ushort) c1); w.Write(bits);
+        }
+
+        static int To565(int r, int g, int b) { return ((r * 31 + 127) / 255 << 11) | ((g * 63 + 127) / 255 << 5) | ((b * 31 + 127) / 255); }
+        static void From565(int c, out int r, out int g, out int b)
+        {
+            r = ((c >> 11) & 31) * 255 / 31; g = ((c >> 5) & 63) * 255 / 63; b = (c & 31) * 255 / 31;
         }
     }
 }
