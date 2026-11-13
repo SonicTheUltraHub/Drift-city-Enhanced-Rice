@@ -121,6 +121,7 @@ namespace Rice.Server.Core
                 if (Config.WeatherEnabled) Rice.Server.Packets.Game.Weather.Start();
                 Rice.Server.Packets.Game.UnderCity.Start();
                 Rice.Server.Packets.Game.NeoDurability.Start();
+                if (Config.StickerSystem) Rice.Server.Packets.Game.Sticker.Start();
             }
             catch (Exception ex) { Log.WriteError("Bots/leilao: " + ex.Message); }
         }

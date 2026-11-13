@@ -35,6 +35,12 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 215 — O mesmo sticker mais de uma vez no carro e pasta lida ao ligar o servidor:**
+- Colar o mesmo sticker de novo no mesmo carro (ex.: o gonhan nos dois lados) tirava o anterior. Agora cada colagem tem
+  o seu proprio id: os dois ficam, e cada um sai sozinho no Delete Mode. Cada colagem cobra o `StickerPrice`.
+- A pasta `stickers` e lida quando o servidor liga (imagens novas viram sticker na hora). O log mostra
+  "Sticker: N sticker(s) na pasta stickers". Colar coisas novas com o servidor ligado continua funcionando.
+
 **Atualizacao 214 — Pasta de stickers, stickers para todos os corredores e descricao da L1:**
 - **Pasta `stickers`** (ao lado do Rice.exe): cada sticker e uma pasta com `sticker.json` (nome, autor, id, downloads) e
   as 3 imagens `32.dds`, `64.dds`, `128.dds`. Para passar stickers para alguem e so mandar a pasta; quem receber cola na

@@ -105,7 +105,17 @@ namespace Rice.Server.Packets.Game
             int type = BitConverter.ToInt32(b, 0), a4 = BitConverter.ToInt32(b, 4), a5 = BitConverter.ToInt32(b, 8);
             int a2 = BitConverter.ToInt32(b, 0xc), a3 = BitConverter.ToInt32(b, 0x10);
             StickerRec r;
-            lock (Sync) r = Recs().FirstOrDefault(x => x.Id == a2) ?? Recs().FirstOrDefault(x => x.Id == a4) ?? Recs().FirstOrDefault(x => x.Id == a5);
+            lock (Sync)
+            {
+                r = Recs().FirstOrDefault(x => x.Id == a2) ?? Recs().FirstOrDefault(x => x.Id == a4) ?? Recs().FirstOrDefault(x => x.Id == a5);
+                if (r == null)
+                {
+                    // id de uma colagem (o mesmo sticker colado 2 vezes tem 2 ids): acha o sticker dela
+                    AttachedOf(0);
+                    var hit = attached.Values.SelectMany(l => l).FirstOrDefault(x => BitConverter.ToInt32(x, 4) == a2);
+                    if (hit != null) { int cat = CatalogId(hit); r = Recs().FirstOrDefault(x => x.Id == cat); }
+                }
+            }
             byte[] img = null;
             if (r != null)
             {
@@ -187,7 +197,7 @@ namespace Rice.Server.Packets.Game
             var ack = new RicePacket(1351);
             ack.Writer.Write(list.Count);
             ack.Writer.Write(0x40000);
-            foreach (var e in list) { NameInto(e, BitConverter.ToInt32(e, 4)); ack.Writer.Write(e); }
+            foreach (var e in list) { NameInto(e, CatalogId(e)); ack.Writer.Write(e); }
             packet.Sender.Send(ack);
         }
         [RicePacket(1352, RiceServer.ServerType.Game)]
@@ -207,8 +217,14 @@ namespace Rice.Server.Packets.Game
             // entrada da "meus stickers" (64 bytes, DriftCity.exe 0x77c3e0 / 0x5577f0): @0 carro, @4 id, @0x28 posicao (24)
             var e = new byte[64];
             Array.Copy(BitConverter.GetBytes(car), 0, e, 0, 4);
-            Array.Copy(BitConverter.GetBytes(sid), 0, e, 4, 4);
             Array.Copy(b, 4, e, 0x28, 24);
+            Array.Copy(BitConverter.GetBytes(sid), 0, e, 0x28, 4);
+            // cada colagem tem o seu id (@4): o mesmo sticker pode ir nos dois lados do carro. A primeira usa o id do sticker.
+            int inst = sid;
+            lock (Sync)
+                if (AttachedOf((long) ch.CID).Any(x => BitConverter.ToInt32(x, 0) == car && BitConverter.ToInt32(x, 4) == sid))
+                    inst = NextId(Recs());
+            Array.Copy(BitConverter.GetBytes(inst), 0, e, 4, 4);
             NameInto(e, sid);
             long price = Math.Max(0, RiceServer.Config.StickerPrice);
             bool paid = price == 0 || ch.SpendMito((ulong) price);
@@ -217,13 +233,13 @@ namespace Rice.Server.Packets.Game
                 lock (Sync)
                 {
                     var list = AttachedOf((long) ch.CID);
-                    list.RemoveAll(x => BitConverter.ToInt32(x, 0) == car && BitConverter.ToInt32(x, 4) == sid);
                     list.Add(e);
                     SaveAttached();
                 }
                 StickerRec r;
                 lock (Sync) { r = Recs().FirstOrDefault(x => x.Id == sid); if (r != null) { r.Downloads++; SaveRec(r); } }
-                Log.WriteLine("Sticker: {0} colou o sticker {1} no carro {2} (-{3} mito).", ch.Name, sid, car, price);
+                Log.WriteLine("Sticker: {0} colou o sticker {1} no carro {2} (-{3} mito){4}.", ch.Name, sid, car, price,
+                              inst != sid ? " como colagem " + inst : "");
             }
             // Cmd_AttachStickerAck (1353, 0x532260, 0x5e bytes): u32, u16, entrada de 64 bytes, i64 mito (soma no seu mito), 16 bytes
             var ack = new RicePacket(1353);
@@ -389,6 +405,25 @@ namespace Rice.Server.Packets.Game
         // Para passar stickers para outra pessoa: copie a pasta. Uma imagem solta (.png .jpg .bmp .gif) na pasta stickers
         // vira sticker sozinha (nome = nome do arquivo). Apagar no jogo move a pasta para stickers/_apagados.
         // A pasta e lida de novo quando muda (nao precisa reiniciar o servidor). Todos os corredores veem todos.
+        // le a pasta stickers ao ligar o servidor (imagens novas viram sticker antes de alguem entrar no jogo)
+        public static void Start()
+        {
+            new System.Threading.Thread(() =>
+            {
+                try
+                {
+                    int n;
+                    lock (Sync) n = Recs().Count;
+                    Log.WriteLine("Sticker: {0} sticker(s) na pasta {1}.", n, Root());
+                }
+                catch (Exception ex) { Log.WriteError("Sticker: " + ex.Message); }
+            }) { IsBackground = true, Name = "Stickers" }.Start();
+        }
+
+        // id do sticker (da lista) de uma entrada colada no carro: a posicao (@0x28) comeca com ele.
+        // @4 e o id desta colagem (um por colagem, para poder ter o mesmo sticker mais de uma vez no carro).
+        static int CatalogId(byte[] e) { return BitConverter.ToInt32(e, 0x28); }
+
         public class StickerRec
         {
             public int Id, Cat, Downloads;
