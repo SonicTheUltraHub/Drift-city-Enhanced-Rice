@@ -35,6 +35,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 220 — Stickers do corredor-bot: manda de novo depois que o carro carrega:**
+- O jogo so cola os stickers de outro carro se o modelo dele ja estiver carregado; na hora em que pede o nome do bot
+  ainda nao esta. O servidor manda os stickers de novo 2,5 s e 7 s depois (teste).
+
 **Atualizacao 219 — Stickers no carro do seu corredor-bot (rua e party):**
 - Achado no jogo o pacote que mostra os stickers do carro de outro jogador (804 StickerInfoRes). Quando o jogo pede o
   nome/visual de um bot (801), o servidor manda tambem os stickers que o seu corredor tem colados no carro atual.

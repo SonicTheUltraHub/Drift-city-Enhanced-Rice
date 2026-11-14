@@ -374,7 +374,7 @@ namespace Rice.Server.Packets.Game
         //   u16 @0, u16 serial do carro @2, u16 idade @4, u32 @6, u16 quantos @0xa (ate 100), depois 24 bytes cada
         //   (a mesma posicao do 1352/1351 @0x28: id do sticker, x, y, largura, altura, ..., lado). O jogo pede a imagem
         //   pelo id (GetImage 64) e cola no carro daquele serial.
-        public static void SendCarStickers(RiceClient c, ushort serial, long cid, int carId)
+        public static void SendCarStickers(RiceClient c, ushort serial, long cid, int carId, bool quiet = false)
         {
             if (c == null || !RiceServer.Config.StickerSystem) return;
             List<byte[]> list;
@@ -388,7 +388,7 @@ namespace Rice.Server.Packets.Game
             p.Writer.Write((ushort) list.Count);
             foreach (var e in list) p.Writer.Write(e, 0x28, 24);
             c.Send(p);
-            Log.WriteLine("Sticker: {0} sticker(s) do carro {1} (corredor {2}) mandados para o serial {3}.", list.Count, carId, cid, serial);
+            if (!quiet) Log.WriteLine("Sticker: {0} sticker(s) do carro {1} (corredor {2}) mandados para o serial {3}.", list.Count, carId, cid, serial);
         }
 
         // seu corredor como bot: os stickers do carro que ele esta usando
@@ -404,7 +404,16 @@ namespace Rice.Server.Packets.Game
                     if (dc == null) return;
                     carId = dc.CurrentCarID;
                 }
-                SendCarStickers(c, (ushort) BotSocial.SerialOf(b), b.Cid, carId);
+                ushort serial = (ushort) BotSocial.SerialOf(b);
+                SendCarStickers(c, serial, b.Cid, carId);
+                // o jogo so cola se o carro do bot ja estiver carregado (DriftCity.exe 0x53ac5e); na hora do 801 o
+                // modelo ainda esta carregando: manda de novo depois de uns segundos
+                foreach (int ms in new[] { 2500, 7000 })
+                    System.Threading.Tasks.Task.Delay(ms).ContinueWith(_ =>
+                    {
+                        try { SendCarStickers(c, serial, b.Cid, carId, true); }
+                        catch (Exception) { }
+                    });
             }
             catch (Exception ex) { Log.WriteError("Sticker: bot " + b.Name + ": " + ex.Message); }
         }
