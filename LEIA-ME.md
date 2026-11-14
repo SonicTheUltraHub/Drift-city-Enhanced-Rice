@@ -35,6 +35,11 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 227 — Pecas H e U saem do carro sem kit (padrao):**
+- `HeatTreatmentRequired` agora vem desligado: pecas H e U saem arrastando, como antes, e nao viram "Scorched" no carro.
+  O Heat Treatment Kit continua funcionando se usado (kit certo para cada grau). Para o jeito do jogo original, ponha
+  `"HeatTreatmentRequired": true` no server.json.
+
 **Atualizacao 226 — Heat Treatment Kit como no jogo original:**
 - Pecas H e U (normais, nao de set) nao saem mais do carro arrastando: precisa usar o kit em cima delas. Kit normal
   (`i_n_00025`) so para H, Ultra (`i_n_00025_U`) so para U; o kit errado da aviso e nao e gasto.
