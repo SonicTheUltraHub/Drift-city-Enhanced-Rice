@@ -399,7 +399,6 @@ namespace Rice.Server.Packets.Game
             var p = packet.Buffer;
             string name = ReadWStr(p, 0, Math.Min(26, p.Length));
             Log.WriteLine("JoinTeamApplyByName '{0}' ({1} bytes)", name, p.Length);
-            if (InviteBot(packet.Sender, p)) return;
             Apply(packet.Sender, ByName(name), name);
         }
 
@@ -410,7 +409,6 @@ namespace Rice.Server.Packets.Game
             if (p.Length < 8) return;
             long tid = BitConverter.ToInt64(p, 0);
             Log.WriteLine("JoinTeamApply crew {0} ({1} bytes): {2}", tid, p.Length, BitConverter.ToString(p));
-            if (InviteBot(packet.Sender, p)) return;
             Apply(packet.Sender, ById(tid), tid.ToString());
         }
 
@@ -438,7 +436,7 @@ namespace Rice.Server.Packets.Game
             return null;
         }
 
-        // Voce e o lider da sua crew e aperta "Join Crew" num bot: vira um convite para a SUA crew. Bot sem crew aceita na
+        // (desligado: o Join Crew nao trazia o bot no pacote) Voce e o lider da sua crew e aperta "Join Crew" num bot: vira um convite para a SUA crew. Bot sem crew aceita na
         // hora (sem precisar de amizade); bot de outra crew recusa. true = era convite (nao segue como pedido de entrada).
         static bool InviteBot(RiceClient c, byte[] p)
         {

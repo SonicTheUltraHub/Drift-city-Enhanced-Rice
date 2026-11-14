@@ -672,8 +672,9 @@ namespace Rice.Server.Packets.Game
                 var myCrew = Crew.Of((long) ch.CID);
                 var pool = Talkers().Where(b => !party.Contains(b) && !b.Special && !Bots.IsAce(b) && Bots.LinkOf(b.Cid) == null).ToList();
                 var crewMates = myCrew != null ? pool.Where(b => { var bc = Crew.Of(b.Cid); return bc != null && bc.Tid == myCrew.Tid; }).ToList() : new List<Bots.BotProfile>();
-                // voce e lider de crew: as vezes um bot sem crew vem pedir para entrar (responda sim)
-                if (myCrew != null && myCrew.Master == (long) ch.CID && Rng.NextDouble() < cfg.BotCrewAskChance)
+                // voce e lider de crew e esta no lobby (Driver Dome): as vezes um bot sem crew vem pedir para entrar (responda sim)
+                bool inLobby = ch.InNeoBase || ch.Area.ID == 0;
+                if (inLobby && myCrew != null && myCrew.Master == (long) ch.CID && Rng.NextDouble() < cfg.BotCrewAskChance)
                 {
                     string why0;
                     var asker = pool.Where(b => Crew.Of(b.Cid) == null && !b.MostWanted && !b.IsAlt && (!cfg.CrewLadder || b.Level <= ch.Level))

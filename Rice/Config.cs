@@ -558,7 +558,7 @@ namespace Rice
         // Chance de a sala que um bot abre na Battle Zone ser corrida de equipe (azul x vermelho). Na corrida de equipe a
         // sua party e a sua crew ficam sempre no seu time.
         public double BotTeamRaceChance = 0.3;
-        // Voce e lider de crew: chance de o bot que vem ate voce na rua ser um bot sem crew pedindo para entrar.
+        // Voce e lider de crew e esta no lobby (Driver Dome): chance de o bot que vem ate voce ser um bot sem crew pedindo para entrar.
         public double BotCrewAskChance = 0.25;
         public string BonusUpdateFlags = "0,0,0,0,0,0,0,0,0";
         public double PartyChaseTeleportSeconds = 10; // HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)

@@ -35,6 +35,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 230 — Join Crew como antes; bot pede para entrar na crew so no lobby:**
+- O Join Crew num bot voltou a ser so pedido de entrada (o convite pelo botao nao funcionou).
+- O bot sem crew que vem pedir para entrar na sua crew agora so aparece no lobby (Driver Dome), nao na rua das cidades.
+
 **Atualizacao 229 — Battle Zone um pouco mais dificil:**
 - `BattleAiDifficulty` agora vem 0.7 (antes 0.6): as IAs miram em 70% do seu nivel. Se o seu server.json ja tem a linha
   `"BattleAiDifficulty"`, troque o valor nele.
