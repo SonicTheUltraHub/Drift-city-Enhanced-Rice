@@ -869,7 +869,9 @@ namespace Rice.Server.Packets.Game
                     foreach (var rh in rushHits) Rush.BotHit(ch, Bots.ByCid(rh.Item1), rh.Item2, rh.Item3);
                     // bot que apareceu agora: manda as licencas montadas (806). Sem isso o minimapa do jogo le licenca 0
                     // ("DrawVehicleNameNonTeam idx error -7000" no GameLog)
-                    foreach (var fs in fresh) { var fb = BotSocial.BySerial(fs); if (fb != null) Licenses.SendBotMounted(c, fb); }
+                    // e os stickers do seu corredor-bot (804) logo que o carro aparece, antes do modelo carregar: o jogo
+                    // cola os stickers quando termina de carregar o carro (DriftCity.exe 0x4dbdd2 -> 0x4ca3a0)
+                    foreach (var fs in fresh) { var fb = BotSocial.BySerial(fs); if (fb != null) { Licenses.SendBotMounted(c, fb); Sticker.SendBotStickers(c, fb); } }
                     foreach (var serial in gone)
                     {
                         var pk = new RicePacket(0x226);

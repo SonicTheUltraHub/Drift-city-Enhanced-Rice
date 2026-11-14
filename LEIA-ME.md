@@ -35,6 +35,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 222 — Stickers do corredor-bot: mandados quando o carro aparece:**
+- O jogo cola os stickers de outro carro quando termina de carregar o modelo dele. Antes o servidor so mandava depois
+  (quando o jogo pedia o nome do bot). Agora manda no mesmo instante em que o carro do seu corredor-bot aparece.
+
 **Atualizacao 221 — Stickers do corredor-bot: carro dos bots com "idade" 0:**
 - O jogo recebia os stickers do bot (804) mas procurava o carro com "idade" 0, e os bots da rua tinham idade 1:
   nao achava o carro e nao colava. Agora os bots da rua usam idade 0 (`BotCarAge`). Se os bots sumirem ou piscarem
