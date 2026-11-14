@@ -35,6 +35,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 229 — Battle Zone um pouco mais dificil:**
+- `BattleAiDifficulty` agora vem 0.7 (antes 0.6): as IAs miram em 70% do seu nivel. Se o seu server.json ja tem a linha
+  `"BattleAiDifficulty"`, troque o valor nele.
+
 **Atualizacao 228 — Crew: convidar bot pelo Join Crew, bot pedindo para entrar; corridas de equipe:**
 - Voce e lider da sua crew e aperta **Join Crew** num bot: vira convite para a SUA crew. Bot sem crew entra na hora (sem
   precisar de amizade); bot de outra crew recusa. Sem ser lider, o Join Crew continua sendo pedido de entrada.

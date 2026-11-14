@@ -199,7 +199,7 @@
   "DockPointSpread": [2, 4, 6, 8],
   "DockPointStep": 6,
   "BattleAiEnabled": true,
-  "BattleAiDifficulty": 0.6,
+  "BattleAiDifficulty": 0.7,
   "BattleBotWaitSeconds": 600,
   "BattleBotRaceSeconds": 420,
   "BattleAiMaxLevel": 65,

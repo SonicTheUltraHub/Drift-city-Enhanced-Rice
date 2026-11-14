@@ -379,7 +379,7 @@ namespace Rice
         public double BattleBotRaceSeconds = 420;     // na largada ele some (esta correndo) por ate N s; no resultado volta
         // Dificuldade das IAs: nivel alvo = nivel do jogador x BattleAiDifficulty (0.1 = facil ... 1.0 = igual ao jogador),
         // no maximo BattleAiMaxLevel (1-99), variando +-BattleAiLevelSpread.
-        public double BattleAiDifficulty = 0.6;
+        public double BattleAiDifficulty = 0.7;
         public int BattleAiMaxLevel = 65;
         public int BattleAiLevelSpread = 6;
         // Carros que a IA nao usa (54 = Nevera/Enzo Ferrari: o bot ficava parado).
