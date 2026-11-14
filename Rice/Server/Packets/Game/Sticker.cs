@@ -371,7 +371,8 @@ namespace Rice.Server.Packets.Game
 
         // ---- stickers colados nos carros (save/stickers_carros.json: cid -> entradas de 64 bytes em base64) ----------
         // 804 StickerInfoRes (DriftCity.exe 0x53ab20, "Cmd_StickerInfoRes"): os stickers do carro de OUTRO jogador.
-        //   u16 @0, u16 serial do carro @2, u16 idade @4, u32 @6, u16 quantos @0xa (ate 100), depois 24 bytes cada
+        //   u16 serial do carro, u16 idade, u32 id do carro, u16 quantos (ate 100), depois 24 bytes cada (como no openDC;
+        //   o handler le com 2 bytes de cabecalho antes, por isso no codigo aparece serial @2 e quantos @0xa)
         //   (a mesma posicao do 1352/1351 @0x28: id do sticker, x, y, largura, altura, ..., lado). O jogo pede a imagem
         //   pelo id (GetImage 64) e cola no carro daquele serial.
         public static void SendCarStickers(RiceClient c, ushort serial, long cid, int carId, bool quiet = false)
@@ -381,10 +382,9 @@ namespace Rice.Server.Packets.Game
             lock (Sync) list = AttachedOf(cid).Where(x => BitConverter.ToInt32(x, 0) == carId).Take(100).ToList();
             if (list.Count == 0) return;
             var p = new RicePacket(804);
-            p.Writer.Write((ushort) 0);
             p.Writer.Write(serial);
-            p.Writer.Write((ushort) 1);
-            p.Writer.Write(0u);
+            p.Writer.Write((ushort) RiceServer.Config.BotCarAge);
+            p.Writer.Write((uint) carId);
             p.Writer.Write((ushort) list.Count);
             foreach (var e in list) p.Writer.Write(e, 0x28, 24);
             c.Send(p);
