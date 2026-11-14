@@ -517,6 +517,9 @@ namespace Rice.Server.Packets.Game
                     // salas de desafio (as que voce entra) e mano a mano: paciencia, saida depois da corrida e espectadores
                     // tambem; so nao entra bot novo no mano a mano
                     if (room.BackInRoom) PatienceAndSeats(room, host0, says);
+                    // corrida de equipe: a sua party e a sua crew vao para o seu lado ainda na sala de espera
+                    // (trocar assento na largada deixava os carros travados no comeco)
+                    TeamSides(room);
                     if (DateTime.UtcNow >= room.NextWatcher)
                     {
                         room.NextWatcher = DateTime.UtcNow.AddSeconds(8 + Rng.Next(25));
@@ -1556,7 +1559,7 @@ namespace Rice.Server.Packets.Game
             return side >= 0 ? side : any;
         }
 
-        // antes da largada: quem e seu e esta do outro lado troca de assento com um bot de fora (ou vai para um vazio)
+        // na sala de espera: quem e seu e esta do outro lado troca de assento com um bot de fora (ou vai para um vazio)
         static void TeamSides(Room room)
         {
             if ((room.Type & 1) == 0) return;
@@ -1914,7 +1917,6 @@ namespace Rice.Server.Packets.Game
 
             // bots que estavam como jogador viram IA para a corrida
             foreach (var ai in room.Ais.Where(a => a.AsPlayer).ToList()) Redress(room, ai, false);
-            TeamSides(room);
             TeamColors(room, true);
             // a corrida comecou: os bots da sala somem da porta da Battle Zone (estao correndo)
             foreach (var ai in room.Ais) CityBots.Vanish(Bots.ByName(ai.Name), Math.Max(60, RiceServer.Config.BattleBotRaceSeconds));

@@ -35,6 +35,12 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 232 — Corrida de equipe sem carros travados; HUV sem enxurrada de fim de perseguicao:**
+- A troca de assento para deixar a sua party/crew no seu time agora acontece na sala de espera, nao na largada (trocar na
+  largada deixava os carros travados no comeco).
+- Depois do resultado da perseguicao de HUV, o jogo mandava o "fim da perseguicao" centenas de vezes por segundo e o
+  servidor respondia todas (o jogo acabava fechando). Agora, por 15 s depois do resultado, essas repeticoes sao ignoradas.
+
 **Atualizacao 231 — Battle Zone mais dificil (0.9):**
 - `BattleAiDifficulty` agora vem 0.9: as IAs miram em 90% do seu nivel. Se o seu server.json ja tem a linha
   `"BattleAiDifficulty"`, troque o valor nele.

@@ -239,6 +239,8 @@ namespace Rice.Server.Packets.Game
             return (float) (baseHp * RiceServer.Config.CityHuvHitDamage * (0.8 + Rng.NextDouble() * 0.4));
         }
 
+        static readonly Dictionary<RiceClient, DateTime> lastResult = new Dictionary<RiceClient, DateTime>();
+
         [RicePacket(183, RiceServer.ServerType.Game, CheckedIn = true)]
         public static void ChaseEnd(RicePacket packet)
         {
@@ -258,6 +260,11 @@ namespace Rice.Server.Packets.Game
             lock (chases) chases.TryGetValue(packet.Sender, out st);
             if (st == null)
             {
+                // o jogo repete o fim da perseguicao centenas de vezes por segundo depois do resultado (e fecha):
+                // fim sem perseguicao registrada logo depois de um resultado e ignorado, sem responder
+                DateTime last;
+                lock (lastResult)
+                    if (lastResult.TryGetValue(packet.Sender, out last) && (DateTime.UtcNow - last).TotalSeconds < 15) return;
                 st = new State();
                 Log.WriteLine("ChaseEnd: nenhuma perseguicao registrada para {0}.", ch.Name);
             }
@@ -332,6 +339,7 @@ namespace Rice.Server.Packets.Game
             }
             else { st.Exp = 0; st.Money = 0; Log.WriteLine("HUV: missao falhou (nenhum HUV pego)."); }
             if (st.Caught > 0) PartyTalk.Praise(ch, "HUV");
+            lock (lastResult) lastResult[packet.Sender] = DateTime.UtcNow;
             var ei = ch.GetExpInfo();
             var ack = new RicePacket(184);
             ack.Writer.Write(result);
