@@ -35,6 +35,12 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 226 — Heat Treatment Kit como no jogo original:**
+- Pecas H e U (normais, nao de set) nao saem mais do carro arrastando: precisa usar o kit em cima delas. Kit normal
+  (`i_n_00025`) so para H, Ultra (`i_n_00025_U`) so para U; o kit errado da aviso e nao e gasto.
+- As pecas que tem versao "Scorched" (24 H e 8 U) viram Scorched quando vao para o carro e voltam ao normal ao sair com o kit.
+- `HeatTreatmentRequired` (false = pecas H/U saem arrastando, como antes).
+
 **Atualizacao 225 — Heat Treatment Kit funciona:**
 - Usar o Heat Treatment Kit em cima de uma peca do carro (pacote 419 ItemUseEx, formato do openDC) agora tira a peca
   do carro, junto com a Option/Docking do quadrado, e gasta 1 kit. Kit normal (`i_n_00025`) para pecas H, Ultra

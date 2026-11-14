@@ -1507,9 +1507,13 @@
 "Bots",
 "\"Idade\" do carro dos bots na rua (XiCarMove @2). 0 = o jogo consegue colar os stickers do seu corredor-bot (o pacote 804 so procura carro com idade 0). Se os bots sumirem ou piscarem na rua, volte para 1."
 ],
+"HeatTreatmentRequired": [
+"Battle Zone",
+"Pecas H e U (normais, nao de set) so saem do carro com o Heat Treatment Kit usado em cima delas: kit normal (i_n_00025) para H, Ultra (i_n_00025_U) para U. As que tem versao \"Scorched\" viram Scorched no carro."
+],
 "BonusUpdateFlags": [
 "Battle Zone",
-"\"Idade\" do carro dos bots na rua (XiCarMove @2). 0 = o jogo consegue colar os stickers do seu corredor-bot (o pacote 804 so procura carro com idade 0). Se os bots sumirem ou piscarem na rua, volte para 1."
+"Pecas H e U (normais, nao de set) so saem do carro com o Heat Treatment Kit usado em cima delas: kit normal (i_n_00025) para H, Ultra (i_n_00025_U) para U. As que tem versao \"Scorched\" viram Scorched no carro."
 ],
 "PartyChaseTeleportSeconds": [
 "Party",

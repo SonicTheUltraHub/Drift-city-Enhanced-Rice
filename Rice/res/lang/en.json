@@ -2471,5 +2471,9 @@
 "Sticker: colar no carro": "Sticker: attach to car",
 "Sticker: comprar": "Sticker: purchase",
 " colou o sticker ": " attached sticker ",
-" salva (": " saved ("
+" salva (": " saved (",
+"Esta peca e Ultra: use o Ultra Parts Heat Treatment Kit.": "This is an Ultra part: use the Ultra Parts Heat Treatment Kit.",
+"Esta peca e Hyper: use o Heat Treatment Kit normal.": "This is a Hyper part: use the regular Heat Treatment Kit.",
+"Peca Ultra: para tirar do carro, use o Ultra Parts Heat Treatment Kit em cima dela.": "Ultra part: to remove it from the car, use the Ultra Parts Heat Treatment Kit on it.",
+"Peca Hyper: para tirar do carro, use o Heat Treatment Kit em cima dela.": "Hyper part: to remove it from the car, use the Heat Treatment Kit on it."
 }

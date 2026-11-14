@@ -427,6 +427,7 @@
   "StickerFolder": "stickers",
   "StickerShareAll": true,
   "BotCarAge": 0,
+  "HeatTreatmentRequired": true,
   "BonusUpdateFlags": "0,0,0,0,0,0,0,0,0",
   "PartyHuvContact": 4,
   "CityHuvHits": true,

@@ -412,7 +412,45 @@ namespace Rice.Server.Packets.Game
             ack.Writer.Write(carId);
             packet.Sender.Send(ack);
 
+            // peca H/U que tem a versao "Scorched" (_b): no carro ela vira a Scorched (como no jogo original; o
+            // proprio jogo pede o Heat Treatment Kit para tirar)
+            if (RiceServer.Config.HeatTreatmentRequired)
+            {
+                var eq = character.Inventory.FirstOrDefault(i => i.invIdx == invIdx);
+                if (eq != null && eq.curCarID != 0 && eq.ID != null && !eq.ID.EndsWith("_b") && HeatGrade(eq) != null
+                    && ItemTable.Items.Any(x => x.ID == eq.ID + "_b"))
+                    SwapItemId(character, eq, eq.ID + "_b");
+            }
+
             character.FlushModInfo(packet.Sender);
+        }
+
+        // grau que precisa de Heat Treatment Kit para sair do carro: "H" ou "U" (pecas normais; pecas de set nao)
+        static string HeatGrade(Rice.Game.Item it)
+        {
+            var e = it != null ? it.itemEntry as ItemTableEntry : null;
+            if (e == null) return null;
+            string cat = e.Category ?? "";
+            if (cat != "speed" && cat != "accel" && cat != "crash" && cat != "boost") return null;
+            if (!string.IsNullOrEmpty(e.SetID) && e.SetID != "n/a" && e.SetID != "0") return null;
+            return e.Grade == "H" || e.Grade == "U" ? e.Grade : null;
+        }
+
+        static void SwapItemId(Rice.Game.Character ch, Rice.Game.Item it, string newId)
+        {
+            int ti = ItemTable.Items.FindIndex(x => x.ID == newId);
+            if (ti < 0) return;
+            using (var rc = Rice.Database.GetContext())
+            {
+                var di = rc.Items.SingleOrDefault(x => x.CID == (long) ch.CID && x.InvIdx == (int) it.invIdx);
+                if (di == null) return;
+                di.ItemID = newId;
+                rc.SaveChanges();
+            }
+            it.ID = newId;
+            it.tblIdx = ti;
+            it.itemEntry = ItemTable.Items[ti];
+            ch.NotifyItem(it);
         }
 
         // 419 ItemUseEx (u32 peca no carro, u32 item usado, u32 carro) -> 420 (os mesmos 12 bytes), como no openDC.
@@ -439,6 +477,15 @@ namespace Rice.Server.Packets.Game
             }
             if (carId == 0) carId = part.curCarID;
             string partId = part.ID;
+            // kit normal (i_n_00025) so para pecas H; o Ultra (i_n_00025_U) so para pecas U
+            string grade = HeatGrade(part);
+            string need = grade == "U" ? "i_n_00025_U" : "i_n_00025";
+            if (grade != null && kit.ID != need)
+            {
+                packet.Sender.Error(grade == "U" ? "Esta peca e Ultra: use o Ultra Parts Heat Treatment Kit." : "Esta peca e Hyper: use o Heat Treatment Kit normal.");
+                Log.WriteLine("ItemUseEx: {0} nao serve para {1} (grau {2}).", kit.ID, partId, grade);
+                return;
+            }
             if (!ch.UnEquipItem((int) dest, (int) carId))
             {
                 packet.Sender.Error("could not unequip item");
@@ -447,20 +494,7 @@ namespace Rice.Server.Packets.Game
             // Scorched (_b) volta a ser a peca normal
             if (partId != null && partId.EndsWith("_b"))
             {
-                string plain = partId.Substring(0, partId.Length - 2);
-                int ti = ItemTable.Items.FindIndex(x => x.ID == plain);
-                if (ti >= 0)
-                {
-                    using (var rc = Rice.Database.GetContext())
-                    {
-                        var di = rc.Items.SingleOrDefault(x => x.CID == (long) ch.CID && x.InvIdx == (int) dest);
-                        if (di != null) { di.ItemID = plain; rc.SaveChanges(); }
-                    }
-                    part.ID = plain;
-                    part.tblIdx = ti;
-                    part.itemEntry = ItemTable.Items[ti];
-                    ch.NotifyItem(part);
-                }
+                SwapItemId(ch, part, partId.Substring(0, partId.Length - 2));
             }
             Rice.Game.Item used;
             ch.DropItem((int) src, out used, 1, true);
@@ -484,6 +518,17 @@ namespace Rice.Server.Packets.Game
             var character = packet.Sender.Player.ActiveCharacter;
 
             Log.WriteDebug($"unequip item {invIdx} car {carId}");
+
+            // peca H/U (e as Scorched) so sai com o Heat Treatment Kit usado em cima dela (419)
+            var off = character.Inventory.FirstOrDefault(i => i.invIdx == invIdx);
+            string hg = RiceServer.Config.HeatTreatmentRequired ? HeatGrade(off) : null;
+            if (hg != null)
+            {
+                packet.Sender.Error(hg == "U" ? "Peca Ultra: para tirar do carro, use o Ultra Parts Heat Treatment Kit em cima dela."
+                                              : "Peca Hyper: para tirar do carro, use o Heat Treatment Kit em cima dela.");
+                Log.WriteLine("Unequip: {0} precisa de Heat Treatment Kit (grau {1}).", off.ID, hg);
+                return;
+            }
 
             bool unEquipped = character.UnEquipItem((int)invIdx, (int)carId);
             if (!unEquipped)
