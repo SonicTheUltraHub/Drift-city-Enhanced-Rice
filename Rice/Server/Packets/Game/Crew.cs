@@ -399,6 +399,7 @@ namespace Rice.Server.Packets.Game
             var p = packet.Buffer;
             string name = ReadWStr(p, 0, Math.Min(26, p.Length));
             Log.WriteLine("JoinTeamApplyByName '{0}' ({1} bytes)", name, p.Length);
+            if (InviteBot(packet.Sender, p)) return;
             Apply(packet.Sender, ByName(name), name);
         }
 
@@ -408,8 +409,70 @@ namespace Rice.Server.Packets.Game
             var p = packet.Buffer;
             if (p.Length < 8) return;
             long tid = BitConverter.ToInt64(p, 0);
-            Log.WriteLine("JoinTeamApply crew {0} ({1} bytes)", tid, p.Length);
+            Log.WriteLine("JoinTeamApply crew {0} ({1} bytes): {2}", tid, p.Length, BitConverter.ToString(p));
+            if (InviteBot(packet.Sender, p)) return;
             Apply(packet.Sender, ById(tid), tid.ToString());
+        }
+
+        // o bot do pedido (Join Crew clicando nele): cid (i64) ou nome (UTF-16) em algum lugar do pacote
+        static Bots.BotProfile BotIn(byte[] p)
+        {
+            for (int o = 0; o + 8 <= p.Length; o += 2)
+            {
+                long v = BitConverter.ToInt64(p, o);
+                if (v <= 0 || ById(v) != null) continue;
+                var b = Bots.ByCid(v);
+                if (b != null && !b.IsAlt) return b;
+            }
+            for (int st = 0; st < 2; st++)
+            {
+                var parts = Encoding.Unicode.GetString(p, st, (p.Length - st) & ~1).Split('\0');
+                foreach (var s in parts)
+                {
+                    string n = s.Trim();
+                    if (n.Length < 2) continue;
+                    var b = Bots.ByName(n);
+                    if (b != null && !b.IsAlt) return b;
+                }
+            }
+            return null;
+        }
+
+        // Voce e o lider da sua crew e aperta "Join Crew" num bot: vira um convite para a SUA crew. Bot sem crew aceita na
+        // hora (sem precisar de amizade); bot de outra crew recusa. true = era convite (nao segue como pedido de entrada).
+        static bool InviteBot(RiceClient c, byte[] p)
+        {
+            var ch = c.Player != null ? c.Player.ActiveCharacter : null;
+            if (ch == null) return false;
+            var mine = Of((long) ch.CID);
+            if (mine == null || mine.Master != (long) ch.CID) return false;
+            var b = BotIn(p);
+            if (b == null) return false;
+            var cur = Of(b.Cid);
+            if (cur != null && cur.Tid == mine.Tid) { Chat.SendSystemMessage(c, b.Name + " ja esta na sua crew."); return true; }
+            if (cur != null) { Bots.SayLater(c, 800, "channel", b.Name, "Valeu o convite, " + ch.Name + ", mas eu ja sou da " + cur.Name + "."); return true; }
+            if (b.Special || Bots.IsAce(b) || b.MostWanted) { Bots.SayLater(c, 800, "channel", b.Name, "Valeu, " + ch.Name + ", mas eu corro sozinho."); return true; }
+            if (RiceServer.Config.CrewLadder && b.Level > ch.Level)
+            {
+                Bots.SayLater(c, 800, "channel", b.Name, "Valeu o convite, " + ch.Name + ", mas eu sou nivel " + b.Level + ". Sobe mais um pouco que eu penso.");
+                return true;
+            }
+            string noSlot;
+            if (!CrewLadder.CanRecruit(ch, out noSlot)) { Chat.SendSystemMessage(c, noSlot); return true; }
+            JoinBot(c, ch, mine, b, "convite");
+            return true;
+        }
+
+        // bot entra na crew do jogador (convite pelo Join Crew ou o bot pediu para entrar e voce aceitou)
+        public static void JoinBot(RiceClient c, Rice.Game.Character ch, CrewData mine, Bots.BotProfile b, string why)
+        {
+            CrewLadder.NoteRecruit(ch, b.Cid);
+            AddMember(mine, b.Cid);
+            b.CrewTid = mine.Tid; b.CrewName = mine.Name;
+            Bots.Save();
+            Chat.SendSystemMessage(c, b.Name + " (nivel " + b.Level + ") entrou na sua crew (" + mine.Name + ").");
+            Bots.SayLater(c, 1200, "team", b.Name, "Valeu, " + ch.Name + "! To na " + mine.Name + " agora.");
+            Log.WriteLine("Crew: {0} entrou na {1} ({2} de {3}).", b.Name, mine.Name, why, ch.Name);
         }
 
         public static void Apply(RiceClient c, CrewData t, string asked)

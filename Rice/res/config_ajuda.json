@@ -1511,9 +1511,17 @@
 "Battle Zone",
 "Pecas H e U (normais, nao de set) so saem do carro com o Heat Treatment Kit usado em cima delas: kit normal (i_n_00025) para H, Ultra (i_n_00025_U) para U. As que tem versao \"Scorched\" viram Scorched no carro."
 ],
+"BotTeamRaceChance": [
+"Bots",
+"Chance de a sala que um bot abre na Battle Zone ser corrida de equipe (azul x vermelho). Na corrida de equipe a sua party e a sua crew ficam sempre no seu time."
+],
+"BotCrewAskChance": [
+"Bots",
+"Voce e lider de crew: chance de o bot que vem ate voce na rua ser um bot sem crew pedindo para entrar."
+],
 "BonusUpdateFlags": [
 "Battle Zone",
-"Pecas H e U (normais, nao de set) so saem do carro com o Heat Treatment Kit usado em cima delas: kit normal (i_n_00025) para H, Ultra (i_n_00025_U) para U. As que tem versao \"Scorched\" viram Scorched no carro."
+"Voce e lider de crew: chance de o bot que vem ate voce na rua ser um bot sem crew pedindo para entrar."
 ],
 "PartyChaseTeleportSeconds": [
 "Party",

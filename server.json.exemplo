@@ -428,6 +428,8 @@
   "StickerShareAll": true,
   "BotCarAge": 0,
   "HeatTreatmentRequired": false,
+  "BotTeamRaceChance": 0.3,
+  "BotCrewAskChance": 0.25,
   "BonusUpdateFlags": "0,0,0,0,0,0,0,0,0",
   "PartyHuvContact": 4,
   "CityHuvHits": true,

@@ -35,6 +35,16 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 228 — Crew: convidar bot pelo Join Crew, bot pedindo para entrar; corridas de equipe:**
+- Voce e lider da sua crew e aperta **Join Crew** num bot: vira convite para a SUA crew. Bot sem crew entra na hora (sem
+  precisar de amizade); bot de outra crew recusa. Sem ser lider, o Join Crew continua sendo pedido de entrada.
+- Voce e lider: as vezes um bot sem crew vem ate voce na rua e pede para entrar; responda **sim** em 1 minuto e ele entra.
+  `BotCrewAskChance` (0.25).
+- Battle Zone: parte das salas que os bots abrem e **corrida de equipe** (azul x vermelho), com "Equipe de ..." no nome.
+  `BotTeamRaceChance` (0.3).
+- Em qualquer corrida de equipe, os bots da sua party e os membros da sua crew ficam **sempre no seu time** (quando
+  entram na sala e, se precisar, trocando de assento antes da largada).
+
 **Atualizacao 227 — Pecas H e U saem do carro sem kit (padrao):**
 - `HeatTreatmentRequired` agora vem desligado: pecas H e U saem arrastando, como antes, e nao viram "Scorched" no carro.
   O Heat Treatment Kit continua funcionando se usado (kit certo para cada grau). Para o jeito do jogo original, ponha

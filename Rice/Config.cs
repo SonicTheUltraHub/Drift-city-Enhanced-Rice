@@ -555,6 +555,11 @@ namespace Rice
         // Pecas H e U (normais, nao de set) so saem do carro com o Heat Treatment Kit usado em cima delas: kit normal
         // (i_n_00025) para H, Ultra (i_n_00025_U) para U. As que tem versao "Scorched" viram Scorched no carro.
         public bool HeatTreatmentRequired = false;
+        // Chance de a sala que um bot abre na Battle Zone ser corrida de equipe (azul x vermelho). Na corrida de equipe a
+        // sua party e a sua crew ficam sempre no seu time.
+        public double BotTeamRaceChance = 0.3;
+        // Voce e lider de crew: chance de o bot que vem ate voce na rua ser um bot sem crew pedindo para entrar.
+        public double BotCrewAskChance = 0.25;
         public string BonusUpdateFlags = "0,0,0,0,0,0,0,0,0";
         public double PartyChaseTeleportSeconds = 10; // HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)
         public double CityBotFarSnapSeconds = 8;      // seguindo: longe do lugar dele por N s, pula para o lugar            // party: derrapa e faz fumaca onde voce derrapou

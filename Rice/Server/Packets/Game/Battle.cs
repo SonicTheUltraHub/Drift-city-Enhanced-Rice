@@ -242,6 +242,7 @@ namespace Rice.Server.Packets.Game
             public int Id; public long Host; public string HostName = ""; public List<long> Racers = new List<long>();
             public DateTime Until; public int Created;
             public string Title; public bool Duel; public long Mate;
+            public bool Team;      // corrida de equipe (tipo da sala com o bit 1)
             public int Arena;      // 0 = Beginner; 1..4 = Pro EXP x4 / x6 / x8 / x16
         }
 
@@ -564,6 +565,7 @@ namespace Rice.Server.Packets.Game
         {
             var ai = NewAi(room, bb.Level, bb.Name, bb.Car, bb.AiIdx);
             if (ai == null) return false;
+            if ((room.Type & 1) != 0) { int ts = SeatFor(room, bb.Name); if (ts >= 0) seat = ts; }   // corrida de equipe: lado certo
             ai.Driver = (int) (host.Serial & 0xffff);
             ai.PatienceUntil = PatienceFrom(DateTime.UtcNow);
             room.Members.Add(ai);
@@ -783,7 +785,7 @@ namespace Rice.Server.Packets.Game
                 foreach (var c in challenges)
                 {
                     if (ChannelOf(c.Arena) != channel) continue;          // so na aba da arena dele (Beginner ou Pro)
-                    uint type = TypeOf(c.Arena);
+                    uint type = TypeOf(c.Arena) | (c.Team ? 1u : 0u);
                     int cap = c.Racers.Count + 1;
                     ushort map = (ushort) (aiTracks.Count > 0 ? aiTracks.First() : 0);
                     r.Add(Build(w =>
@@ -853,7 +855,7 @@ namespace Rice.Server.Packets.Game
                 var bots = chal.Racers.Select(Bots.ByCid).Where(b => b != null).ToList();
                 room = new Room
                 {
-                    Id = chal.Id, Type = TypeOf(chal.Arena), Map = (ushort) (aiTracks.Count > 0 ? aiTracks.OrderBy(x => Rng.Next()).First() : 0),
+                    Id = chal.Id, Type = TypeOf(chal.Arena) | (chal.Team ? 1u : 0u), Map = (ushort) (aiTracks.Count > 0 ? aiTracks.OrderBy(x => Rng.Next()).First() : 0),
                     Capacity = (ushort) Math.Min(Seats, bots.Count + 1), MapFlag = 0, Name = chal.Title ?? ("Desafio de " + chal.HostName),
                     Channel = ChannelOf(chal.Arena), ChallengeHost = chal.HostName, ChallengeBonus = !chal.Duel,
                     DuelBot = chal.Duel ? chal.Host : 0, DuelMate = chal.Duel ? chal.Mate : 0
@@ -1517,6 +1519,73 @@ namespace Rice.Server.Packets.Game
 
         // corrida de time: IA no time vermelho (assentos pares) pintada de vermelho, no azul (impares) de azul; a cor
         // propria volta quando a corrida acaba (Result)
+        // ---- corrida de equipe: a sua party e a sua crew sempre no seu time ------------------------------------------
+        // Time = paridade do assento (par azul, impar vermelho). "Os seus": bots da party de quem esta na sala e membros
+        // da crew do dono da sala.
+        static HashSet<string> MySide(Room room)
+        {
+            var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var h in room.Humans.Where(x => x.Char != null))
+            {
+                foreach (var b in BotSocial.PartyBots(h.Char)) names.Add(b.Name);
+                var t = Crew.Of((long) h.Char.CID);
+                if (t != null) foreach (var cid in t.Members) { var cm = Bots.ByCid(cid); if (cm != null) names.Add(cm.Name); }
+            }
+            return names;
+        }
+
+        static int HostParity(Room room)
+        {
+            var host = room.Humans.FirstOrDefault(m => m.Serial == room.Master) ?? room.Humans.FirstOrDefault();
+            int s = host != null ? Array.IndexOf(room.SeatList, host.Serial) : 0;
+            return s < 0 ? 0 : s % 2;
+        }
+
+        // assento livre para um bot: na corrida de equipe, do lado certo (o seu se for seu, senao o outro); -1 = cheio
+        static int SeatFor(Room room, string botName)
+        {
+            int any = -1, side = -1;
+            bool team = (room.Type & 1) != 0;
+            int want = !team ? -1 : (MySide(room).Contains(botName ?? "") ? HostParity(room) : 1 - HostParity(room));
+            for (int i = 0; i < room.Capacity && i < Seats; i++)
+            {
+                if (room.SeatList[i] != Open) continue;
+                if (any < 0) any = i;
+                if (want >= 0 && i % 2 == want) { side = i; break; }
+            }
+            return side >= 0 ? side : any;
+        }
+
+        // antes da largada: quem e seu e esta do outro lado troca de assento com um bot de fora (ou vai para um vazio)
+        static void TeamSides(Room room)
+        {
+            if ((room.Type & 1) == 0) return;
+            var mine = MySide(room);
+            int p = HostParity(room);
+            bool moved = false;
+            var humans = new HashSet<uint>(room.Humans.Select(h => h.Serial));
+            foreach (var ai in room.Ais.ToList())
+            {
+                if (!mine.Contains(ai.Name ?? "")) continue;
+                int s = Array.IndexOf(room.SeatList, ai.Serial);
+                if (s < 0 || s % 2 == p) continue;
+                for (int j = 0; j < room.Capacity && j < Seats; j++)
+                {
+                    if (j % 2 != p) continue;
+                    uint occ = room.SeatList[j];
+                    if (occ == Locked || humans.Contains(occ)) continue;
+                    var other = room.Ais.FirstOrDefault(a => a.Serial == occ);
+                    if (occ != Open && (other == null || mine.Contains(other.Name ?? ""))) continue;
+                    room.SeatList[j] = ai.Serial;
+                    room.SeatList[s] = occ;
+                    moved = true;
+                    Log.WriteLine("Sala {0}: {1} foi para o seu time (assento {2}).", room.Id, ai.Name, j);
+                    break;
+                }
+            }
+            if (moved) Cast(room, 621, ModifyFrame(room));
+        }
+
         static void TeamColors(Room room, bool on)
         {
             if ((room.Type & 1) == 0) return;
@@ -1607,9 +1676,7 @@ namespace Rice.Server.Packets.Game
                 bots = bots.Where(x => BotFits(arena, x)).ToList();
                 foreach (var b in bots)
                 {
-                    int seat = -1;
-                    for (int i = 0; i < room.Capacity && i < Seats; i++)
-                        if (room.SeatList[i] == Open) { seat = i; break; }
+                    int seat = SeatFor(room, b.Name);
                     if (seat < 0) break;
                     var ai = NewAi(room, b.Level, b.Name, b.Car, b.AiIdx);
                     if (ai == null) break;
@@ -1847,6 +1914,7 @@ namespace Rice.Server.Packets.Game
 
             // bots que estavam como jogador viram IA para a corrida
             foreach (var ai in room.Ais.Where(a => a.AsPlayer).ToList()) Redress(room, ai, false);
+            TeamSides(room);
             TeamColors(room, true);
             // a corrida comecou: os bots da sala somem da porta da Battle Zone (estao correndo)
             foreach (var ai in room.Ais) CityBots.Vanish(Bots.ByName(ai.Name), Math.Max(60, RiceServer.Config.BattleBotRaceSeconds));

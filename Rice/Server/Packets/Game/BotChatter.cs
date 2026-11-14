@@ -628,6 +628,15 @@ namespace Rice.Server.Packets.Game
                     Bots.MeetPlayer(o.Bot, 120);                  // espera voce abrir a troca
                     Bots.SayLater(c, d, "channel", o.Bot.Name, "Fechou, " + ch.Name + "! Clica em mim e escolhe Trocar.");
                     break;
+                case "joinme":
+                {
+                    var mc = Crew.Of((long) ch.CID);
+                    if (mc == null || o.Crew == null || mc.Tid != o.Crew.Tid || mc.Master != (long) ch.CID) break;
+                    if (Crew.Of(o.Bot.Cid) != null) { Bots.SayLater(c, d, "channel", o.Bot.Name, "Ih, acabei entrando em outra crew. Foi mal!"); break; }
+                    var jb = o.Bot;
+                    Later(d, () => { Crew.JoinBot(c, ch, mc, jb, "pediu"); Bots.Unlink(jb.Cid); });
+                    break;
+                }
                 case "crew":
                 {
                     var t = o.Crew;
@@ -663,6 +672,36 @@ namespace Rice.Server.Packets.Game
                 var myCrew = Crew.Of((long) ch.CID);
                 var pool = Talkers().Where(b => !party.Contains(b) && !b.Special && !Bots.IsAce(b) && Bots.LinkOf(b.Cid) == null).ToList();
                 var crewMates = myCrew != null ? pool.Where(b => { var bc = Crew.Of(b.Cid); return bc != null && bc.Tid == myCrew.Tid; }).ToList() : new List<Bots.BotProfile>();
+                // voce e lider de crew: as vezes um bot sem crew vem pedir para entrar (responda sim)
+                if (myCrew != null && myCrew.Master == (long) ch.CID && Rng.NextDouble() < cfg.BotCrewAskChance)
+                {
+                    string why0;
+                    var asker = pool.Where(b => Crew.Of(b.Cid) == null && !b.MostWanted && !b.IsAlt && (!cfg.CrewLadder || b.Level <= ch.Level))
+                                    .OrderBy(x => Rng.Next()).FirstOrDefault();
+                    if (asker != null && CrewLadder.CanRecruit(ch, out why0))
+                    {
+                        double win = Math.Max(30, cfg.BotOfferSeconds);
+                        Bots.MeetPlayer(asker, win + 20);
+                        lock (offers) nextOffer = DateTime.UtcNow.AddSeconds(Math.Max(win, cfg.BotApproachPauseSeconds));
+                        var jo = new Offer { Kind = "joinme", Bot = asker, Crew = myCrew, Until = DateTime.UtcNow.AddSeconds(win) };
+                        lock (offers) offers.Add(jo);
+                        var jp = p; var jb = asker; var jc = c;
+                        string jline = Pick("Ei " + ch.Name + ", posso entrar na " + myCrew.Name + "?", ch.Name + ", to sem crew... me aceita na " + myCrew.Name + "?")
+                                       + " (responda sim em 1 minuto)";
+                        Later(4000, () =>
+                        {
+                            float d = CityBots.DistanceTo(jp.ActiveCharacter, jb.Cid);
+                            if (d <= RiceServer.Config.BotLocalChatRange) PartyTalk.SayArea(jp, jb.Name, jline); else Bots.Say(jc, "channel", jb.Name, jline);
+                        });
+                        Later((int) (win * 1000) + 4000, () =>
+                        {
+                            bool answered; lock (offers) answered = jo.Answered.Count > 0;
+                            if (!answered) { Bots.Unlink(jb.Cid); Bots.SayLater(jc, 0, "channel", jb.Name, Pick("Tudo bem, fica pra proxima.", "Beleza, outra hora.")); }
+                        });
+                        Log.WriteLine("Bots: {0} (sem crew) foi pedir para entrar na crew de {1}.", asker.Name, ch.Name);
+                        break;
+                    }
+                }
                 // so para em voce quem e da sua crew (a que voce criou ou a mesma em que voce esta)
                 var b0 = crewMates.Count > 0 ? crewMates[Rng.Next(crewMates.Count)] : null;
                 if (b0 == null) continue;
@@ -836,6 +875,14 @@ namespace Rice.Server.Packets.Game
             double open = Math.Max(30, RiceServer.Config.BotRaceOpenSeconds);
             var chal = Battle.OpenChallenge(a, racers, open, arena);
             if (chal == null) return;
+            // as vezes e corrida de equipe (azul x vermelho); entrando, a sua party e a sua crew ficam no seu time
+            if (racers.Count >= 2 && Rng.NextDouble() < RiceServer.Config.BotTeamRaceChance)
+            {
+                chal.Team = true;
+                chal.Title = "Equipe de " + a.Name;
+                SayAll(delay + 1200, "channel", a, Pick("E corrida de equipe! Azul x vermelho.", "Vai ser por equipe, monta o seu time!"));
+                Log.WriteLine("Desafio {0}: corrida de equipe.", chal.Id);
+            }
             var o = new Offer { Kind = "race", Bot = a, Until = DateTime.UtcNow.AddSeconds(open), Challenge = chal.Id };
             lock (offers) offers.Add(o);
         }
