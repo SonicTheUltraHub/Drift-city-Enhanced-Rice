@@ -1517,11 +1517,11 @@
 ],
 "BotCrewAskChance": [
 "Bots",
-"Voce e lider de crew: chance de o bot que vem ate voce na rua ser um bot sem crew pedindo para entrar."
+"Voce e lider de crew e esta no lobby (Driver Dome): chance de o bot que vem ate voce ser um bot sem crew pedindo para entrar."
 ],
 "BonusUpdateFlags": [
 "Battle Zone",
-"Voce e lider de crew: chance de o bot que vem ate voce na rua ser um bot sem crew pedindo para entrar."
+"Voce e lider de crew e esta no lobby (Driver Dome): chance de o bot que vem ate voce ser um bot sem crew pedindo para entrar."
 ],
 "PartyChaseTeleportSeconds": [
 "Party",
