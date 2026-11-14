@@ -240,6 +240,7 @@ namespace Rice.Server.Packets.Game
         }
 
         static readonly Dictionary<RiceClient, DateTime> lastResult = new Dictionary<RiceClient, DateTime>();
+        static readonly Dictionary<RiceClient, DateTime> ignoredLog = new Dictionary<RiceClient, DateTime>();
 
         [RicePacket(183, RiceServer.ServerType.Game, CheckedIn = true)]
         public static void ChaseEnd(RicePacket packet)
@@ -248,6 +249,23 @@ namespace Rice.Server.Packets.Game
             if (p.Length < 16) return;
             var ch = packet.Sender.Player.ActiveCharacter;
             ushort serial = BitConverter.ToUInt16(p, 0), sort = BitConverter.ToUInt16(p, 2);
+            State st0;
+            lock (chases) chases.TryGetValue(packet.Sender, out st0);
+            // Depois de um chamado de HUV que nao virou perseguicao, o jogo fica "em perseguicao": numa corrida da Battle
+            // Zone ele trata cada carro (1..15) como HUV e manda o fim de perseguicao sem parar (os carros travam e o jogo
+            // fecha). Sem perseguicao registrada: ignora (nao responde), salvo "pego" (resultado 1) fora da sala.
+            if (st0 == null)
+            {
+                uint r0 = p.Length >= 0x12 ? BitConverter.ToUInt32(p, 0xe) : BitConverter.ToUInt32(p, 12);
+                if (r0 != 1 || Battle.InRoom(packet.Sender))
+                {
+                    DateTime lastIgn;
+                    bool say;
+                    lock (lastResult) { say = !ignoredLog.TryGetValue(packet.Sender, out lastIgn) || (DateTime.UtcNow - lastIgn).TotalSeconds > 30; if (say) ignoredLog[packet.Sender] = DateTime.UtcNow; }
+                    if (say) Log.WriteLine("ChaseEnd sem perseguicao (HUV {0}) ignorado{1}.", sort, Battle.InRoom(packet.Sender) ? " - voce esta numa sala da Battle Zone" : "");
+                    return;
+                }
+            }
             // cliente 2016 (0x848744): u16 serial @0, u16 numero @2, u16 tipo @4 e o resultado (u32) em @0xe; os bytes
             // 6..0xd nao sao preenchidos (lixo). Ler em @12 dava 65879 em vez de 1 (pego).
             uint result = p.Length >= 0x12 ? BitConverter.ToUInt32(p, 0xe) : BitConverter.ToUInt32(p, 12);

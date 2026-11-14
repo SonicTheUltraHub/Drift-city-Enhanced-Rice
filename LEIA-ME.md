@@ -35,6 +35,12 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 234 — Crash na Battle Zone depois de chamar HUV:**
+- Depois de um chamado de HUV que nao virou perseguicao, o jogo ficava "em perseguicao": na corrida da Battle Zone
+  tratava cada carro como HUV e mandava o fim de perseguicao sem parar; o servidor respondia todos, os carros travavam
+  e o jogo fechava. Agora fim de perseguicao sem perseguicao registrada e ignorado (sem resposta), sempre na sala da
+  Battle Zone. O log mostra so uma linha "ChaseEnd sem perseguicao ... ignorado" a cada 30 s.
+
 **Atualizacao 233 — Sem a janela do PowerShell ao abrir pelo Start.bat:**
 - Quem guardava a configuracao de video quando o jogo fechava era um PowerShell "escondido" no Start.bat, que piscava
   na tela. Agora o proprio Rice.exe faz isso (copia Data\Init\goption.ini para goption_salvo.ini quando o jogo fecha),

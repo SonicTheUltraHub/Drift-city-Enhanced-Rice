@@ -221,6 +221,8 @@ namespace Rice.Server.Packets.Game
             return Build(w => { w.Write(serial); w.Write(SeatBytes(r)); w.Write(r.Type); });
         }
 
+        internal static bool InRoom(RiceClient c) { lock (Sync) return RoomOfClient(c) != null; }
+
         static Room RoomOfClient(RiceClient c)
         {
             int id;
