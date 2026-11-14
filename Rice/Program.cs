@@ -45,6 +45,20 @@ namespace Rice
 
         // CloseWithGame: depois que o jogo (DriftCity.exe) abriu, se ele ficar fechado por CloseWithGameSeconds o servidor
         // salva os bots e fecha sozinho (o resto ja e gravado na hora). Sem o jogo ter aberto, o servidor fica aberto.
+        // configuracao de video do jogo: quando o jogo fecha, copia Data\Init\goption.ini para goption_salvo.ini
+        // (o Start.bat coloca de volta antes de abrir). Antes isso era um PowerShell escondido no Start.bat, que piscava.
+        static void SaveGameOptions()
+        {
+            try
+            {
+                string ini = Menu.GameIni();
+                if (ini == null) return;
+                System.IO.File.Copy(ini, System.IO.Path.Combine(System.IO.Path.GetDirectoryName(ini), "goption_salvo.ini"), true);
+                Log.WriteLine("Configuracao de video do jogo salva (goption_salvo.ini).");
+            }
+            catch (Exception ex) { Log.WriteError("goption_salvo.ini: " + ex.Message); }
+        }
+
         static void WatchGame(Config cfg)
         {
             bool seen = false;
@@ -62,6 +76,8 @@ namespace Rice
                 if (!seen) continue;
                 if (gone == DateTime.MinValue) { gone = DateTime.UtcNow; continue; }
                 if ((DateTime.UtcNow - gone).TotalSeconds < Math.Max(3, cfg.CloseWithGameSeconds)) continue;
+                SaveGameOptions();
+                if (!cfg.CloseWithGame) { seen = false; gone = DateTime.MinValue; continue; }
                 Log.WriteLine("O jogo fechou: salvando e fechando o servidor.");
                 System.Threading.Interlocked.Exchange(ref gameClosed, 1);
                 try { Rice.Server.Packets.Game.Bots.Save(); } catch (Exception) { }
@@ -120,8 +136,8 @@ namespace Rice
             // o X da janela do servidor, Ctrl+C, sair do Windows: fecha o jogo junto
             ctrlHandler = t => { if (t == 0 || t == 1 || t == 2 || t == 5 || t == 6) CloseGame(config); return false; };
             try { SetConsoleCtrlHandler(ctrlHandler, true); } catch (Exception) { }
-            if (config.CloseWithGame)
-                new System.Threading.Thread(() => WatchGame(config)) { IsBackground = true, Name = "fecha com o jogo" }.Start();
+            // vigia o jogo: quando fecha, salva a configuracao de video e (CloseWithGame) fecha o servidor
+            new System.Threading.Thread(() => WatchGame(config)) { IsBackground = true, Name = "fecha com o jogo" }.Start();
             // o servidor fica aberto ate digitar "sair" (antes um Enter sem querer na janela fechava o servidor)
             while (true)
             {

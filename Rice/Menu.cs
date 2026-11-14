@@ -684,7 +684,7 @@ namespace Rice
         // ------------------------------------------------------------------------------------------------ graficos
         // Data\Init\goption.ini do jogo (secao [Graphic]). O Start.bat guarda uma copia (goption_salvo.ini) e coloca de
         // volta antes de abrir o jogo: o menu grava nos dois. Backup na primeira vez: goption.ini.antes_do_menu.
-        static string GameIni()
+        internal static string GameIni()
         {
             foreach (var root in new[] { "..", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".."), "." })
             {

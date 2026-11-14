@@ -35,6 +35,11 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 233 — Sem a janela do PowerShell ao abrir pelo Start.bat:**
+- Quem guardava a configuracao de video quando o jogo fechava era um PowerShell "escondido" no Start.bat, que piscava
+  na tela. Agora o proprio Rice.exe faz isso (copia Data\Init\goption.ini para goption_salvo.ini quando o jogo fecha),
+  mesmo com `CloseWithGame` desligado. Use o Start.bat novo (vem no instalador).
+
 **Atualizacao 232 — Corrida de equipe sem carros travados; HUV sem enxurrada de fim de perseguicao:**
 - A troca de assento para deixar a sua party/crew no seu time agora acontece na sala de espera, nao na largada (trocar na
   largada deixava os carros travados no comeco).

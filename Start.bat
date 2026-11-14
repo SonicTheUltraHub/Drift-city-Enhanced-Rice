@@ -41,8 +41,5 @@ Rice.exe ia
 start Rice.exe
 cd ..
 start DriftCity.exe %WIN%
-rem when the game closes, save the settings (runs hidden in the background)
-rem quando o jogo fechar, guarda a configuracao (roda escondido em segundo plano)
-rem it runs from the TEMP folder (with the full path of the files), so it does not keep the game folder "in use"
-rem roda a partir da pasta TEMP (com o caminho completo dos arquivos), para nao deixar a pasta do jogo "em uso"
-start "" /min /D "%TEMP%" powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command "Start-Sleep -Seconds 20; Wait-Process -Name DriftCity -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; Copy-Item -Force -LiteralPath '%~dp0%INI%' -Destination '%~dp0%SAVE%'"
+rem when the game closes, Rice.exe saves the video settings (goption_salvo.ini); no extra window
+rem quando o jogo fecha, o Rice.exe guarda a configuracao de video (goption_salvo.ini); sem janela extra
