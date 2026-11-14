@@ -35,6 +35,11 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 219 — Stickers no carro do seu corredor-bot (rua e party):**
+- Achado no jogo o pacote que mostra os stickers do carro de outro jogador (804 StickerInfoRes). Quando o jogo pede o
+  nome/visual de um bot (801), o servidor manda tambem os stickers que o seu corredor tem colados no carro atual.
+  O log mostra "Sticker: N sticker(s) do carro ... mandados para o serial ...". Battle Zone ainda nao.
+
 **Atualizacao 218 — Vidro: bots com o vidro deles e cor certa no seu corredor-bot:**
 - Os bots da rua sem vidro proprio copiavam o vidro do SEU carro (trocar o vidro mudava o de todos). Agora usam o vidro
   de fabrica.

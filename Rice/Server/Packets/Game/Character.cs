@@ -131,7 +131,7 @@ namespace Rice.Server.Packets.Game
                 for (int i = 0; i < Math.Min(reqCnt, 40u) && 4 + 4 * i + 2 <= buf.Length; i++)
                 {
                     var bb = BotSocial.BySerial(BitConverter.ToUInt16(buf, (int) (4 + 4 * i)));
-                    if (bb != null) Licenses.SendBotMounted(packet.Sender, bb);
+                    if (bb != null) { Licenses.SendBotMounted(packet.Sender, bb); Sticker.SendBotStickers(packet.Sender, bb); }
                 }
                 return;
             }

@@ -370,6 +370,45 @@ namespace Rice.Server.Packets.Game
         }
 
         // ---- stickers colados nos carros (save/stickers_carros.json: cid -> entradas de 64 bytes em base64) ----------
+        // 804 StickerInfoRes (DriftCity.exe 0x53ab20, "Cmd_StickerInfoRes"): os stickers do carro de OUTRO jogador.
+        //   u16 @0, u16 serial do carro @2, u16 idade @4, u32 @6, u16 quantos @0xa (ate 100), depois 24 bytes cada
+        //   (a mesma posicao do 1352/1351 @0x28: id do sticker, x, y, largura, altura, ..., lado). O jogo pede a imagem
+        //   pelo id (GetImage 64) e cola no carro daquele serial.
+        public static void SendCarStickers(RiceClient c, ushort serial, long cid, int carId)
+        {
+            if (c == null || !RiceServer.Config.StickerSystem) return;
+            List<byte[]> list;
+            lock (Sync) list = AttachedOf(cid).Where(x => BitConverter.ToInt32(x, 0) == carId).Take(100).ToList();
+            if (list.Count == 0) return;
+            var p = new RicePacket(804);
+            p.Writer.Write((ushort) 0);
+            p.Writer.Write(serial);
+            p.Writer.Write((ushort) 1);
+            p.Writer.Write(0u);
+            p.Writer.Write((ushort) list.Count);
+            foreach (var e in list) p.Writer.Write(e, 0x28, 24);
+            c.Send(p);
+            Log.WriteLine("Sticker: {0} sticker(s) do carro {1} (corredor {2}) mandados para o serial {3}.", list.Count, carId, cid, serial);
+        }
+
+        // seu corredor como bot: os stickers do carro que ele esta usando
+        public static void SendBotStickers(RiceClient c, Bots.BotProfile b)
+        {
+            if (c == null || b == null || !b.IsAlt) return;
+            try
+            {
+                int carId;
+                using (var rc = Rice.Database.GetContext())
+                {
+                    var dc = rc.Characters.Find(b.Cid);
+                    if (dc == null) return;
+                    carId = dc.CurrentCarID;
+                }
+                SendCarStickers(c, (ushort) BotSocial.SerialOf(b), b.Cid, carId);
+            }
+            catch (Exception ex) { Log.WriteError("Sticker: bot " + b.Name + ": " + ex.Message); }
+        }
+
         static Dictionary<long, List<byte[]>> attached;
         static List<byte[]> AttachedOf(long cid)
         {
