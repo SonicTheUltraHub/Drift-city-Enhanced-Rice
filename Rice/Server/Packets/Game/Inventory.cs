@@ -415,6 +415,66 @@ namespace Rice.Server.Packets.Game
             character.FlushModInfo(packet.Sender);
         }
 
+        // 419 ItemUseEx (u32 peca no carro, u32 item usado, u32 carro) -> 420 (os mesmos 12 bytes), como no openDC.
+        // Heat Treatment Kit (i_n_00025 = pecas H, i_n_00025_U = pecas U): o jogo so deixa tirar do carro peca H/U
+        // usando o kit em cima dela. A peca sai (com a Option/Docking do quadrado), um kit e gasto e a peca
+        // "Scorched" (_b) volta a ser a peca normal.
+        [RicePacket(419, RiceServer.ServerType.Game, CheckedIn = true)]
+        public static void ItemUseEx(RicePacket packet)
+        {
+            var b = packet.Buffer ?? new byte[0];
+            Log.WriteLine("ItemUseEx ({0} bytes): {1}", b.Length, BitConverter.ToString(b));
+            if (b.Length < 12) return;
+            uint dest = BitConverter.ToUInt32(b, 0), src = BitConverter.ToUInt32(b, 4), carId = BitConverter.ToUInt32(b, 8);
+            var ch = packet.Sender.Player != null ? packet.Sender.Player.ActiveCharacter : null;
+            if (ch == null) return;
+            var kit = ch.Inventory.FirstOrDefault(i => i.invIdx == src);
+            var part = ch.Inventory.FirstOrDefault(i => i.invIdx == dest);
+            bool isKit = kit != null && kit.ID != null && kit.ID.StartsWith("i_n_00025");
+            if (!isKit || part == null || part.curCarID == 0)
+            {
+                Log.WriteLine("ItemUseEx: {0} em {1}: nao e Heat Treatment Kit numa peca do carro.", kit != null ? kit.ID : "?", part != null ? part.ID : "?");
+                packet.Sender.Error("could not use item");
+                return;
+            }
+            if (carId == 0) carId = part.curCarID;
+            string partId = part.ID;
+            if (!ch.UnEquipItem((int) dest, (int) carId))
+            {
+                packet.Sender.Error("could not unequip item");
+                return;
+            }
+            // Scorched (_b) volta a ser a peca normal
+            if (partId != null && partId.EndsWith("_b"))
+            {
+                string plain = partId.Substring(0, partId.Length - 2);
+                int ti = ItemTable.Items.FindIndex(x => x.ID == plain);
+                if (ti >= 0)
+                {
+                    using (var rc = Rice.Database.GetContext())
+                    {
+                        var di = rc.Items.SingleOrDefault(x => x.CID == (long) ch.CID && x.InvIdx == (int) dest);
+                        if (di != null) { di.ItemID = plain; rc.SaveChanges(); }
+                    }
+                    part.ID = plain;
+                    part.tblIdx = ti;
+                    part.itemEntry = ItemTable.Items[ti];
+                    ch.NotifyItem(part);
+                }
+            }
+            Rice.Game.Item used;
+            ch.DropItem((int) src, out used, 1, true);
+            var ack = new RicePacket(420);
+            ack.Writer.Write(dest); ack.Writer.Write(src); ack.Writer.Write(carId);
+            packet.Sender.Send(ack);
+            var un = new RicePacket(412);
+            un.Writer.Write(dest); un.Writer.Write(carId);
+            packet.Sender.Send(un);
+            ch.FlushModInfo(packet.Sender);
+            Log.WriteLine("Heat Treatment: {0} tirou {1} do carro {2} com {3}{4}.", ch.Name, partId, carId, kit.ID,
+                          part.ID != partId ? " (voltou a ser " + part.ID + ")" : "");
+        }
+
         [RicePacket(411, RiceServer.ServerType.Game, CheckedIn = true)]
         public static void UnEquipItem(RicePacket packet)
         {

@@ -35,6 +35,12 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 225 — Heat Treatment Kit funciona:**
+- Usar o Heat Treatment Kit em cima de uma peca do carro (pacote 419 ItemUseEx, formato do openDC) agora tira a peca
+  do carro, junto com a Option/Docking do quadrado, e gasta 1 kit. Kit normal (`i_n_00025`) para pecas H, Ultra
+  (`i_n_00025_U`) para pecas U. Peca "Scorched" (terminada em `_b`) volta a ser a peca normal ao sair.
+  O log mostra "Heat Treatment: ... tirou ... do carro ...".
+
 **Atualizacao 224 — Stickers do corredor-bot: a imagem que o jogo pede:**
 - Com o 804 certo, o jogo passou a pedir as imagens dos stickers do bot, mas com o id terminado em 0 (100028 em vez de
   100029) e o servidor respondia "nao encontrada". Agora acha o sticker pelo id base.
