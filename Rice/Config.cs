@@ -549,6 +549,9 @@ namespace Rice
         public string StickerFolder = "stickers";
         // Todos os corredores de todas as contas veem todos os stickers (tambem na lista "do corredor").
         public bool StickerShareAll = true;
+        // "Idade" do carro dos bots na rua (XiCarMove @2). 0 = o jogo consegue colar os stickers do seu corredor-bot
+        // (o pacote 804 so procura carro com idade 0). Se os bots sumirem ou piscarem na rua, volte para 1.
+        public int BotCarAge = 0;
         public string BonusUpdateFlags = "0,0,0,0,0,0,0,0,0";
         public double PartyChaseTeleportSeconds = 10; // HUV: bot que nao encosta no HUV em N s pula para tras dele (0 = nunca)
         public double CityBotFarSnapSeconds = 8;      // seguindo: longe do lugar dele por N s, pula para o lugar            // party: derrapa e faz fumaca onde voce derrapou

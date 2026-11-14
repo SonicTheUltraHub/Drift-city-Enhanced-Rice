@@ -1503,9 +1503,13 @@
 "Battle Zone",
 "Todos os corredores de todas as contas veem todos os stickers (tambem na lista \"do corredor\")."
 ],
+"BotCarAge": [
+"Bots",
+"\"Idade\" do carro dos bots na rua (XiCarMove @2). 0 = o jogo consegue colar os stickers do seu corredor-bot (o pacote 804 so procura carro com idade 0). Se os bots sumirem ou piscarem na rua, volte para 1."
+],
 "BonusUpdateFlags": [
 "Battle Zone",
-"Todos os corredores de todas as contas veem todos os stickers (tambem na lista \"do corredor\")."
+"\"Idade\" do carro dos bots na rua (XiCarMove @2). 0 = o jogo consegue colar os stickers do seu corredor-bot (o pacote 804 so procura carro com idade 0). Se os bots sumirem ou piscarem na rua, volte para 1."
 ],
 "PartyChaseTeleportSeconds": [
 "Party",

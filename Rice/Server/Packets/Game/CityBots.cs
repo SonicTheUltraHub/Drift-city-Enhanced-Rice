@@ -2925,7 +2925,8 @@ namespace Rice.Server.Packets.Game
         {
             var m = (byte[]) template.Clone();
             BitConverter.GetBytes((ushort) BotSocial.SerialOf(b)).CopyTo(m, 0);
-            BitConverter.GetBytes((ushort) 1).CopyTo(m, 2);
+            // idade do carro: o 804 (stickers de outro carro) so acha carro com idade 0 (DriftCity.exe 0x53ac3b)
+            BitConverter.GetBytes((ushort) RiceServer.Config.BotCarAge).CopyTo(m, 2);
             BitConverter.GetBytes((ushort) 0).CopyTo(m, 4);     // 0 = carro de jogador (num. de objeto/HUV fica aqui)
             BitConverter.GetBytes((ushort) b.Car).CopyTo(m, 6);
             BitConverter.GetBytes(b.Color).CopyTo(m, 8);
@@ -3028,7 +3029,7 @@ namespace Rice.Server.Packets.Game
             var n = Encoding.Unicode.GetBytes(b.Name ?? "");
             Array.Copy(n, o, Math.Min(n.Length, 24));
             BitConverter.GetBytes((ushort) BotSocial.SerialOf(b)).CopyTo(o, 0x1a);
-            BitConverter.GetBytes((ushort) 1).CopyTo(o, 0x1c);
+            BitConverter.GetBytes((ushort) RiceServer.Config.BotCarAge).CopyTo(o, 0x1c);
             BitConverter.GetBytes(b.Cid).CopyTo(o, 0x1e);
             BitConverter.GetBytes((ushort) b.Level).CopyTo(o, 0x26);
             BitConverter.GetBytes(t != null ? t.Tid : -1L).CopyTo(o, 0x2c);
