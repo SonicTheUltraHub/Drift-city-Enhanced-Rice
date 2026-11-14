@@ -35,6 +35,10 @@ opcao Portugues no instalador ou `"Language": "pt"` no `Rice\server.json`.
 
 ## Historico de atualizacoes
 
+**Atualizacao 224 — Stickers do corredor-bot: a imagem que o jogo pede:**
+- Com o 804 certo, o jogo passou a pedir as imagens dos stickers do bot, mas com o id terminado em 0 (100028 em vez de
+  100029) e o servidor respondia "nao encontrada". Agora acha o sticker pelo id base.
+
 **Atualizacao 223 — Stickers do corredor-bot: formato certo do 804:**
 - O pacote 804 (stickers de outro carro) ia com o serial no lugar errado (o jogo lia serial 0). Formato certo, conferido
   com o openDC: u16 serial, u16 idade, u32 id do carro, u16 quantos, 24 bytes por sticker.

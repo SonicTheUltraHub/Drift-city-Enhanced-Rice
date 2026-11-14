@@ -115,6 +115,18 @@ namespace Rice.Server.Packets.Game
                     var hit = attached.Values.SelectMany(l => l).FirstOrDefault(x => BitConverter.ToInt32(x, 4) == a2);
                     if (hit != null) { int cat = CatalogId(hit); r = Recs().FirstOrDefault(x => x.Id == cat); }
                 }
+                if (r == null)
+                {
+                    // stickers do carro de OUTRO jogador (804): o jogo pede o id com os 2 bits de baixo zerados
+                    // (100029 -> 100028); os nossos ids sao 4n+1
+                    int baseId = (a2 & ~3) | 1;
+                    r = Recs().FirstOrDefault(x => x.Id == baseId);
+                    if (r == null)
+                    {
+                        var hit2 = attached.Values.SelectMany(l => l).FirstOrDefault(x => BitConverter.ToInt32(x, 4) == baseId);
+                        if (hit2 != null) { int cat2 = CatalogId(hit2); r = Recs().FirstOrDefault(x => x.Id == cat2); }
+                    }
+                }
             }
             byte[] img = null;
             if (r != null)
